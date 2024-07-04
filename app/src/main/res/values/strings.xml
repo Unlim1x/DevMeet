@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">wb_project</string>
+    <string name="text_sample">The quick brown fox jumps over the lazy dog</string>
+    <string name="heading1_heading">Heading 1</string>
+    <string name="heading1_description">SF Pro Display/32/Bold</string>
+    <string name="heading2_heading">Heading 2</string>
+    <string name="heading2_description">SF Pro Display/28/Bold</string>
+    <string name="subheading1_heading">Subheading 1</string>
+    <string name="subheading1_description">SF Pro Display/18/SemiBold</string>
+    <string name="subheading2_heading">Subheading 2</string>
+    <string name="subheading2_description">SF Pro Display/16/SemiBold</string>
+    <string name="body1_heading">Body Text 1</string>
+    <string name="body1_description">SF Pro Display/14/SemiBold</string>
+    <string name="body2_heading">Body Text 2</string>
+    <string name="body2_description">SF Pro Display/14/Regular</string>
+    <string name="meta1_heading">Metadata 1</string>
+    <string name="meta1_description">SF Pro Display12/Regular</string>
+    <string name="meta2_heading">Metadata 2</string>
+    <string name="meta2_description">SF Pro Display10/Regular</string>
+    <string name="meta3_heading">Metadata 3</string>
+    <string name="meta3_description">SF Pro Display10/SemiBold</string>
+    <string name="is_over">Закончилась</string>
+
+    <plurals name="people">
+        <item quantity="one">человек</item>
+        <item quantity="few">человека</item>
+        <item quantity="many">человек</item>
+        <item quantity="other">человек</item>
+    </plurals>
+
+
+</resources>
