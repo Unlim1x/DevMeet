@@ -1,6 +1,5 @@
 package ru.unlim1x.wb_project.ui.screens
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -28,9 +27,9 @@ import ru.unlim1x.wb_project.ui.uiKit.tabrow.PageMeetings
 import ru.unlim1x.wb_project.ui.uiKit.tabrow.WBTabLayout
 import ru.unlim1x.wb_project.ui.uiKit.tabrow.model.TabData
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyMeetingScreen(bottomPadding: Dp, navController: NavController, tabs: List<TabData>) {
+fun MyMeetingScreen(navController: NavController, tabs: List<TabData>) {
 
     Scaffold(containerColor = Wb_projectTheme.colorScheme.neutralWhite,
         topBar = {
@@ -59,10 +58,9 @@ fun MyMeetingScreen(bottomPadding: Dp, navController: NavController, tabs: List<
                 )
         }) {
 
-        val modifier = Modifier.padding(top = it.calculateTopPadding(), bottom = bottomPadding)
 
 
-        Column(modifier = modifier.padding(horizontal = 16.dp)) {
+        Column(modifier = Modifier.padding(top = it.calculateTopPadding(), start = 16.dp, end = 16.dp)) {
             WBTabLayout(tabDataList = tabs, horizontalPaddingOffset = 16)
         }
 
@@ -108,5 +106,5 @@ fun showMyMeeting() {
             )
         }),
     )
-    MeetingScreen(bottomPadding = 50.dp, navController = rememberNavController(), tabs = tabs)
+    MeetingScreen(navController = rememberNavController(), tabs = tabs)
 }

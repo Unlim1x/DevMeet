@@ -40,7 +40,7 @@ import ru.unlim1x.wb_project.ui.uiKit.buttons.SecondaryButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(bottomPadding: Dp, navController: NavController) {
+fun ProfileScreen(navController: NavController) {
 
     var userAvatarState by remember { mutableStateOf(UserAvatarState.Default as UserAvatarState) }
 
@@ -95,7 +95,7 @@ fun ProfileScreen(bottomPadding: Dp, navController: NavController) {
 
         LazyColumn(
             modifier = Modifier
-                .padding(top = it.calculateTopPadding(), bottom = bottomPadding)
+                .padding(top = it.calculateTopPadding())
                 .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
@@ -134,5 +134,5 @@ fun ProfileScreen(bottomPadding: Dp, navController: NavController) {
 @Composable
 @Preview
 fun showProfileScreen() {
-    ProfileScreen(bottomPadding = 50.dp, navController = rememberNavController())
+    ProfileScreen(navController = rememberNavController())
 }

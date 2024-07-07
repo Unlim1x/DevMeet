@@ -58,12 +58,12 @@ import ru.unlim1x.wb_project.ui.uiKit.theme.MyTypography
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ElementsScreen1(bottomPadding: Dp) {
+fun ElementsScreen1() {
 
 
     LazyColumn(
         modifier = Modifier
-            .padding(start = 4.dp, top = 0.dp, end = 4.dp, bottom = bottomPadding)
+            .padding(start = 4.dp, top = 0.dp, end = 4.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -376,5 +376,5 @@ fun UserAvatarGroup() {
 @Preview
 @Composable
 fun MainScreenPreview() {
-    ElementsScreen1(50.dp)
+    ElementsScreen1()
 }

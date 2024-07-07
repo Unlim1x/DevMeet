@@ -1,10 +1,17 @@
 package ru.unlim1x.wb_project.ui.navigation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import ru.unlim1x.wb_project.ui.screens.CommunityScreen
 import ru.unlim1x.wb_project.ui.screens.ElementsScreen1
 import ru.unlim1x.wb_project.ui.screens.MeetingScreen
@@ -19,6 +26,22 @@ import ru.unlim1x.wb_project.ui.uiKit.tabrow.model.TabData
 @Composable
 fun BottomNavGraph(navController: NavHostController, bottomPadding: Dp) {
 
+
+
+    NavHost(navController = navController, startDestination = NavGraphElements.Meeting.route) {
+        EventsNavGraph(navController, bottomPadding)
+        CommunityNavGraph(navController, bottomPadding)
+        MoreNavGraph(navController, bottomPadding)
+
+    }
+
+}
+
+fun NavGraphBuilder.EventsNavGraph(navController: NavHostController,bottomPadding: Dp) {
+    navigation(
+        route = NavGraphElements.Meeting.route,
+        startDestination = NavGraphElements.Init.route
+    ){
     //TODO: Пример!!, потом данные будут браться из viewmodel'и
     val listOfTags = listOf("Junior", "Python", "Moscow")
     val listEvents: MutableList<Event> = mutableListOf()
@@ -63,7 +86,6 @@ fun BottomNavGraph(navController: NavHostController, bottomPadding: Dp) {
             )
         )
     }
-
     val tabsAll = listOf(
         TabData(text = "ВСЕ ВСТРЕЧИ", screen = {
             PageMeetings(
@@ -76,54 +98,140 @@ fun BottomNavGraph(navController: NavHostController, bottomPadding: Dp) {
             )
         }),
     )
-    val tabsMy = listOf(
-        TabData(text = "ЗАПЛАНИРОВАНО", screen = {
-            PageMeetings(
-                listEvents = listEventsPlanned
-            )
-        }),
-        TabData(text = "УЖЕ ПРОШЛИ", screen = {
-            PageMeetings(
-                listEvents = listEventsFinished
-            )
-        }),
-    )
-
-    NavHost(navController = navController, startDestination = NavGraphElements.Meeting.route) {
-
-
-        composable(
-            route = NavGraphElements.Meeting.route,
-        ) {
+    composable(
+        route = NavGraphElements.Meeting.route,
+    ) {
+        Box(modifier = Modifier.padding(bottom = bottomPadding)) {
             MeetingScreen(
-                bottomPadding = bottomPadding,
                 navController = navController,
                 tabs = tabsAll
             )
         }
-        composable(route = NavGraphElements.Community.route) {
+    }
+}
+}
 
+fun NavGraphBuilder.CommunityNavGraph(navController: NavHostController,bottomPadding: Dp){
+    composable(route = NavGraphElements.Community.route,
+    ) {
+        Box(modifier = Modifier.padding(bottom = bottomPadding)) {
             CommunityScreen()
         }
-        composable(route = NavGraphElements.More.route) {
-            MoreScreen(bottomPadding = bottomPadding, navController = navController)
+    }
+}
+
+fun NavGraphBuilder.MoreNavGraph(navController: NavHostController,bottomPadding: Dp){
+    navigation(route = NavGraphElements.More.route, startDestination = NavGraphElements.More.route) {
+        composable(
+            route = NavGraphElements.More.route,
+        ) {
+            Box(modifier = Modifier.padding(bottom = bottomPadding)) {
+
+                MoreScreen(navController = navController)
+            }
         }
-        composable(route = NavGraphElements.Profile.route) {
-            ProfileScreen(bottomPadding = bottomPadding, navController = navController)
+        composable(
+            route = NavGraphElements.Profile.route,
+        ) {
+            Box(modifier = Modifier.padding(bottom = bottomPadding)) {
+                ProfileScreen(navController = navController)
+            }
         }
-        composable(route = NavGraphElements.Elements.route) {
-            ElementsScreen1(bottomPadding = bottomPadding)
+        composable(
+            route = NavGraphElements.Elements.route,
+        ) {
+            Box(modifier = Modifier.padding(bottom = bottomPadding)) {
+                ElementsScreen1()
+            }
         }
 
-        composable(route = NavGraphElements.MyMeetings.route) {
-            MyMeetingScreen(
-                bottomPadding = bottomPadding,
-                navController = navController,
-                tabs = tabsMy
+
+        //TODO: Пример!!, потом данные будут браться из viewmodel'и
+        val listOfTags = listOf("Junior", "Python", "Moscow")
+        val listEvents: MutableList<Event> = mutableListOf()
+        val listEvents2: MutableList<Event> = mutableListOf()
+        val listEventsPlanned: MutableList<Event> = mutableListOf()
+        val listEventsFinished: MutableList<Event> = mutableListOf()
+        for (x in 0..14) {
+            listEvents.add(
+                index = x,
+                element = Event(
+                    name = "Developer meeting",
+                    timeAndPlace = TimeAndPlace(
+                        place = "Moscow",
+                        date = 13,
+                        month = 9,
+                        year = 2024
+                    ),
+                    isFinished = x % 4 == 0,
+                    tags = listOfTags
+                )
+            )
+            listEventsPlanned.add(
+                index = x,
+                element = Event(
+                    name = "Developer meeting",
+                    timeAndPlace = TimeAndPlace(
+                        place = "Moscow",
+                        date = 13,
+                        month = 9,
+                        year = 2024
+                    ),
+                    isFinished = false,
+                    tags = listOfTags
+                )
             )
         }
+        for (x in 0..2) {
+            listEvents2.add(
+                index = x, element = Event(
+                    name = "Developer meeting",
+                    timeAndPlace = TimeAndPlace(
+                        place = "Moscow",
+                        date = 13,
+                        month = 9,
+                        year = 2024
+                    ),
+                    isFinished = x % 4 == 0,
+                    tags = listOfTags
+                )
+            )
+            listEventsFinished.add(
+                index = x, element = Event(
+                    name = "Developer meeting",
+                    timeAndPlace = TimeAndPlace(
+                        place = "Moscow",
+                        date = 13,
+                        month = 9,
+                        year = 2024
+                    ),
+                    isFinished = true,
+                    tags = listOfTags
+                )
+            )
+        }
+        val tabsMy = listOf(
+            TabData(text = "ЗАПЛАНИРОВАНО", screen = {
+                PageMeetings(
+                    listEvents = listEventsPlanned
+                )
+            }),
+            TabData(text = "УЖЕ ПРОШЛИ", screen = {
+                PageMeetings(
+                    listEvents = listEventsFinished
+                )
+            }),
+        )
 
-
+        composable(
+            route = NavGraphElements.MyMeetings.route,
+        ) {
+            Box(modifier = Modifier.padding(bottom = bottomPadding)) {
+                MyMeetingScreen(
+                    navController = navController,
+                    tabs = tabsMy
+                )
+            }
+        }
     }
-
 }

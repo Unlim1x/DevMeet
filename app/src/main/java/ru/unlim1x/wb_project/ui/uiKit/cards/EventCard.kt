@@ -62,7 +62,7 @@ fun CardBody(
     meta2Flag: Boolean = false,
     tags: List<String>?
 ) {
-    Column(modifier = Modifier.padding(horizontal = 4.dp)) {
+    Column(modifier = Modifier.padding(start = 12.dp)) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = heading, style = Wb_projectTheme.typography.bodyText1)
             Text(

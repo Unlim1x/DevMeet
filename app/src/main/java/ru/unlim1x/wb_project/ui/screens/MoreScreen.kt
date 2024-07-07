@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -41,7 +43,7 @@ import ru.unlim1x.wb_project.ui.uiKit.avatar.UserAvatar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MoreScreen(bottomPadding: Dp, navController: NavController) {
+fun MoreScreen(navController: NavController) {
 
     Scaffold(containerColor = Wb_projectTheme.colorScheme.neutralWhite,
         topBar = {
@@ -81,14 +83,13 @@ fun MoreScreen(bottomPadding: Dp, navController: NavController) {
 
         LazyColumn(
             modifier = Modifier.padding(
-                top = it.calculateTopPadding(),
-                bottom = bottomPadding
+                top = it.calculateTopPadding()
             )
         ) {
             item {
                 MoreContainer(
                     user = user,
-                    modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
+                    modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
                 ) {
                     navController.navigate(NavGraphElements.Profile.route)
                 }
@@ -96,7 +97,7 @@ fun MoreScreen(bottomPadding: Dp, navController: NavController) {
             item {
                 MoreContainer(
                     moreContainerData = myMeetings,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(top = 8.dp,bottom = 16.dp)
                 ) {
                     navController.navigate(NavGraphElements.MyMeetings.route)
                 }
@@ -168,6 +169,7 @@ fun MoreContainer(
     }
 
     Row(modifier = modifier
+        .requiredHeightIn(min = 40.dp, max = 50.dp)
         .clickable { onClick() }
         .fillMaxWidth()
         .padding(horizontal = 8.dp),
@@ -205,6 +207,7 @@ fun MoreContainer(user: User, modifier: Modifier = Modifier, onClick: () -> Unit
     }
 
     Row(modifier = modifier
+        .requiredHeightIn(min = 40.dp, max = 50.dp)
         .clickable { onClick() }
         .fillMaxWidth()
         .padding(horizontal = 8.dp),
@@ -235,7 +238,7 @@ fun MoreContainerPreview() {
 //        MoreContainer(moreContainerData = element) {}
 //        MoreContainer(user = user) {}
 //    }
-    MoreScreen(bottomPadding = 50.dp, rememberNavController())
+    MoreScreen(rememberNavController())
 }
 
 

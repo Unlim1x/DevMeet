@@ -22,11 +22,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavArgument
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import ru.unlim1x.wb_project.ui.navigation.BottomNavGraph
 import ru.unlim1x.wb_project.ui.navigation.NavGraphElements
 import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
@@ -69,7 +72,7 @@ fun BottomBar(navController: NavHostController) {
                             CompositionLocalProvider(LocalRippleTheme provides PrimaryColorRippleTheme) {
                                 Icon(
                                     imageVector = ImageVector.vectorResource(id = screen.iconId),
-                                    contentDescription = screen.title,
+                                    contentDescription = screen.route,
                                     modifier = Modifier.height(25.dp)
                                 )
                             }
@@ -79,11 +82,11 @@ fun BottomBar(navController: NavHostController) {
                     selected = selected,
                     label = {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(screen.title, style = Wb_projectTheme.typography.bodyText1)
+                            Text(screen.route, style = Wb_projectTheme.typography.bodyText1)
                             Canvas(modifier = Modifier.padding(top = 4.dp)) {
                                 drawCircle(
                                     color = Wb_projectTheme.colorScheme.neutralActive,
-                                    radius = 2f,
+                                    radius = 4f,
                                     style = Fill
                                 )
                             }
@@ -101,9 +104,7 @@ fun BottomBar(navController: NavHostController) {
                         }
                     },
 
-                    unselectedContentColor = Color(0xFF2E3A59),
-                    //indicatorColor = LocalContentColor.current.copy(0f),
-
+                    unselectedContentColor = Color(0xFF2E3A59)
 
                 )
             }

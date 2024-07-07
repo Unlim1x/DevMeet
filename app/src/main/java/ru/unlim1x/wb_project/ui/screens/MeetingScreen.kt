@@ -32,7 +32,7 @@ import ru.unlim1x.wb_project.ui.uiKit.tabrow.model.TabData
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun MeetingScreen(bottomPadding: Dp, navController: NavController, tabs: List<TabData>) {
+fun MeetingScreen(navController: NavController, tabs: List<TabData>) {
 
     Scaffold(containerColor = Wb_projectTheme.colorScheme.neutralWhite,
         topBar = {
@@ -64,7 +64,7 @@ fun MeetingScreen(bottomPadding: Dp, navController: NavController, tabs: List<Ta
             )
         }) {
 
-        val modifier = Modifier.padding(top = it.calculateTopPadding(), bottom = bottomPadding)
+        val modifier = Modifier.padding(top = it.calculateTopPadding())
 
 
         Column(modifier = modifier.padding(horizontal = 16.dp)) {
@@ -115,5 +115,5 @@ fun show() {
             )
         }),
     )
-    MeetingScreen(bottomPadding = 50.dp, navController = rememberNavController(), tabs = tabs)
+    MeetingScreen(navController = rememberNavController(), tabs = tabs)
 }
