@@ -31,7 +31,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ru.unlim1x.wb_project.ui.navigation.BottomNavGraph
-import ru.unlim1x.wb_project.ui.navigation.NavGraphElements
+import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
 import ru.unlim1x.wb_project.ui.uiKit.theme.NoRippleTheme
 import ru.unlim1x.wb_project.ui.uiKit.theme.PrimaryColorRippleTheme
@@ -47,11 +47,12 @@ fun NavigationScreen() {
 @Composable
 fun BottomBar(navController: NavHostController) {
 
-    val screens = listOf(
-        NavGraphElements.Meeting,
-        NavGraphElements.Community,
-        NavGraphElements.More
+    val roots = listOf(
+        NavGraphNodes.MeetingRoot,
+        NavGraphNodes.CommunityRoot,
+        NavGraphNodes.MoreRoot
     )
+
     val view = LocalView.current
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -62,7 +63,7 @@ fun BottomBar(navController: NavHostController) {
             modifier = Modifier.height(64.dp)
         ) {
 
-            screens.forEachIndexed { _, screen ->
+            roots.forEachIndexed { _, screen ->
                 val selected = currentDestination?.hierarchy?.any {
                     it.route == screen.route
                 } == true
@@ -82,7 +83,7 @@ fun BottomBar(navController: NavHostController) {
                     selected = selected,
                     label = {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(screen.route, style = Wb_projectTheme.typography.bodyText1)
+                            Text(screen.label, style = Wb_projectTheme.typography.bodyText1)
                             Canvas(modifier = Modifier.padding(top = 4.dp)) {
                                 drawCircle(
                                     color = Wb_projectTheme.colorScheme.neutralActive,

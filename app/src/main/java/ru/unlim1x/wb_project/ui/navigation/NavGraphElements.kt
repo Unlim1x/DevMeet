@@ -9,44 +9,58 @@ import androidx.navigation.navArgument
 import ru.unlim1x.wb_project.R
 
 
-sealed class NavGraphElements(
-    val route: String,
+
+
+sealed class NavGraphNodes(
+    open val route: String,
+    val label:String,
     val iconId: Int
 ) {
 
-    data object Init:NavGraphElements(
-        route = "Enter",
-        iconId = R.drawable.nav_meeting
-    )
-    data object Meeting : NavGraphElements(
-        route = "Встречи",
+
+
+    data object MeetingRoot : NavGraphNodes(
+        route = "Meeting",
+        label = "Встречи",
         iconId = R.drawable.nav_meeting
     )
 
-    data object Community : NavGraphElements(
-        route = "Сообщества",
+    data object CommunityRoot : NavGraphNodes(
+        route = "Community",
+        label = "Сообщества",
         iconId = R.drawable.nav_comm2
     )
 
-    data object More : NavGraphElements(
-        route = "Еще",
+    data object MoreRoot : NavGraphNodes(
+        route = "MoreRoot",
+        label = "Еще",
         iconId = R.drawable.nav_more
-    )
+    ){
+        data object More : NavGraphNodes(
+            route = "More",
+            label = "Еще",
+            iconId = R.drawable.nav_more
+        )
+        data object Profile : NavGraphNodes(
+            route = "Profile",
+            label = "Профиль",
+            iconId = R.drawable.nav_more
+        )
 
-    data object Profile : NavGraphElements(
-        route = "Профиль",
-        iconId = R.drawable.nav_more
-    )
+        data object Elements : NavGraphNodes(
+            route = "Elements",
+            label = "Элементы",
+            iconId = R.drawable.nav_more
+        )
 
-    data object Elements : NavGraphElements(
-        route = "Элементы",
-        iconId = R.drawable.nav_more
-    )
+        data object MyMeetings : NavGraphNodes(
+            route = "MyMeetings",
+            label = "Мои встречи",
+            iconId = R.drawable.nav_more
+        )
+    }
 
-    data object MyMeetings : NavGraphElements(
-        route = "Мои встречи",
-        iconId = R.drawable.nav_more
-    )
+
 
 
 }

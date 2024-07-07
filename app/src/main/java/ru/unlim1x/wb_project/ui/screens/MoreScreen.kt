@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ru.unlim1x.wb_project.R
-import ru.unlim1x.wb_project.ui.navigation.NavGraphElements
+import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.screens.model.MoreContainerData
 import ru.unlim1x.wb_project.ui.screens.model.User
 import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
@@ -91,7 +91,7 @@ fun MoreScreen(navController: NavController) {
                     user = user,
                     modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
                 ) {
-                    navController.navigate(NavGraphElements.Profile.route)
+                    navController.navigate(NavGraphNodes.MoreRoot.Profile.route)
                 }
             }
             item {
@@ -99,7 +99,7 @@ fun MoreScreen(navController: NavController) {
                     moreContainerData = myMeetings,
                     modifier = Modifier.padding(top = 8.dp,bottom = 16.dp)
                 ) {
-                    navController.navigate(NavGraphElements.MyMeetings.route)
+                    navController.navigate(NavGraphNodes.MoreRoot.MyMeetings.route)
                 }
             }
             item {
@@ -134,7 +134,7 @@ fun MoreScreen(navController: NavController) {
                     moreContainerData = help,
                     modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
                 ) {
-                    navController.navigate(NavGraphElements.Elements.route)
+                    navController.navigate(NavGraphNodes.MoreRoot.Elements.route)
                 }
             }
             item {

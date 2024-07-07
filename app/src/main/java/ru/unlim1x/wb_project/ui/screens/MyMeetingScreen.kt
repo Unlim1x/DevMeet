@@ -40,7 +40,7 @@ fun MyMeetingScreen(navController: NavController, tabs: List<TabData>) {
                 ),
                 title = {
                     Text(
-                        "${navController.currentDestination?.route}",
+                        "Мои встречи",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = Wb_projectTheme.typography.subheading1
