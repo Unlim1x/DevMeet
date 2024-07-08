@@ -20,16 +20,44 @@ sealed class NavGraphNodes(
 
 
     data object MeetingRoot : NavGraphNodes(
-        route = "Meeting",
+        route = "MeetingRoot",
         label = "Встречи",
         iconId = R.drawable.nav_meeting
-    )
+    ){
+        data object Meeting:NavGraphNodes(
+            route = "Meeting",
+            label = "Встречи",
+            iconId = R.drawable.nav_meeting
+        )
+        data object MeetingDetailed:NavGraphNodes(
+            route = "MeetingDetailed",
+            label = "Встречи",
+            iconId = R.drawable.nav_meeting
+        )
+    }
 
     data object CommunityRoot : NavGraphNodes(
-        route = "Community",
+        route = "CommunityRoot",
         label = "Сообщества",
         iconId = R.drawable.nav_comm2
-    )
+    ){
+        data object Community:NavGraphNodes(
+            route = "Community",
+            label = "Сообщества",
+            iconId = R.drawable.nav_comm2
+        )
+        data object CommunityDetailed:NavGraphNodes(
+            route = "CommunityDetailed",
+            label = "Сообщества",
+            iconId = R.drawable.nav_comm2
+        ){
+            data object MeetingDetailed:NavGraphNodes(
+                route = "CommunityMeetingDetailed",
+                label = "Встречи",
+                iconId = R.drawable.nav_comm2
+            )
+        }
+    }
 
     data object MoreRoot : NavGraphNodes(
         route = "MoreRoot",
@@ -57,6 +85,11 @@ sealed class NavGraphNodes(
             route = "MyMeetings",
             label = "Мои встречи",
             iconId = R.drawable.nav_more
+        )
+        data object MeetingDetailed:NavGraphNodes(
+            route = "MoreMeetingDetailed",
+            label = "Встречи",
+            iconId = R.drawable.nav_meeting
         )
     }
 

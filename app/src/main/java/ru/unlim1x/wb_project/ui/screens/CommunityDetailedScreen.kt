@@ -3,16 +3,13 @@ package ru.unlim1x.wb_project.ui.screens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,26 +23,35 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import ru.unlim1x.wb_project.R
-import ru.unlim1x.wb_project.ui.screens.model.User
+import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
-import ru.unlim1x.wb_project.ui.uiKit.avatar.UserAvatar
-import ru.unlim1x.wb_project.ui.uiKit.avatar.state.UserAvatarState
-import ru.unlim1x.wb_project.ui.uiKit.buttons.SecondaryButton
+import ru.unlim1x.wb_project.ui.uiKit.cards.EventCard
+import ru.unlim1x.wb_project.ui.uiKit.cards.TimeAndPlace
+import ru.unlim1x.wb_project.ui.uiKit.cards.model.Community
+import ru.unlim1x.wb_project.ui.uiKit.cards.model.Event
+import ru.unlim1x.wb_project.ui.uiKit.cards.model.LoremIpsum
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun CommunityDetailedScreen(navController: NavController, communityName: String, communityId: Int) {
+    val FIGMA_HORIZONTAL_PADDING = 16.dp
+    val FIGMA_GAP_BIG = 20.dp
+    val FIGMA_GAP_SMALL = 2.dp
 
-    var userAvatarState by remember { mutableStateOf(UserAvatarState.Default as UserAvatarState) }
     var topBarAnimation by remember { mutableStateOf(false) }
+
+    val community = Community(
+        name = communityName,
+        id = communityId,
+        quantityMembers = 10000,
+        description = LoremIpsum.Short.text
+    )
 
     Scaffold(containerColor = Wb_projectTheme.colorScheme.neutralWhite,
         topBar = {
@@ -56,7 +62,7 @@ fun ProfileScreen(navController: NavController) {
                 ),
                 title = {
                     Text(
-                        "Профиль",
+                        "${community.name} ${community.id}",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = Wb_projectTheme.typography.subheading1
@@ -77,81 +83,77 @@ fun ProfileScreen(navController: NavController) {
                         }
                     }
 
-                },
-                actions = {
-                    AnimatedVisibility(
-                        visible = topBarAnimation,
-                        enter = slideInHorizontally(
-                            animationSpec = tween(durationMillis = 500),
-                            initialOffsetX = { it })
-                    ) {
-                        IconButton(onClick = {
-                            userAvatarState = if (userAvatarState == UserAvatarState.Default)
-                                UserAvatarState.Edit
-                            else
-                                UserAvatarState.Default
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Edit,
-                                contentDescription = "Изменить"
-                            )
-                        }
-                    }
-
-
                 }
+
 
             )
         }) {
-        //временная мера
-        val user = User(
-            name = "Иван Иванов",
-            phone = "+7 999 999-99-99",
-            avatarURL = "",
-            hasAvatar = false
-        )
         topBarAnimation = true
+        val modifier = Modifier.padding(top = it.calculateTopPadding())
 
-        LazyColumn(
-            modifier = Modifier
-                .padding(top = it.calculateTopPadding())
-                .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item {
-                Spacer(modifier = Modifier.size(50.dp))
-                UserAvatar(size = 200.dp, state = userAvatarState) {}
-            }
-            item {
-                Text(
-                    text = user.name,
-                    style = Wb_projectTheme.typography.heading2,
-                    modifier = Modifier.padding(top = 16.dp)
+        val listOfTags = listOf("Junior", "Python", "Moscow")
+        val listEvents: MutableList<Event> = mutableListOf()
+        for (x in 0..14) {
+            listEvents.add(
+                index = x,
+                element = Event(
+                    name = "Developer meeting",
+                    timeAndPlace = TimeAndPlace(
+                        place = "Moscow",
+                        date = 13,
+                        month = 9,
+                        year = 2024
+                    ),
+                    isFinished = x % 4 == 0,
+                    tags = listOfTags
                 )
+            )
+        }
+
+        LazyColumn(modifier = modifier.padding(horizontal = FIGMA_HORIZONTAL_PADDING)) {
+            item { Spacer(modifier = Modifier.size(FIGMA_GAP_BIG)) }
+
+            item {
                 Text(
-                    text = user.phone,
-                    style = Wb_projectTheme.typography.subheading1,
-                    modifier = Modifier.padding(top = 4.dp),
+                    text = community.description,
+                    style = Wb_projectTheme.typography.metadata1
+                )
+            }
+
+            item { Spacer(modifier = Modifier.size(FIGMA_GAP_BIG)) }
+
+            item {
+                Text(
+                    "Встречи сообщества",
+                    style = Wb_projectTheme.typography.bodyText1,
                     color = Wb_projectTheme.colorScheme.neutralWeak
                 )
             }
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+
+            item { Spacer(modifier = Modifier.size(FIGMA_GAP_SMALL)) }
+
+            items(listEvents) { event ->
+                EventCard(
+                    heading = event.name,
+                    timeAndPlace = event.timeAndPlace.dateAndPlaceString,
+                    tags = event.tags
                 ) {
-                    SecondaryButton(buttonIconId = R.drawable.twitter, buttonText = "") {}
-                    SecondaryButton(buttonIconId = R.drawable.insta, buttonText = "") {}
-                    SecondaryButton(buttonIconId = R.drawable.linkedin, buttonText = "") {}
-                    SecondaryButton(buttonIconId = R.drawable.facebook, buttonText = "") {}
+                    navController.navigate(NavGraphNodes.CommunityRoot.CommunityDetailed.MeetingDetailed.route + "/${event.id}/${event.name}")
                 }
             }
 
         }
+
+
     }
 }
 
 @Composable
 @Preview
-fun showProfileScreen() {
-    ProfileScreen(navController = rememberNavController())
+fun ShowDetailedCommunity() {
+    CommunityDetailedScreen(
+        navController = rememberNavController(),
+        communityName = "Designa",
+        communityId = 1
+    )
 }
