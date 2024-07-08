@@ -1,6 +1,7 @@
 package ru.unlim1x.wb_project.ui.screens
 
 import android.view.SoundEffectConstants
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.HoverInteraction
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text2.input.rememberTextFieldState
@@ -52,6 +54,9 @@ import ru.unlim1x.wb_project.ui.uiKit.cards.EventCard
 import ru.unlim1x.wb_project.ui.uiKit.cards.QuantityMembers
 import ru.unlim1x.wb_project.ui.uiKit.cards.TimeAndPlace
 import ru.unlim1x.wb_project.ui.uiKit.chips.Chip
+import ru.unlim1x.wb_project.ui.uiKit.custominputview.PassCodeInput
+import ru.unlim1x.wb_project.ui.uiKit.custominputview.PhoneInput
+import ru.unlim1x.wb_project.ui.uiKit.custominputview.printToLog
 import ru.unlim1x.wb_project.ui.uiKit.searchfield.SearchField
 import ru.unlim1x.wb_project.ui.uiKit.text.TitleBlock
 import ru.unlim1x.wb_project.ui.uiKit.theme.MyTypography
@@ -60,6 +65,7 @@ import ru.unlim1x.wb_project.ui.uiKit.theme.MyTypography
 @Composable
 fun ElementsScreen1() {
 
+    val context = LocalContext.current
 
     LazyColumn(
         modifier = Modifier
@@ -95,6 +101,29 @@ fun ElementsScreen1() {
         item { CommunityGroup(100000) }
 
         item { AvatarRowGroup() }
+
+        item { Spacer(modifier = Modifier.size(8.dp)) }
+
+        item { PhoneInput {phone->
+            printToLog(phone)
+            Toast.makeText(
+                context,
+                phone,
+                Toast.LENGTH_SHORT
+            ).show()
+        } }
+
+        item{
+            PassCodeInput {pin->
+            printToLog(pin)
+                Toast.makeText(
+                    context,
+                    pin,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
 
 
     }
@@ -371,6 +400,7 @@ fun UserAvatarGroup() {
             })
     }
     UserAvatar(state = userAvatarState) {}
+
 }
 
 @Preview
