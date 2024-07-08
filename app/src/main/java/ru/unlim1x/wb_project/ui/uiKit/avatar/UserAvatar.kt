@@ -158,6 +158,66 @@ fun UserAvatar(
     }
 }
 
+@Composable
+fun UserAvatar(
+    size: Dp = 100.dp,
+    state: UserAvatarState = UserAvatarState.Default,
+    bitmap: ImageBitmap,
+    onClick: () -> Unit,
+    image: @Composable ()->Unit
+) {
+    val boxSize = size
+    val imageUserSize = ((76f / 200f) * boxSize.value).dp
+    val imagePlusSize = ((20f / 100f) * boxSize.value).dp
+    when (state) {
+        UserAvatarState.Default -> {
+            Box(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(boxSize)
+                    .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground),
+                contentAlignment = Alignment.Center
+            ) {
+                image()
+            }
+        }
+
+        UserAvatarState.Edit -> {
+            Box(contentAlignment = Alignment.BottomEnd) {
+                val view = LocalView.current
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable {
+                            view.playSoundEffect(SoundEffectConstants.CLICK)
+                            onClick()
+                        }
+                        .size(boxSize)
+                        .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground),
+                    contentAlignment = Alignment.Center
+                ) {
+                    image()
+                }
+                CompositionLocalProvider(
+                    LocalRippleTheme provides NoRippleTheme,
+                ) {
+                    Image(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.icon_plus),
+                        contentDescription = "User avatar",
+                        modifier = Modifier
+                            .size(imagePlusSize)
+                            .clickable {
+                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                onClick()
+                            }
+
+                    )
+                }
+            }
+        }
+    }
+}
+
 
 @Preview
 @Composable
