@@ -18,7 +18,7 @@ fun MeetingAvatar(
     painter: Painter = painterResource(id = R.drawable.event_avatar),
     contentDescription: String = "Event avatar"
 ) {
-    Box(modifier = modifier.size(40.dp)) {
+    Box(modifier = modifier.size(50.dp)) {
         Image(
             modifier = Modifier.fillMaxSize(),
             painter = painter,
