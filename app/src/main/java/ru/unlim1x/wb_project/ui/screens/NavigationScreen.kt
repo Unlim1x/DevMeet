@@ -22,14 +22,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavArgument
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import ru.unlim1x.wb_project.ui.navigation.BottomNavGraph
 import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme

@@ -38,9 +38,7 @@ import java.security.InvalidParameterException
 fun WBTabLayout(
     tabDataList: List<TabData>, modifier: Modifier = Modifier, horizontalPaddingOffset: Int = 8
 ) {
-//    if(listHeadings.size != pagesCompose.size) {
-//        throw (InvalidParameterException("Количество заголовков listHeadings должно быть равно количеству контента pagesCompose. Текущее количество в listHeadings = ${listHeadings.size}, в pagesCompose = ${pagesCompose.size}"))
-//    }
+
     val size = tabDataList.size
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { tabDataList.size })
@@ -95,13 +93,14 @@ fun PageMeetingsAll(navController: NavController, listEvents: List<Event>) {
                 isOver = event.isFinished,
                 tags = event.tags
             ) {
-                if(!event.isFinished)
-                    navController.navigate(NavGraphNodes.MeetingRoot.MeetingDetailed.route+"/${event.id}/${event.name}")
+                if (!event.isFinished)
+                    navController.navigate(NavGraphNodes.MeetingRoot.MeetingDetailed.route + "/${event.id}/${event.name}")
             }
             Spacer(modifier = Modifier.size(12.dp))
         }
     }
 }
+
 @Composable
 fun PageMeetingsActive(navController: NavController, listEvents: List<Event>) {
     LazyColumn(
@@ -116,13 +115,14 @@ fun PageMeetingsActive(navController: NavController, listEvents: List<Event>) {
                 isOver = event.isFinished,
                 tags = event.tags
             ) {
-                if(!event.isFinished)
-                    navController.navigate(NavGraphNodes.MeetingRoot.MeetingDetailed.route+"/${event.id}/${event.name}")
+                if (!event.isFinished)
+                    navController.navigate(NavGraphNodes.MeetingRoot.MeetingDetailed.route + "/${event.id}/${event.name}")
             }
             Spacer(modifier = Modifier.size(12.dp))
         }
     }
 }
+
 @Composable
 fun PageMeetingsPlanned(navController: NavController, listEvents: List<Event>) {
     LazyColumn(
@@ -137,12 +137,13 @@ fun PageMeetingsPlanned(navController: NavController, listEvents: List<Event>) {
                 isOver = event.isFinished,
                 tags = event.tags
             ) {
-                navController.navigate(NavGraphNodes.MoreRoot.MeetingDetailed.route+"/${event.id}/${event.name}")
+                navController.navigate(NavGraphNodes.MoreRoot.MeetingDetailed.route + "/${event.id}/${event.name}")
             }
             Spacer(modifier = Modifier.size(12.dp))
         }
     }
 }
+
 @Composable
 fun PageMeetingsPassed(navController: NavController, listEvents: List<Event>) {
     LazyColumn(

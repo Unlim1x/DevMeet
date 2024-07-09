@@ -52,7 +52,8 @@ fun SearchField(
     Row(
         modifier = modifier
             .hoverable(interactionSource = interactionSource)
-            .fillMaxWidth().defaultMinSize(minHeight = 36.dp)
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 36.dp)
             .background(
                 myColorScheme.neutralSecondaryBackground,
                 RoundedCornerShape(4.dp)

@@ -12,11 +12,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
 import ru.unlim1x.wb_project.ui.uiKit.cards.TimeAndPlace
 import ru.unlim1x.wb_project.ui.uiKit.cards.model.Event
@@ -36,7 +38,7 @@ fun MeetingScreen(navController: NavController) {
                 ),
                 title = {
                     Text(
-                        "Встречи",
+                        stringResource(id = R.string.meetings),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = Wb_projectTheme.typography.subheading1
@@ -83,13 +85,13 @@ fun MeetingScreen(navController: NavController) {
                 )
             )
         val tabs = listOf(
-            TabData(text = "ВСЕ ВСТРЕЧИ", screen = {
+            TabData(text = stringResource(id = R.string.all_meetings), screen = {
                 PageMeetingsAll(
                     navController = navController,
                     listEvents = listEvents
                 )
             }),
-            TabData(text = "АКТИВНЫЕ", screen = {
+            TabData(text = stringResource(id = R.string.active), screen = {
                 PageMeetingsActive(
                     navController = navController,
                     listEvents = listEvents2

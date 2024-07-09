@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val loaded = remember { mutableStateOf(false)}
+                    val loaded = remember { mutableStateOf(false) }
 
                     LaunchedEffect(key1 = Unit) {
                         delay(4000)
@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
                     }
                     if (!loaded.value)
                         SplashScreen()
-                    else{
+                    else {
                         NavigationScreen()
                     }
 
