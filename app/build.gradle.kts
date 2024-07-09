@@ -68,6 +68,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.navigationCompose)
+
+
+    implementation("com.github.LottieFiles:dotlottie-android:0.3.0")
     implementation(libs.coil)
     implementation ("net.engawapg.lib:zoomable:1.6.1")
 }
