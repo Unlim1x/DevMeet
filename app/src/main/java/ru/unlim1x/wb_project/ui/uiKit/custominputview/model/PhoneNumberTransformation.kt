@@ -35,7 +35,7 @@ class PhoneNumberTransformation: VisualTransformation {
                     offset <= 6 -> offset - 1
                     offset <= 9 -> offset - 2
                     offset <= 12 -> offset - 3
-                    else -> 9
+                    else -> 10
                 }
 
         }
