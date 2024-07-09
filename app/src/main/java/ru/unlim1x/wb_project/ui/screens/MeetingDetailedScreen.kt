@@ -7,7 +7,6 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -221,12 +220,17 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
 }
 
 @Composable
-fun ShowImageFullScreen(dismissRequest: ()->Unit){
+fun ShowImageFullScreen(dismissRequest: () -> Unit) {
     Dialog(
-        onDismissRequest = { dismissRequest()
-                           },
-        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true, usePlatformDefaultWidth = false)
-    ){
+        onDismissRequest = {
+            dismissRequest()
+        },
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true,
+            usePlatformDefaultWidth = false
+        )
+    ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(R.drawable.map_sample_2)
@@ -236,7 +240,7 @@ fun ShowImageFullScreen(dismissRequest: ()->Unit){
             placeholder = painterResource(id = R.drawable.map_sample_2),
             contentDescription = "Map picture will be replaced in future",
             modifier = Modifier
-                .height((LocalConfiguration.current.screenHeightDp/(1.5)).dp)
+                .height((LocalConfiguration.current.screenHeightDp / (1.5)).dp)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(5.dp))
                 .zoomable(rememberZoomState())

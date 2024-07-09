@@ -3,8 +3,6 @@ package ru.unlim1x.wb_project.ui.uiKit.avatarline
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
@@ -20,7 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -31,7 +28,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
-import ru.unlim1x.wb_project.ui.uiKit.avatar.MeetingAvatar
 
 @Composable
 fun AvatarLine(listAvatars: List<String>) {
@@ -46,11 +42,12 @@ fun AvatarLine(listAvatars: List<String>) {
         horizontalArrangement = Arrangement.spacedBy((-14).dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        when (listAvatars.size){
+        when (listAvatars.size) {
             in 1..5 -> items(listAvatars) {
                 ZIndexElement(zIndex = zIndexCounter--.toFloat(), url = it)
             }
-            in 5..Int.MAX_VALUE ->{
+
+            in 5..Int.MAX_VALUE -> {
                 items(listAvatars.subList(0, 5)) {
                     ZIndexElement(zIndex = zIndexCounter--.toFloat(), url = it)
                 }
@@ -63,7 +60,8 @@ fun AvatarLine(listAvatars: List<String>) {
                     )
                 }
             }
-            else->{
+
+            else -> {
 
             }
         }
@@ -73,9 +71,11 @@ fun AvatarLine(listAvatars: List<String>) {
 
 
 @Composable
-fun ZIndexElement(zIndex: Float, url:String) {
+fun ZIndexElement(zIndex: Float, url: String) {
     Box(
-        modifier = Modifier.zIndex(zIndex).size(48.dp)
+        modifier = Modifier
+            .zIndex(zIndex)
+            .size(48.dp)
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -84,9 +84,11 @@ fun ZIndexElement(zIndex: Float, url:String) {
                 .build(),
             contentDescription = "User avatar",
             contentScale = ContentScale.FillBounds,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .clip(RoundedCornerShape(10.dp)),
-             placeholder = painterResource(id = R.drawable.community_avatar)
+            placeholder = painterResource(id = R.drawable.community_avatar),
+            error = painterResource(id = R.drawable.community_avatar)
         )
     }
 }

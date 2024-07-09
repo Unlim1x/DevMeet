@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -28,14 +27,17 @@ import androidx.compose.ui.unit.dp
 import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
 
 @Composable
-fun PassCodeInput(modifier: Modifier = Modifier, actionDone: (code:String)->Unit) {
+fun PassCodeInput(modifier: Modifier = Modifier, actionDone: (code: String) -> Unit) {
     var pin by remember {
         mutableStateOf("")
     }
     val focusManager = LocalFocusManager.current
-    BasicTextField(modifier = modifier.padding(vertical = 16.dp),value = pin, onValueChange = {pin = it.take(4)},
+    BasicTextField(modifier = modifier.padding(vertical = 16.dp),
+        value = pin,
+        onValueChange = { pin = it.take(4) },
         decorationBox = {
-            Row(modifier = Modifier.height(Wb_projectTheme.typography.heading1.lineHeight.value.dp),
+            Row(
+                modifier = Modifier.height(Wb_projectTheme.typography.heading1.lineHeight.value.dp),
                 horizontalArrangement = Arrangement.spacedBy(40.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -50,11 +52,12 @@ fun PassCodeInput(modifier: Modifier = Modifier, actionDone: (code:String)->Unit
             imeAction = ImeAction.Done
         ),
         keyboardActions = KeyboardActions(
-            onDone  = {
+            onDone = {
                 focusManager.clearFocus()
-                actionDone(pin) }
+                actionDone(pin)
+            }
         )
-        )
+    )
 }
 
 @Composable
@@ -64,7 +67,7 @@ fun NumberOrCircle(code: String, index: Int) {
             drawCircle(Wb_projectTheme.colorScheme.neutralLine)
         }
     } else {
-        Box(modifier = Modifier.width(24.dp), contentAlignment = Alignment.Center){
+        Box(modifier = Modifier.width(24.dp), contentAlignment = Alignment.Center) {
             Text(text = code[index].toString(), style = Wb_projectTheme.typography.heading1)
         }
 
@@ -74,6 +77,6 @@ fun NumberOrCircle(code: String, index: Int) {
 @Preview
 @Composable
 fun showItPass() {
-    PassCodeInput(){}
+    PassCodeInput() {}
 }
 

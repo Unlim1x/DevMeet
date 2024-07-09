@@ -5,23 +5,23 @@ import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 
-class PhoneNumberTransformation: VisualTransformation {
+class PhoneNumberTransformation : VisualTransformation {
 
     override fun filter(text: AnnotatedString): TransformedText {
 
         var out = ""
         text.forEachIndexed { index, _ ->
             out += text[index]
-            when(index){
+            when (index) {
                 2 -> out += " "
                 5 -> out += "-"
                 7 -> out += "-"
             }
         }
 
-        val numberOffsetTranslator = object: OffsetMapping {
+        val numberOffsetTranslator = object : OffsetMapping {
             override fun originalToTransformed(offset: Int) =
-                when{
+                when {
                     offset <= 2 -> offset
                     offset <= 5 -> offset + 1
                     offset <= 7 -> offset + 2
@@ -30,7 +30,7 @@ class PhoneNumberTransformation: VisualTransformation {
                 }
 
             override fun transformedToOriginal(offset: Int) =
-                when{
+                when {
                     offset <= 2 -> offset
                     offset <= 6 -> offset - 1
                     offset <= 9 -> offset - 2

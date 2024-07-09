@@ -21,9 +21,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,9 +41,9 @@ import ru.unlim1x.wb_project.ui.uiKit.custominputview.model.PhoneNumberTransform
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PhoneInput(modifier: Modifier = Modifier,actionNext: (phone:String) -> Unit){
+fun PhoneInput(modifier: Modifier = Modifier, actionNext: (phone: String) -> Unit) {
     val FIGMA_HORIZONTAL_PADDING = 8.dp
-    var selectedCountry by remember{mutableStateOf(Country.Russia)}
+    var selectedCountry by remember { mutableStateOf(Country.Russia) }
     var phone by remember {
         mutableStateOf("")
     }
@@ -51,28 +51,35 @@ fun PhoneInput(modifier: Modifier = Modifier,actionNext: (phone:String) -> Unit)
         mutableStateOf(false)
     }
     val focusManager = LocalFocusManager.current
-    Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
+    Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
 
-            Row(modifier = Modifier.clip(RoundedCornerShape(5.dp))
+        Row(
+            modifier = Modifier
+                .clip(RoundedCornerShape(5.dp))
                 .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground)
                 .padding(vertical = FIGMA_HORIZONTAL_PADDING)
                 .clickable { expanded = !expanded },
-                verticalAlignment = Alignment.CenterVertically){
-                Image(modifier = Modifier.padding(horizontal = FIGMA_HORIZONTAL_PADDING),
-                    painter = painterResource(id = selectedCountry.flagPainterId),
-                    contentDescription = null)
-                Text(modifier = Modifier.padding(end = FIGMA_HORIZONTAL_PADDING),
-                    text = selectedCountry.phoneCode,
-                    style = Wb_projectTheme.typography.bodyText1,
-                    color = Wb_projectTheme.colorScheme.neutralDisabled)
-            }
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                modifier = Modifier.padding(horizontal = FIGMA_HORIZONTAL_PADDING),
+                painter = painterResource(id = selectedCountry.flagPainterId),
+                contentDescription = null
+            )
+            Text(
+                modifier = Modifier.padding(end = FIGMA_HORIZONTAL_PADDING),
+                text = selectedCountry.phoneCode,
+                style = Wb_projectTheme.typography.bodyText1,
+                color = Wb_projectTheme.colorScheme.neutralDisabled
+            )
+        }
 
         DropdownMenu(
             modifier = Modifier
                 .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground),
             expanded = expanded,
             onDismissRequest = { expanded = false }
-        ){
+        ) {
             Country.entries.forEach { country ->
                 DropdownMenuItem(
                     modifier = Modifier
@@ -104,50 +111,57 @@ fun PhoneInput(modifier: Modifier = Modifier,actionNext: (phone:String) -> Unit)
 
         Spacer(modifier = Modifier.size(FIGMA_HORIZONTAL_PADDING))
 
-            BasicTextField(
-                modifier = Modifier.clip(RoundedCornerShape(5.dp))
-                    .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground).fillMaxWidth(),
-                value = phone,
-                onValueChange = {phone = it.take(10)},
-                textStyle = Wb_projectTheme.typography.bodyText1,
-                decorationBox = {
-                    Row(
-                        verticalAlignment=Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground)
-                            ){
-                        if (phone.isEmpty())
-                            Text(modifier = Modifier.padding(start = FIGMA_HORIZONTAL_PADDING), text = "999 999-99-99", style = Wb_projectTheme.typography.bodyText1, color = Wb_projectTheme.colorScheme.neutralDisabled)
-                        it()
-                    }
-                },
-                visualTransformation = PhoneNumberTransformation(),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Phone,
-                    imeAction = ImeAction.Next
-                ),
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        focusManager.clearFocus()
-                        actionNext(selectedCountry.phoneCode+phone) }
-                ),
-            )
-
-
+        BasicTextField(
+            modifier = Modifier
+                .clip(RoundedCornerShape(5.dp))
+                .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground)
+                .fillMaxWidth(),
+            value = phone,
+            onValueChange = { phone = it.take(10) },
+            textStyle = Wb_projectTheme.typography.bodyText1,
+            decorationBox = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .clip(RoundedCornerShape(5.dp))
+                        .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground)
+                ) {
+                    if (phone.isEmpty())
+                        Text(
+                            modifier = Modifier.padding(start = FIGMA_HORIZONTAL_PADDING),
+                            text = "999 999-99-99",
+                            style = Wb_projectTheme.typography.bodyText1,
+                            color = Wb_projectTheme.colorScheme.neutralDisabled
+                        )
+                    it()
+                }
+            },
+            visualTransformation = PhoneNumberTransformation(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Phone,
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.clearFocus()
+                    actionNext(selectedCountry.phoneCode + phone)
+                }
+            ),
+        )
 
 
     }
 
 }
-fun printToLog(string:String){
+
+fun printToLog(string: String) {
     Log.e("CALL PRINT", string)
 }
 
 @Composable
 @Preview
-fun ShowPhoneInput(){
-    PhoneInput(){}
+fun ShowPhoneInput() {
+    PhoneInput() {}
 }

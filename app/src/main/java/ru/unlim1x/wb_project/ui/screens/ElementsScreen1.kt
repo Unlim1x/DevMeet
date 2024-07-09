@@ -37,7 +37,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import ru.unlim1x.wb_project.R
@@ -104,18 +103,20 @@ fun ElementsScreen1() {
 
         item { Spacer(modifier = Modifier.size(8.dp)) }
 
-        item { PhoneInput {phone->
-            printToLog(phone)
-            Toast.makeText(
-                context,
-                phone,
-                Toast.LENGTH_SHORT
-            ).show()
-        } }
+        item {
+            PhoneInput { phone ->
+                printToLog(phone)
+                Toast.makeText(
+                    context,
+                    phone,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 
-        item{
-            PassCodeInput {pin->
-            printToLog(pin)
+        item {
+            PassCodeInput { pin ->
+                printToLog(pin)
                 Toast.makeText(
                     context,
                     pin,
@@ -123,7 +124,6 @@ fun ElementsScreen1() {
                 ).show()
             }
         }
-
 
 
     }

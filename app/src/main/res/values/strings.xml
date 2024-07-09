@@ -21,6 +21,19 @@
     <string name="meta3_description">SF Pro Display10/SemiBold</string>
     <string name="is_over">Закончилась</string>
 
+    <string name="meetings">Встречи</string>
+    <string name="communities">Сообщества</string>
+    <string name="community_meetings">Встречи сообщества</string>
+    <string name="more">Еще</string>
+    <string name="profile">Профиль</string>
+    <string name="my_meetings">Мои встречи</string>
+
+    <string name="planned">ЗАПЛАНИРОВАНО</string>
+    <string name="passed">УЖЕ ПРОШЛИ</string>
+
+    <string name="active">АКТИВНЫЕ</string>
+    <string name="all_meetings">ВСЕ ВСТРЕЧИ</string>
+
     <plurals name="people">
         <item quantity="one">человек</item>
         <item quantity="few">человека</item>

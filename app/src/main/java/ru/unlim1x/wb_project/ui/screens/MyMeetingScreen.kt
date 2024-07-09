@@ -21,11 +21,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
 import ru.unlim1x.wb_project.ui.uiKit.cards.TimeAndPlace
 import ru.unlim1x.wb_project.ui.uiKit.cards.model.Event
@@ -45,7 +47,7 @@ fun MyMeetingScreen(navController: NavController) {
                 ),
                 title = {
                     Text(
-                        "Мои встречи",
+                        stringResource(id = R.string.my_meetings),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = Wb_projectTheme.typography.subheading1
@@ -108,13 +110,13 @@ fun MyMeetingScreen(navController: NavController) {
             )
         }
         val tabs = listOf(
-            TabData(text = "ЗАПЛАНИРОВАНО", screen = {
+            TabData(text = stringResource(id = R.string.planned), screen = {
                 PageMeetingsPlanned(
                     navController = navController,
                     listEvents = listEventsPlanned
                 )
             }),
-            TabData(text = "УЖЕ ПРОШЛИ", screen = {
+            TabData(text = stringResource(id = R.string.passed), screen = {
                 PageMeetingsPassed(
                     navController = navController,
                     listEvents = listEventsFinished
