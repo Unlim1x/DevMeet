@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,15 +33,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import net.engawapg.lib.zoomable.rememberZoomState
+import net.engawapg.lib.zoomable.zoomable
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatarline.AvatarLine
@@ -58,6 +65,10 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
 
     val meGo = remember { mutableStateOf(false) }
     var topBarAnimation by remember { mutableStateOf(false) }
+
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
 
     Scaffold(containerColor = Wb_projectTheme.colorScheme.neutralWhite,
         topBar = {
@@ -124,6 +135,11 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
             tags = listOfTags
         )
 
+        if (showDialog)
+            ShowImageFullScreen {
+                showDialog = false
+            }
+
         LazyColumn(modifier = modifier.padding(horizontal = FIGMA_HORIZONTAL_PADDING)) {
 
             item { Spacer(modifier = Modifier.size(FIGMA_GAP)) }
@@ -141,6 +157,7 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(175.dp)
+                        .clickable { showDialog = true }
                 ) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
@@ -200,6 +217,31 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
         }
 
 
+    }
+}
+
+@Composable
+fun ShowImageFullScreen(dismissRequest: ()->Unit){
+    Dialog(
+        onDismissRequest = { dismissRequest()
+                           },
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true, usePlatformDefaultWidth = false)
+    ){
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(R.drawable.map_sample_2)
+                .crossfade(true)
+                .build(),
+            contentScale = ContentScale.None,
+            placeholder = painterResource(id = R.drawable.map_sample_2),
+            contentDescription = "Map picture will be replaced in future",
+            modifier = Modifier
+                .height((LocalConfiguration.current.screenHeightDp/(1.5)).dp)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(5.dp))
+                .zoomable(rememberZoomState())
+
+        )
     }
 }
 

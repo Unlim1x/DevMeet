@@ -69,4 +69,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.navigationCompose)
     implementation(libs.coil)
+    implementation ("net.engawapg.lib:zoomable:1.6.1")
 }
