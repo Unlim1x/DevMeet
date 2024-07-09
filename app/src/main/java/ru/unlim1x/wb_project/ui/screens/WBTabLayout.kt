@@ -1,4 +1,4 @@
-package ru.unlim1x.wb_project.ui.uiKit.tabrow
+package ru.unlim1x.wb_project.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -23,7 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import kotlinx.coroutines.launch
+import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
 import ru.unlim1x.wb_project.ui.uiKit.cards.EventCard
 import ru.unlim1x.wb_project.ui.uiKit.cards.model.Event
@@ -80,7 +82,7 @@ fun WBTabLayout(
 }
 
 @Composable
-fun PageMeetings(listEvents: List<Event>) {
+fun PageMeetingsAll(navController: NavController, listEvents: List<Event>) {
     LazyColumn(
         modifier = Modifier
             .background(color = Wb_projectTheme.colorScheme.neutralWhite)
@@ -92,7 +94,71 @@ fun PageMeetings(listEvents: List<Event>) {
                 timeAndPlace = event.timeAndPlace.dateAndPlaceString,
                 isOver = event.isFinished,
                 tags = event.tags
-            ) {}
+            ) {
+                if(!event.isFinished)
+                    navController.navigate(NavGraphNodes.MeetingRoot.MeetingDetailed.route+"/${event.id}/${event.name}")
+            }
+            Spacer(modifier = Modifier.size(12.dp))
+        }
+    }
+}
+@Composable
+fun PageMeetingsActive(navController: NavController, listEvents: List<Event>) {
+    LazyColumn(
+        modifier = Modifier
+            .background(color = Wb_projectTheme.colorScheme.neutralWhite)
+            .padding(top = 4.dp)
+    ) {
+        itemsIndexed(listEvents) { index, event ->
+            EventCard(
+                heading = event.name,
+                timeAndPlace = event.timeAndPlace.dateAndPlaceString,
+                isOver = event.isFinished,
+                tags = event.tags
+            ) {
+                if(!event.isFinished)
+                    navController.navigate(NavGraphNodes.MeetingRoot.MeetingDetailed.route+"/${event.id}/${event.name}")
+            }
+            Spacer(modifier = Modifier.size(12.dp))
+        }
+    }
+}
+@Composable
+fun PageMeetingsPlanned(navController: NavController, listEvents: List<Event>) {
+    LazyColumn(
+        modifier = Modifier
+            .background(color = Wb_projectTheme.colorScheme.neutralWhite)
+            .padding(top = 4.dp)
+    ) {
+        itemsIndexed(listEvents) { index, event ->
+            EventCard(
+                heading = event.name,
+                timeAndPlace = event.timeAndPlace.dateAndPlaceString,
+                isOver = event.isFinished,
+                tags = event.tags
+            ) {
+                navController.navigate(NavGraphNodes.MoreRoot.MeetingDetailed.route+"/${event.id}/${event.name}")
+            }
+            Spacer(modifier = Modifier.size(12.dp))
+        }
+    }
+}
+@Composable
+fun PageMeetingsPassed(navController: NavController, listEvents: List<Event>) {
+    LazyColumn(
+        modifier = Modifier
+            .background(color = Wb_projectTheme.colorScheme.neutralWhite)
+            .padding(top = 4.dp)
+    ) {
+        itemsIndexed(listEvents) { index, event ->
+            EventCard(
+                heading = event.name,
+                timeAndPlace = event.timeAndPlace.dateAndPlaceString,
+                isOver = event.isFinished,
+                tags = event.tags
+            ) {
+                //navController.navigate(NavGraphNodes.MeetingRoot.MeetingDetailed.route+"/${event.id}/${event.name}")
+            }
             Spacer(modifier = Modifier.size(12.dp))
         }
     }

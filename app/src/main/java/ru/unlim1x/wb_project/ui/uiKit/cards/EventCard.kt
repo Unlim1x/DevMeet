@@ -45,7 +45,7 @@ fun EventCard(
 
         Row(verticalAlignment = Alignment.Top) {
 
-            MeetingAvatar(modifier = Modifier.padding(vertical = 6.dp))
+            MeetingAvatar(modifier = Modifier.padding(vertical = 4.dp))
             CardBody(heading = heading, meta = timeAndPlace, meta2Flag = isOver, tags = tags)
 
         }

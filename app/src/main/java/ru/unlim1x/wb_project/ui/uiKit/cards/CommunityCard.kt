@@ -31,18 +31,18 @@ fun CommunityCard(
             view.playSoundEffect(SoundEffectConstants.CLICK)
             onClick()
         }
-        .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground)
+        .background(Wb_projectTheme.colorScheme.neutralWhite)
         .padding(4.dp)
         .fillMaxWidth()
     ) {
 
         Row(verticalAlignment = Alignment.Top) {
 
-            CommunityAvatar(modifier = Modifier.padding(vertical = 6.dp))
+            CommunityAvatar(modifier = Modifier.padding(vertical = 4.dp))
             CardBody(heading = heading, meta = quantity, meta2Flag = false, tags = tags)
 
         }
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         HorizontalDivider()
     }
 }

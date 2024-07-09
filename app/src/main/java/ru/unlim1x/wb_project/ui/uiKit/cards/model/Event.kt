@@ -6,5 +6,7 @@ data class Event(
     val name: String,
     val timeAndPlace: TimeAndPlace,
     val isFinished: Boolean,
-    val tags: List<String>
+    val tags: List<String>,
+    val description:String = LoremIpsum.Short.text,
+    val id :Int = 0
 )
