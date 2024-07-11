@@ -28,7 +28,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun TextInput(modifier: Modifier = Modifier,maxLines: Int = 1, hint:String, onTextChanged:(text: String)->Unit, onActionNext:(text: String)->Unit){
+fun TextInput(
+    modifier: Modifier = Modifier,
+    maxLines: Int = 1,
+    hint: String,
+    onTextChanged: (text: String) -> Unit,
+    onActionNext: (text: String) -> Unit
+) {
     var text by remember {
         mutableStateOf("")
     }
@@ -40,7 +46,8 @@ fun TextInput(modifier: Modifier = Modifier,maxLines: Int = 1, hint:String, onTe
             .fillMaxWidth(),
         maxLines = maxLines,
         value = text,
-        onValueChange = {string-> text = string
+        onValueChange = { string ->
+            text = string
             onTextChanged(text)
         },
         textStyle = Wb_projectTheme.typography.bodyText1,
@@ -52,7 +59,7 @@ fun TextInput(modifier: Modifier = Modifier,maxLines: Int = 1, hint:String, onTe
                     .padding(8.dp)
                     .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground)
             ) {
-                Box{
+                Box {
                     if (text.isEmpty())
                         Text(
                             text = hint,
@@ -80,8 +87,8 @@ fun TextInput(modifier: Modifier = Modifier,maxLines: Int = 1, hint:String, onTe
 
 @Preview
 @Composable
-fun ShowTextInput(){
-    TextInput(hint = "AMOGUS",onTextChanged = {it}){
+fun ShowTextInput() {
+    TextInput(hint = "AMOGUS", onTextChanged = { it }) {
 
     }
 }

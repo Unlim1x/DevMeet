@@ -1,4 +1,5 @@
 package ru.unlim1x.wb_project.ui.screens
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
@@ -51,15 +52,16 @@ private val FIGMA_MAIN_TEXT_HORIZONTAL_PADDING = 40.dp
 private val FIGMA_MAIN_TEXT_TOP_PADDING = 169.dp
 private val COLUMN_HORIZONTAL_PADDING = 24.dp
 private val BOTTOM_PADDING = 48.dp
-private val MAIN_TEXT_HORIZONTAL_PADDING = FIGMA_MAIN_TEXT_HORIZONTAL_PADDING - COLUMN_HORIZONTAL_PADDING
+private val MAIN_TEXT_HORIZONTAL_PADDING =
+    FIGMA_MAIN_TEXT_HORIZONTAL_PADDING - COLUMN_HORIZONTAL_PADDING
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuthCodeInputScreen(navController: NavController, phone:String, code:String){
+fun AuthCodeInputScreen(navController: NavController, phone: String, code: String) {
 
     val phoneNumberText = transformPhoneNumber(code, phone)
     var topBarAnimation by remember { mutableStateOf(false) }
-    var buttonState by remember{mutableStateOf(true)}
+    var buttonState by remember { mutableStateOf(true) }
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
 
@@ -89,55 +91,68 @@ fun AuthCodeInputScreen(navController: NavController, phone:String, code:String)
                 title = {}
 
 
-                )
+            )
         }) {
         topBarAnimation = true
 
-        LazyColumn(modifier = Modifier.padding(
-            start = COLUMN_HORIZONTAL_PADDING, end = COLUMN_HORIZONTAL_PADDING),
+        LazyColumn(
+            modifier = Modifier.padding(
+                start = COLUMN_HORIZONTAL_PADDING, end = COLUMN_HORIZONTAL_PADDING
+            ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround,
-            contentPadding = PaddingValues(top = it.calculateTopPadding() +
-                    FIGMA_MAIN_TEXT_TOP_PADDING-it.calculateTopPadding())) {
+            contentPadding = PaddingValues(
+                top = it.calculateTopPadding() +
+                        FIGMA_MAIN_TEXT_TOP_PADDING - it.calculateTopPadding()
+            )
+        ) {
 
-            item{
-                Text(modifier = Modifier.padding(horizontal =MAIN_TEXT_HORIZONTAL_PADDING),
+            item {
+                Text(
+                    modifier = Modifier.padding(horizontal = MAIN_TEXT_HORIZONTAL_PADDING),
                     text = stringResource(R.string.enter_code),
-                    style = Wb_projectTheme.typography.heading2)
+                    style = Wb_projectTheme.typography.heading2
+                )
             }
-            item{
+            item {
                 Spacer(modifier = Modifier.size(8.dp))
             }
-            item{
+            item {
                 Text(
                     modifier = Modifier
                         .padding(horizontal = MAIN_TEXT_HORIZONTAL_PADDING)
                         .padding(bottom = BOTTOM_PADDING),
-                    text = stringResource(R.string.we_sent_code_to_number)+phoneNumberText,
+                    text = stringResource(R.string.we_sent_code_to_number) + phoneNumberText,
                     style = Wb_projectTheme.typography.bodyText2,
                     textAlign = TextAlign.Center,
                 )
 
             }
 
-            item{
-                    PassCodeInput(modifier = Modifier.padding(bottom = BOTTOM_PADDING).focusRequester(focusRequester)) {code->
-                        coroutineScope.launch {
-                            if (validateCode(code)){
-                                navController.navigate(route = AuthNavGraphNodes.ProfileNode.route)
-                            }
+            item {
+                PassCodeInput(
+                    modifier = Modifier
+                        .padding(bottom = BOTTOM_PADDING)
+                        .focusRequester(focusRequester)
+                ) { code ->
+                    coroutineScope.launch {
+                        if (validateCode(code)) {
+                            navController.navigate(route = AuthNavGraphNodes.ProfileNode.route)
                         }
                     }
+                }
                 LaunchedEffect(Unit) {
                     focusRequester.requestFocus()
                 }
-                }
+            }
 
 
-            item{
-                GhostButton(modifier = Modifier.fillMaxWidth(),
+            item {
+                GhostButton(
+                    modifier = Modifier.fillMaxWidth(),
                     buttonText = stringResource(R.string.request_code_again),
-                    enabled = buttonState) {
+                    enabled = buttonState
+                ) {
 
                 }
             }
@@ -149,17 +164,17 @@ fun AuthCodeInputScreen(navController: NavController, phone:String, code:String)
 
 }
 
-fun validateCode(code:String):Boolean{
-    return code.length ==4
+fun validateCode(code: String): Boolean {
+    return code.length == 4
 }
 
-fun transformPhoneNumber(code:String, phone:String):String{
+fun transformPhoneNumber(code: String, phone: String): String {
     return code + " " +
             PhoneNumberTransformation().filter(AnnotatedString(phone, spanStyle = SpanStyle())).text
 }
 
 @Preview
 @Composable
-fun ShowCodeInputScreen(){
+fun ShowCodeInputScreen() {
     AuthCodeInputScreen(rememberNavController(), phone = "9999999999", code = "+7")
 }

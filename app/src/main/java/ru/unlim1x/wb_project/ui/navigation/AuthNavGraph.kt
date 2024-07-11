@@ -7,9 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import ru.unlim1x.wb_project.ui.screens.AuthCodeInputScreen
-import ru.unlim1x.wb_project.ui.screens.NavigationScreen
 import ru.unlim1x.wb_project.ui.screens.AuthPhoneInputScreen
 import ru.unlim1x.wb_project.ui.screens.AuthProfileScreen
+import ru.unlim1x.wb_project.ui.screens.NavigationScreen
 
 @Composable
 fun AuthNavGraph(navController: NavHostController) {
@@ -20,30 +20,30 @@ fun AuthNavGraph(navController: NavHostController) {
         composable(
             route = AuthNavGraphNodes.PhoneNode.route,
         ) {
-             AuthPhoneInputScreen(
-                    navController = navController
-                )
+            AuthPhoneInputScreen(
+                navController = navController
+            )
 
         }
         composable(
-            route = AuthNavGraphNodes.CodeNode.route +"/{code}/{number}",
+            route = AuthNavGraphNodes.CodeNode.route + "/{code}/{number}",
             arguments = listOf(
                 navArgument("code") { type = NavType.StringType },
                 navArgument("number") { type = NavType.StringType }
             )
-        ) {backStackEntry->
+        ) { backStackEntry ->
             val phone = backStackEntry.arguments?.getString("number")
             val code = backStackEntry.arguments?.getString("code")
 
-            phone?.let{phone->
-                code?.let{code->
+            phone?.let { phone ->
+                code?.let { code ->
                     AuthCodeInputScreen(
                         navController = navController,
                         phone = phone,
                         code = code
                     )
 
-            }
+                }
 
             }
 
@@ -52,7 +52,7 @@ fun AuthNavGraph(navController: NavHostController) {
         composable(
             route = AuthNavGraphNodes.MainGraphNode.route,
         ) {
-                NavigationScreen()
+            NavigationScreen()
 
         }
 
