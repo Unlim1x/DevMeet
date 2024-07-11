@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.delay
+import ru.unlim1x.wb_project.ui.screens.AuthentificationScreen
 import ru.unlim1x.wb_project.ui.screens.NavigationScreen
 import ru.unlim1x.wb_project.ui.screens.SplashScreen
 import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
@@ -32,7 +33,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             Wb_projectTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     if (!loaded.value)
                         SplashScreen()
                     else {
-                        NavigationScreen()
+                        AuthentificationScreen()
                     }
 
                 }
