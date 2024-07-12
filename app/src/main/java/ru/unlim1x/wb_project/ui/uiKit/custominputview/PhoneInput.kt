@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,7 +42,7 @@ import ru.unlim1x.wb_project.ui.uiKit.custominputview.model.PhoneNumberTransform
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PhoneInput(modifier: Modifier = Modifier, actionNext: (phone: String) -> Unit) {
+fun PhoneInput(modifier: Modifier = Modifier, onValueChanged: (countryCode:String,phone: String) -> Unit) {
     val FIGMA_HORIZONTAL_PADDING = 8.dp
     var selectedCountry by remember { mutableStateOf(Country.Russia) }
     var phone by remember {
@@ -117,7 +118,8 @@ fun PhoneInput(modifier: Modifier = Modifier, actionNext: (phone: String) -> Uni
                 .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground)
                 .fillMaxWidth(),
             value = phone,
-            onValueChange = { phone = it.take(10) },
+            onValueChange = { phone = it.take(10)
+                            onValueChanged(selectedCountry.phoneCode, phone)},
             textStyle = Wb_projectTheme.typography.bodyText1,
             decorationBox = {
                 Row(
@@ -125,17 +127,18 @@ fun PhoneInput(modifier: Modifier = Modifier, actionNext: (phone: String) -> Uni
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
-                        .clip(RoundedCornerShape(5.dp))
                         .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground)
                 ) {
-                    if (phone.isEmpty())
-                        Text(
-                            modifier = Modifier.padding(start = FIGMA_HORIZONTAL_PADDING),
-                            text = "999 999-99-99",
-                            style = Wb_projectTheme.typography.bodyText1,
-                            color = Wb_projectTheme.colorScheme.neutralDisabled
-                        )
-                    it()
+                    Box{
+                        if (phone.isEmpty())
+                            Text(
+                                text = "999 999-99-99",
+                                style = Wb_projectTheme.typography.bodyText1,
+                                color = Wb_projectTheme.colorScheme.neutralDisabled
+                            )
+                        it()
+                    }
+
                 }
             },
             visualTransformation = PhoneNumberTransformation(),
@@ -146,7 +149,7 @@ fun PhoneInput(modifier: Modifier = Modifier, actionNext: (phone: String) -> Uni
             keyboardActions = KeyboardActions(
                 onNext = {
                     focusManager.clearFocus()
-                    actionNext(selectedCountry.phoneCode + phone)
+                    //actionNext(selectedCountry.phoneCode, phone)
                 }
             ),
         )
@@ -163,5 +166,5 @@ fun printToLog(string: String) {
 @Composable
 @Preview
 fun ShowPhoneInput() {
-    PhoneInput() {}
+    PhoneInput() { _, _ ->  }
 }

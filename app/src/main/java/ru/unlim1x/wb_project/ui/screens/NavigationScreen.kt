@@ -94,11 +94,8 @@ fun BottomBar(navController: NavHostController) {
                     onClick = {
                         view.playSoundEffect(SoundEffectConstants.CLICK)
                         navController.navigate(screen.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
+                            popUpTo(navController.graph.findStartDestination().id)
                             launchSingleTop = true
-                            restoreState = true
                         }
                     },
 
