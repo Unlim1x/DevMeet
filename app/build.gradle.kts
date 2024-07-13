@@ -51,7 +51,7 @@ android {
 }
 
 dependencies {
-    implementation("androidx.compose.material:material:1.6.8")
+    implementation(libs.androidx.material)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -68,4 +68,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.navigationCompose)
+
+
+    implementation("com.github.LottieFiles:dotlottie-android:0.3.0")
+    implementation(libs.coil)
+    implementation("net.engawapg.lib:zoomable:1.6.1")
+    implementation("com.airbnb.android:lottie-compose:6.4.1")
 }

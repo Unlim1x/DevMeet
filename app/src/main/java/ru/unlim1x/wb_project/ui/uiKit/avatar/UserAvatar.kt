@@ -164,7 +164,7 @@ fun UserAvatar(
     state: UserAvatarState = UserAvatarState.Default,
     bitmap: ImageBitmap,
     onClick: () -> Unit,
-    image: @Composable ()->Unit
+    image: @Composable () -> Unit
 ) {
     val boxSize = size
     val imageUserSize = ((76f / 200f) * boxSize.value).dp

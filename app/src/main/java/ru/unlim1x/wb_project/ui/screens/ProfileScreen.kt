@@ -1,5 +1,8 @@
 package ru.unlim1x.wb_project.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,9 +28,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -43,7 +46,7 @@ import ru.unlim1x.wb_project.ui.uiKit.buttons.SecondaryButton
 fun ProfileScreen(navController: NavController) {
 
     var userAvatarState by remember { mutableStateOf(UserAvatarState.Default as UserAvatarState) }
-
+    var topBarAnimation by remember { mutableStateOf(false) }
 
     Scaffold(containerColor = Wb_projectTheme.colorScheme.neutralWhite,
         topBar = {
@@ -54,32 +57,49 @@ fun ProfileScreen(navController: NavController) {
                 ),
                 title = {
                     Text(
-                        "Профиль",
+                        stringResource(id = R.string.profile),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = Wb_projectTheme.typography.subheading1
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Назад"
-                        )
+                    AnimatedVisibility(
+                        visible = topBarAnimation,
+                        enter = slideInHorizontally(
+                            animationSpec = tween(durationMillis = 500),
+                            initialOffsetX = { -it })
+                    ) {
+                        IconButton(onClick = { navController.navigateUp() }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Назад"
+                            )
+                        }
                     }
+
                 },
                 actions = {
-                    IconButton(onClick = {
-                        userAvatarState = if (userAvatarState == UserAvatarState.Default)
-                            UserAvatarState.Edit
-                        else
-                            UserAvatarState.Default
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Edit,
-                            contentDescription = "Изменить"
-                        )
+                    AnimatedVisibility(
+                        visible = topBarAnimation,
+                        enter = slideInHorizontally(
+                            animationSpec = tween(durationMillis = 500),
+                            initialOffsetX = { it })
+                    ) {
+                        IconButton(onClick = {
+                            userAvatarState = if (userAvatarState == UserAvatarState.Default)
+                                UserAvatarState.Edit
+                            else
+                                UserAvatarState.Default
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Edit,
+                                contentDescription = "Изменить"
+                            )
+                        }
                     }
+
+
                 }
 
             )
@@ -91,7 +111,7 @@ fun ProfileScreen(navController: NavController) {
             avatarURL = "",
             hasAvatar = false
         )
-
+        topBarAnimation = true
 
         LazyColumn(
             modifier = Modifier
