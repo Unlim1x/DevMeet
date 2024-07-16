@@ -1,5 +1,6 @@
 package ru.unlim1x.wb_project.ui.screens
 
+import androidx.collection.mutableLongListOf
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -70,14 +71,19 @@ fun MoreScreen(navController: NavController) {
             avatarURL = "",
             hasAvatar = false
         )
-        val myMeetings = MoreContainerData(iconId = R.drawable.icon_meeting, text = "Мои встречи")
-        val theme = MoreContainerData(iconId = R.drawable.icon_theme, text = "Тема")
+        val myMeetings = MoreContainerData(iconId = R.drawable.icon_meeting, text = stringResource(
+            id = R.string.my_meetings
+        ))
+        val theme = MoreContainerData(iconId = R.drawable.icon_theme, text = stringResource(R.string.theme_string))
         val notification =
-            MoreContainerData(iconId = R.drawable.icon_notification, text = "Уведомления")
-        val safety = MoreContainerData(iconId = R.drawable.icon_safety, text = "Безопасность")
-        val memory = MoreContainerData(iconId = R.drawable.icon_res, text = "Память и ресурсы")
-        val help = MoreContainerData(iconId = R.drawable.icon_help, text = "Помощь")
-        val invite = MoreContainerData(iconId = R.drawable.icon_invite, text = "Пригласи друга")
+            MoreContainerData(iconId = R.drawable.icon_notification, text = stringResource(R.string.notifications))
+        val safety = MoreContainerData(iconId = R.drawable.icon_safety, text = stringResource(R.string.safety))
+        val memory = MoreContainerData(iconId = R.drawable.icon_res, text = stringResource(R.string.memory_res_string))
+        val help = MoreContainerData(iconId = R.drawable.icon_help, text = stringResource(R.string.help))
+        val invite = MoreContainerData(iconId = R.drawable.icon_invite, text = stringResource(R.string.invite_friend))
+
+        val listOfContainers = listOf(myMeetings, theme, notification, safety, memory, help, invite)
+
 
 
         LazyColumn(
@@ -85,6 +91,8 @@ fun MoreScreen(navController: NavController) {
                 top = it.calculateTopPadding()
             )
         ) {
+
+
             item {
                 MoreContainer(
                     user = user,
@@ -93,6 +101,9 @@ fun MoreScreen(navController: NavController) {
                     navController.navigate(NavGraphNodes.MoreRoot.Profile.route)
                 }
             }
+            // TODO: items(listOfContainers){container->
+          //      MoreContainer()
+        //    }
             item {
                 MoreContainer(
                     moreContainerData = myMeetings,
