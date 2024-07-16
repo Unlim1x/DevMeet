@@ -35,16 +35,12 @@ fun AuthNavGraph(navController: NavHostController) {
             val phone = backStackEntry.arguments?.getString("number")
             val code = backStackEntry.arguments?.getString("code")
 
-            phone?.let { phone ->
-                code?.let { code ->
-                    AuthCodeInputScreen(
-                        navController = navController,
-                        phone = phone,
-                        code = code
-                    )
-
-                }
-
+            if (phone?.isEmpty() == false  && code?.isEmpty() == false) {
+                AuthCodeInputScreen(
+                    navController = navController,
+                    phone = phone,
+                    code = code
+                )
             }
 
 

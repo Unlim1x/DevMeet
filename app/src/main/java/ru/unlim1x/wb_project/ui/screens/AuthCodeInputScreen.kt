@@ -55,6 +55,8 @@ private val BOTTOM_PADDING = 48.dp
 private val MAIN_TEXT_HORIZONTAL_PADDING =
     FIGMA_MAIN_TEXT_HORIZONTAL_PADDING - COLUMN_HORIZONTAL_PADDING
 
+private const val animationDuration = 300
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthCodeInputScreen(navController: NavController, phone: String, code: String) {
@@ -76,7 +78,7 @@ fun AuthCodeInputScreen(navController: NavController, phone: String, code: Strin
                     AnimatedVisibility(
                         visible = topBarAnimation,
                         enter = slideInHorizontally(
-                            animationSpec = tween(durationMillis = 300),
+                            animationSpec = tween(durationMillis = animationDuration),
                             initialOffsetX = { -it })
                     ) {
                         IconButton(onClick = { navController.navigateUp() }) {
@@ -137,7 +139,9 @@ fun AuthCodeInputScreen(navController: NavController, phone: String, code: Strin
                 ) { code ->
                     coroutineScope.launch {
                         if (validateCode(code)) {
-                            navController.navigate(route = AuthNavGraphNodes.ProfileNode.route)
+                            navController.navigate(route = AuthNavGraphNodes.ProfileNode.route){
+                                popUpTo(route = AuthNavGraphNodes.PhoneNode.route)
+                            }
                         }
                     }
                 }

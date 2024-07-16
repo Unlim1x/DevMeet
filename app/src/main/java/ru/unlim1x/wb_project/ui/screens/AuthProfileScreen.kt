@@ -74,7 +74,6 @@ fun AuthProfileScreen(navController: NavController) {
                 navigationIcon = {
                     IconButton(onClick = {
                         navController.navigateUp()
-                        navController.navigateUp()
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
