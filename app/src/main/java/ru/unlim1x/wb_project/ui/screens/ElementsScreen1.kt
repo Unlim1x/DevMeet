@@ -104,11 +104,11 @@ fun ElementsScreen1() {
         item { Spacer(modifier = Modifier.size(8.dp)) }
 
         item {
-            PhoneInput { phone ->
+            PhoneInput { countryCode,phone ->
                 printToLog(phone)
                 Toast.makeText(
                     context,
-                    phone,
+                    countryCode+phone,
                     Toast.LENGTH_SHORT
                 ).show()
             }
