@@ -9,11 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -31,7 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.navigation.AuthNavGraphNodes
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.buttons.PrimaryButton
 import ru.unlim1x.wb_project.ui.uiKit.custominputview.PhoneInput
 
@@ -50,17 +47,8 @@ fun AuthPhoneInputScreen(navController: NavController) {
     var codeCountry by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
-    Scaffold(containerColor = Wb_projectTheme.colorScheme.neutralWhite,
+    Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Wb_projectTheme.colorScheme.neutralWhite,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {},
-
-
-                )
         }) {
         LazyColumn(
             modifier = Modifier.padding(
@@ -78,7 +66,7 @@ fun AuthPhoneInputScreen(navController: NavController) {
                 Text(
                     modifier = Modifier.padding(horizontal = MAIN_TEXT_HORIZONTAL_PADDING),
                     text = stringResource(R.string.enter_phone_number),
-                    style = Wb_projectTheme.typography.heading2
+                    style = DevMeetTheme.typography.heading2
                 )
             }
             item {
@@ -90,7 +78,7 @@ fun AuthPhoneInputScreen(navController: NavController) {
                         .padding(horizontal = MAIN_TEXT_HORIZONTAL_PADDING)
                         .padding(bottom = BOTTOM_PADDING),
                     text = stringResource(R.string.we_will_send_code),
-                    style = Wb_projectTheme.typography.bodyText2,
+                    style = DevMeetTheme.typography.bodyText2,
                     textAlign = TextAlign.Center,
                 )
             }

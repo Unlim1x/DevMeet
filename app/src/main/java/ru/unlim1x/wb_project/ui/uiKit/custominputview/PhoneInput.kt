@@ -35,7 +35,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.custominputview.model.Country
 import ru.unlim1x.wb_project.ui.uiKit.custominputview.model.PhoneNumberTransformation
 
@@ -57,7 +57,7 @@ fun PhoneInput(modifier: Modifier = Modifier, onValueChanged: (countryCode:Strin
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(5.dp))
-                .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground)
+                .background(DevMeetTheme.colorScheme.neutralSecondaryBackground)
                 .padding(vertical = FIGMA_HORIZONTAL_PADDING)
                 .clickable { expanded = !expanded },
             verticalAlignment = Alignment.CenterVertically
@@ -70,21 +70,21 @@ fun PhoneInput(modifier: Modifier = Modifier, onValueChanged: (countryCode:Strin
             Text(
                 modifier = Modifier.padding(end = FIGMA_HORIZONTAL_PADDING),
                 text = selectedCountry.phoneCode,
-                style = Wb_projectTheme.typography.bodyText1,
-                color = Wb_projectTheme.colorScheme.neutralDisabled
+                style = DevMeetTheme.typography.bodyText1,
+                color = DevMeetTheme.colorScheme.neutralDisabled
             )
         }
 
         DropdownMenu(
             modifier = Modifier
-                .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground),
+                .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
             Country.entries.forEach { country ->
                 DropdownMenuItem(
                     modifier = Modifier
-                        .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground),
+                        .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
                     text = {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -97,8 +97,8 @@ fun PhoneInput(modifier: Modifier = Modifier, onValueChanged: (countryCode:Strin
                             )
                             Text(
                                 text = country.phoneCode,
-                                style = Wb_projectTheme.typography.bodyText1,
-                                color = Wb_projectTheme.colorScheme.neutralDisabled
+                                style = DevMeetTheme.typography.bodyText1,
+                                color = DevMeetTheme.colorScheme.neutralDisabled
                             )
                         }
                     },
@@ -115,26 +115,26 @@ fun PhoneInput(modifier: Modifier = Modifier, onValueChanged: (countryCode:Strin
         BasicTextField(
             modifier = Modifier
                 .clip(RoundedCornerShape(5.dp))
-                .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground)
+                .background(DevMeetTheme.colorScheme.neutralSecondaryBackground)
                 .fillMaxWidth(),
             value = phone,
             onValueChange = { phone = it.take(10)
                             onValueChanged(selectedCountry.phoneCode, phone)},
-            textStyle = Wb_projectTheme.typography.bodyText1,
+            textStyle = DevMeetTheme.typography.bodyText1,
             decorationBox = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
-                        .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground)
+                        .background(DevMeetTheme.colorScheme.neutralSecondaryBackground)
                 ) {
                     Box{
                         if (phone.isEmpty())
                             Text(
                                 text = "999 999-99-99",
-                                style = Wb_projectTheme.typography.bodyText1,
-                                color = Wb_projectTheme.colorScheme.neutralDisabled
+                                style = DevMeetTheme.typography.bodyText1,
+                                color = DevMeetTheme.colorScheme.neutralDisabled
                             )
                         it()
                     }

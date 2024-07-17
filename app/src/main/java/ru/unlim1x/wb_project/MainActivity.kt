@@ -12,9 +12,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.delay
 import ru.unlim1x.wb_project.ui.screens.AuthentificationScreen
-import ru.unlim1x.wb_project.ui.screens.NavigationScreen
 import ru.unlim1x.wb_project.ui.screens.SplashScreen
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import java.util.Locale
 
 
@@ -32,7 +31,7 @@ class MainActivity : ComponentActivity() {
         resources.updateConfiguration(config, resources.displayMetrics)
 
         setContent {
-            Wb_projectTheme {
+            DevMeetTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

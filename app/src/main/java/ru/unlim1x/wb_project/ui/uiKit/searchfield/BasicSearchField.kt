@@ -31,7 +31,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.theme.myColorScheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -46,8 +46,8 @@ fun SearchField(
     onSearch: (state: TextFieldState) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
-    val hintColor by rememberUpdatedState(if (state.text.isEmpty()) Wb_projectTheme.colorScheme.neutralDisabled else Color.Transparent)
-    val iconTint by rememberUpdatedState(if (state.text.isEmpty()) Wb_projectTheme.colorScheme.neutralDisabled else Wb_projectTheme.colorScheme.neutralActive)
+    val hintColor by rememberUpdatedState(if (state.text.isEmpty()) DevMeetTheme.colorScheme.neutralDisabled else Color.Transparent)
+    val iconTint by rememberUpdatedState(if (state.text.isEmpty()) DevMeetTheme.colorScheme.neutralDisabled else DevMeetTheme.colorScheme.neutralActive)
 
     Row(
         modifier = modifier
@@ -69,7 +69,7 @@ fun SearchField(
         ) {
             Text(
                 text = "Поиск",
-                style = Wb_projectTheme.typography.bodyText1,
+                style = DevMeetTheme.typography.bodyText1,
                 color = hintColor,
             )
 
@@ -84,7 +84,7 @@ fun SearchField(
                 interactionSource = interactionSource,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 lineLimits = TextFieldLineLimits.SingleLine,
-                textStyle = Wb_projectTheme.typography.bodyText1.copy(color = Wb_projectTheme.colorScheme.neutralActive),
+                textStyle = DevMeetTheme.typography.bodyText1.copy(color = DevMeetTheme.colorScheme.neutralActive),
                 state = state,
             )
         }

@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.cards.EventCard
 import ru.unlim1x.wb_project.ui.uiKit.cards.model.Event
 import ru.unlim1x.wb_project.ui.uiKit.tabrow.model.TabData
@@ -35,7 +35,7 @@ import java.security.InvalidParameterException
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 @Throws(InvalidParameterException::class)
-fun WBTabLayout(
+fun TabLayout(
     tabDataList: List<TabData>, modifier: Modifier = Modifier, horizontalPaddingOffset: Int = 8
 ) {
 
@@ -46,7 +46,7 @@ fun WBTabLayout(
         ScrollableTabRow(selectedTabIndex = pagerState.currentPage,
             modifier = Modifier.fillMaxWidth(),
             edgePadding = 0.dp,
-            containerColor = Wb_projectTheme.colorScheme.neutralWhite,
+            containerColor = DevMeetTheme.colorScheme.neutralWhite,
             divider = { HorizontalDivider(color = Color.Transparent) }) {
             tabDataList.forEachIndexed { index, tab ->
                 val selected = pagerState.currentPage == index
@@ -55,7 +55,7 @@ fun WBTabLayout(
                     text = {
                         Text(
                             text = tab.text,
-                            color = if (selected) Wb_projectTheme.colorScheme.brandDefault else Color(
+                            color = if (selected) DevMeetTheme.colorScheme.brandDefault else Color(
                                 0xFF666666
                             )
                         )
@@ -83,7 +83,7 @@ fun WBTabLayout(
 fun PageMeetingsAll(navController: NavController, listEvents: List<Event>) {
     LazyColumn(
         modifier = Modifier
-            .background(color = Wb_projectTheme.colorScheme.neutralWhite)
+            .background(color = DevMeetTheme.colorScheme.neutralWhite)
             .padding(top = 4.dp)
     ) {
         itemsIndexed(listEvents) { index, event ->
@@ -105,7 +105,7 @@ fun PageMeetingsAll(navController: NavController, listEvents: List<Event>) {
 fun PageMeetingsActive(navController: NavController, listEvents: List<Event>) {
     LazyColumn(
         modifier = Modifier
-            .background(color = Wb_projectTheme.colorScheme.neutralWhite)
+            .background(color = DevMeetTheme.colorScheme.neutralWhite)
             .padding(top = 4.dp)
     ) {
         itemsIndexed(listEvents) { index, event ->
@@ -127,7 +127,7 @@ fun PageMeetingsActive(navController: NavController, listEvents: List<Event>) {
 fun PageMeetingsPlanned(navController: NavController, listEvents: List<Event>) {
     LazyColumn(
         modifier = Modifier
-            .background(color = Wb_projectTheme.colorScheme.neutralWhite)
+            .background(color = DevMeetTheme.colorScheme.neutralWhite)
             .padding(top = 4.dp)
     ) {
         itemsIndexed(listEvents) { index, event ->
@@ -148,7 +148,7 @@ fun PageMeetingsPlanned(navController: NavController, listEvents: List<Event>) {
 fun PageMeetingsPassed(navController: NavController, listEvents: List<Event>) {
     LazyColumn(
         modifier = Modifier
-            .background(color = Wb_projectTheme.colorScheme.neutralWhite)
+            .background(color = DevMeetTheme.colorScheme.neutralWhite)
             .padding(top = 4.dp)
     ) {
         itemsIndexed(listEvents) { index, event ->

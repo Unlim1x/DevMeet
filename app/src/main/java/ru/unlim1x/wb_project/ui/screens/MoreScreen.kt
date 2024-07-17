@@ -1,6 +1,5 @@
 package ru.unlim1x.wb_project.ui.screens
 
-import androidx.collection.mutableLongListOf
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,18 +17,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -38,31 +33,17 @@ import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.screens.model.MoreContainerData
 import ru.unlim1x.wb_project.ui.screens.model.User
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatar.UserAvatar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoreScreen(navController: NavController) {
 
-    Scaffold(containerColor = Wb_projectTheme.colorScheme.neutralWhite,
+    Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Wb_projectTheme.colorScheme.neutralWhite,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text(
-                        stringResource(id = R.string.more),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = Wb_projectTheme.typography.subheading1
-                    )
-                },
+            TopBar(header = stringResource(id = R.string.more))
 
-
-                )
         }) {
         //TODO: потом во ViewModel?
         val user = User(
@@ -174,7 +155,7 @@ fun MoreContainer(
                     .width(18.dp)
             )
             Spacer(modifier = Modifier.size(8.dp))
-            Text(text = moreContainerData.text, style = Wb_projectTheme.typography.bodyText1)
+            Text(text = moreContainerData.text, style = DevMeetTheme.typography.bodyText1)
         }
     }
 
@@ -210,8 +191,8 @@ fun MoreContainer(user: User, modifier: Modifier = Modifier, onClick: () -> Unit
 
             Spacer(modifier = Modifier.size(8.dp))
             Column(verticalArrangement = Arrangement.SpaceBetween) {
-                Text(text = user.name, style = Wb_projectTheme.typography.bodyText1)
-                Text(text = user.phone, style = Wb_projectTheme.typography.metadata1)
+                Text(text = user.name, style = DevMeetTheme.typography.bodyText1)
+                Text(text = user.phone, style = DevMeetTheme.typography.metadata1)
             }
         }
     }

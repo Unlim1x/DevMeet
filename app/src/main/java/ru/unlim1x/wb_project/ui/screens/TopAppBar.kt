@@ -3,9 +3,6 @@ package ru.unlim1x.wb_project.ui.screens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -19,19 +16,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import ru.unlim1x.wb_project.AppBarMenuItems
-import ru.unlim1x.wb_project.R
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
-import ru.unlim1x.wb_project.ui.uiKit.avatar.state.UserAvatarState
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 
+private const val ANIMATION_DURATION = 300
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
-    header: String,
-    backIcon: Boolean,
-    backIconAction: () -> Unit,
+    header: String = "",
+    backIconIsVisible: Boolean = false,
+    backIconAction: (() -> Unit)? = null,
     animate: Boolean = true,
     actionMenuItem: AppBarMenuItems? = null,
     actionMenu: (() -> Unit)? = null
@@ -40,37 +35,38 @@ fun TopBar(
 
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Wb_projectTheme.colorScheme.neutralWhite,
+            containerColor = DevMeetTheme.colorScheme.neutralWhite,
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         title = {
             TopAppBarTitle(header = header)
         },
         navigationIcon = {
-            if (backIcon) {
+            if (backIconIsVisible) {
                 when(animate){
                     true -> {
                         AnimatedBackArrow(visible = topBarAnimation) {
-                            backIconAction()
+                            backIconAction?.invoke()
+                            }
                         }
-                    }
+
                     false -> {
                         StaticBackArrow {
-                            backIconAction()
+                            backIconAction?.invoke()
                         }
                     }
                 }
             }
         },
         actions = {
-            actionMenu?.let { action ->
+
                 if (actionMenuItem != null) {
                     AnimatedAction(item = actionMenuItem, visible = topBarAnimation) {
-                        action()
+                        actionMenu?.invoke()
                     }
                 }
 
-            }
+
         }
     )
 
@@ -86,7 +82,7 @@ private fun TopAppBarTitle(header:String){
         header,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        style = Wb_projectTheme.typography.subheading1
+        style = DevMeetTheme.typography.subheading1
     )
 }
 
@@ -95,7 +91,7 @@ private fun AnimatedBackArrow(visible: Boolean, action: () -> Unit) {
     AnimatedVisibility(
         visible = visible,
         enter = slideInHorizontally(
-            animationSpec = tween(durationMillis = 500),
+            animationSpec = tween(durationMillis = ANIMATION_DURATION),
             initialOffsetX = { -it })
     ) {
         IconButton(onClick = { action() }) {
@@ -134,7 +130,8 @@ private fun AnimatedAction(item: AppBarMenuItems, visible: Boolean, action: () -
             item.icon?.let {
                 Icon(
                     imageVector = it,
-                    contentDescription = item.description
+                    contentDescription = item.description,
+                    tint = item.tint
                 )
             }
         }

@@ -1,8 +1,5 @@
 package ru.unlim1x.wb_project.ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,17 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,14 +18,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import ru.unlim1x.wb_project.AppBarMenuItems
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.screens.model.User
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatar.UserAvatar
 import ru.unlim1x.wb_project.ui.uiKit.avatar.state.UserAvatarState
 import ru.unlim1x.wb_project.ui.uiKit.buttons.SecondaryButton
@@ -48,61 +37,19 @@ fun ProfileScreen(navController: NavController) {
     var userAvatarState by remember { mutableStateOf(UserAvatarState.Default as UserAvatarState) }
     var topBarAnimation by remember { mutableStateOf(false) }
 
-    Scaffold(containerColor = Wb_projectTheme.colorScheme.neutralWhite,
+    Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Wb_projectTheme.colorScheme.neutralWhite,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text(
-                        stringResource(id = R.string.profile),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = Wb_projectTheme.typography.subheading1
-                    )
-                },
-                navigationIcon = {
-                    AnimatedVisibility(
-                        visible = topBarAnimation,
-                        enter = slideInHorizontally(
-                            animationSpec = tween(durationMillis = 500),
-                            initialOffsetX = { -it })
-                    ) {
-                        IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Назад"
-                            )
-                        }
-                    }
+            TopBar(header = stringResource(id = R.string.profile),
+                backIconIsVisible = true,
+                backIconAction = {navController.navigateUp()},
+                actionMenuItem = AppBarMenuItems.Edit){
 
-                },
-                actions = {
-                    AnimatedVisibility(
-                        visible = topBarAnimation,
-                        enter = slideInHorizontally(
-                            animationSpec = tween(durationMillis = 500),
-                            initialOffsetX = { it })
-                    ) {
-                        IconButton(onClick = {
-                            userAvatarState = if (userAvatarState == UserAvatarState.Default)
-                                UserAvatarState.Edit
-                            else
-                                UserAvatarState.Default
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Edit,
-                                contentDescription = "Изменить"
-                            )
-                        }
-                    }
+                userAvatarState = if (userAvatarState == UserAvatarState.Default)
+                    UserAvatarState.Edit
+                else
+                    UserAvatarState.Default
+            }
 
-
-                }
-
-            )
         }) {
         //временная мера
         val user = User(
@@ -125,14 +72,14 @@ fun ProfileScreen(navController: NavController) {
             item {
                 Text(
                     text = user.name,
-                    style = Wb_projectTheme.typography.heading2,
+                    style = DevMeetTheme.typography.heading2,
                     modifier = Modifier.padding(top = 16.dp)
                 )
                 Text(
                     text = user.phone,
-                    style = Wb_projectTheme.typography.subheading1,
+                    style = DevMeetTheme.typography.subheading1,
                     modifier = Modifier.padding(top = 4.dp),
-                    color = Wb_projectTheme.colorScheme.neutralWeak
+                    color = DevMeetTheme.colorScheme.neutralWeak
                 )
             }
             item {

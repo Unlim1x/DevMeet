@@ -9,7 +9,6 @@ import androidx.navigation.navArgument
 import ru.unlim1x.wb_project.ui.screens.AuthCodeInputScreen
 import ru.unlim1x.wb_project.ui.screens.AuthPhoneInputScreen
 import ru.unlim1x.wb_project.ui.screens.AuthProfileScreen
-import ru.unlim1x.wb_project.ui.screens.NavigationScreen
 
 @Composable
 fun AuthNavGraph(navController: NavHostController) {

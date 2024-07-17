@@ -1,4 +1,4 @@
-package ru.unlim1x.wb_project.ui.screens
+package ru.unlim1x.wb_project.ui.navigation
 
 import android.view.SoundEffectConstants
 import androidx.compose.foundation.Canvas
@@ -27,9 +27,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import ru.unlim1x.wb_project.ui.navigation.BottomNavGraph
-import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.theme.NoRippleTheme
 import ru.unlim1x.wb_project.ui.uiKit.theme.PrimaryColorRippleTheme
 
@@ -55,7 +53,7 @@ fun BottomBar(navController: NavHostController) {
     val currentDestination = navBackStackEntry?.destination
     CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
         BottomNavigation(
-            backgroundColor = Wb_projectTheme.colorScheme.neutralWhite,
+            backgroundColor = DevMeetTheme.colorScheme.neutralWhite,
             elevation = 10.dp,
             modifier = Modifier.height(64.dp)
         ) {
@@ -80,10 +78,10 @@ fun BottomBar(navController: NavHostController) {
                     selected = selected,
                     label = {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(screen.label, style = Wb_projectTheme.typography.bodyText1)
+                            Text(screen.label, style = DevMeetTheme.typography.bodyText1)
                             Canvas(modifier = Modifier.padding(top = 4.dp)) {
                                 drawCircle(
-                                    color = Wb_projectTheme.colorScheme.neutralActive,
+                                    color = DevMeetTheme.colorScheme.neutralActive,
                                     radius = 4f,
                                     style = Fill
                                 )

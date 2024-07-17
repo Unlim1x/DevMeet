@@ -35,7 +35,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun Wb_projectTheme(
+fun DevMeetTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
@@ -62,7 +62,7 @@ fun Wb_projectTheme(
 
 }
 
-object Wb_projectTheme {
+object DevMeetTheme {
     val colorScheme get() = myColorScheme
     val typography get() = MyTypography
 }

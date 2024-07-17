@@ -14,10 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import ru.unlim1x.wb_project.R
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +40,7 @@ fun TextInput(
     BasicTextField(
         modifier = modifier
             .clip(RoundedCornerShape(5.dp))
-            .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground)
+            .background(DevMeetTheme.colorScheme.neutralSecondaryBackground)
             .fillMaxWidth(),
         maxLines = maxLines,
         value = text,
@@ -50,21 +48,21 @@ fun TextInput(
             text = string
             onTextChanged(text)
         },
-        textStyle = Wb_projectTheme.typography.bodyText1,
+        textStyle = DevMeetTheme.typography.bodyText1,
         decorationBox = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground)
+                    .background(DevMeetTheme.colorScheme.neutralSecondaryBackground)
             ) {
                 Box {
                     if (text.isEmpty())
                         Text(
                             text = hint,
-                            style = Wb_projectTheme.typography.bodyText1,
-                            color = Wb_projectTheme.colorScheme.neutralDisabled
+                            style = DevMeetTheme.typography.bodyText1,
+                            color = DevMeetTheme.colorScheme.neutralDisabled
                         )
 
                     it()
