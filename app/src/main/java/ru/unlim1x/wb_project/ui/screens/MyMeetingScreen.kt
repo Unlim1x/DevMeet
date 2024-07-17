@@ -1,20 +1,9 @@
 package ru.unlim1x.wb_project.ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,13 +11,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ru.unlim1x.wb_project.R
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.cards.TimeAndPlace
 import ru.unlim1x.wb_project.ui.uiKit.cards.model.Event
 import ru.unlim1x.wb_project.ui.uiKit.tabrow.model.TabData
@@ -38,39 +26,11 @@ import ru.unlim1x.wb_project.ui.uiKit.tabrow.model.TabData
 fun MyMeetingScreen(navController: NavController) {
 
     var topBarAnimation by remember { mutableStateOf(false) }
-    Scaffold(containerColor = Wb_projectTheme.colorScheme.neutralWhite,
+    Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Wb_projectTheme.colorScheme.neutralWhite,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text(
-                        stringResource(id = R.string.my_meetings),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = Wb_projectTheme.typography.subheading1
-                    )
-                },
-                navigationIcon = {
-                    AnimatedVisibility(
-                        visible = topBarAnimation,
-                        enter = slideInHorizontally(
-                            animationSpec = tween(durationMillis = 500),
-                            initialOffsetX = { -it })
-                    ) {
-                        IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Назад"
-                            )
-                        }
-                    }
-
-                },
-
-                )
+            TopBar(header = stringResource(id = R.string.my_meetings),
+                backIconIsVisible = true,
+                backIconAction = {navController.navigateUp()})
         }) {
         topBarAnimation = true
 
@@ -131,7 +91,7 @@ fun MyMeetingScreen(navController: NavController) {
                 end = 16.dp
             )
         ) {
-            WBTabLayout(tabDataList = tabs, horizontalPaddingOffset = 16)
+            TabLayout(tabDataList = tabs, horizontalPaddingOffset = 16)
         }
 
     }

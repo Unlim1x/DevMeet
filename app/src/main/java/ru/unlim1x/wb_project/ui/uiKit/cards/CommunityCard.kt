@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatar.CommunityAvatar
 
 @Composable
@@ -31,7 +31,7 @@ fun CommunityCard(
             view.playSoundEffect(SoundEffectConstants.CLICK)
             onClick()
         }
-        .background(Wb_projectTheme.colorScheme.neutralWhite)
+        .background(DevMeetTheme.colorScheme.neutralWhite)
         .padding(4.dp)
         .fillMaxWidth()
     ) {

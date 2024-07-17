@@ -1,8 +1,5 @@
 package ru.unlim1x.wb_project.ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -10,16 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -43,7 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.navigation.AuthNavGraphNodes
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.buttons.GhostButton
 import ru.unlim1x.wb_project.ui.uiKit.custominputview.PassCodeInput
 import ru.unlim1x.wb_project.ui.uiKit.custominputview.model.PhoneNumberTransformation
@@ -67,32 +56,10 @@ fun AuthCodeInputScreen(navController: NavController, phone: String, code: Strin
     val focusRequester = remember { FocusRequester() }
     val coroutineScope = rememberCoroutineScope()
 
-    Scaffold(containerColor = Wb_projectTheme.colorScheme.neutralWhite,
+    Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Wb_projectTheme.colorScheme.neutralWhite,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                navigationIcon = {
-                    AnimatedVisibility(
-                        visible = topBarAnimation,
-                        enter = slideInHorizontally(
-                            animationSpec = tween(durationMillis = animationDuration),
-                            initialOffsetX = { -it })
-                    ) {
-                        IconButton(onClick = { navController.navigateUp() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Назад"
-                            )
-                        }
-                    }
-
-                },
-                title = {}
-
-
+            TopBar(backIconIsVisible = true,
+                backIconAction = {navController.navigateUp()}
             )
         }) {
         topBarAnimation = true
@@ -113,7 +80,7 @@ fun AuthCodeInputScreen(navController: NavController, phone: String, code: Strin
                 Text(
                     modifier = Modifier.padding(horizontal = MAIN_TEXT_HORIZONTAL_PADDING),
                     text = stringResource(R.string.enter_code),
-                    style = Wb_projectTheme.typography.heading2
+                    style = DevMeetTheme.typography.heading2
                 )
             }
             item {
@@ -125,7 +92,7 @@ fun AuthCodeInputScreen(navController: NavController, phone: String, code: Strin
                         .padding(horizontal = MAIN_TEXT_HORIZONTAL_PADDING)
                         .padding(bottom = BOTTOM_PADDING),
                     text = stringResource(R.string.we_sent_code_to_number) + phoneNumberText,
-                    style = Wb_projectTheme.typography.bodyText2,
+                    style = DevMeetTheme.typography.bodyText2,
                     textAlign = TextAlign.Center,
                 )
 

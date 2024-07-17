@@ -27,7 +27,7 @@ import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import ru.unlim1x.wb_project.R
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 
 @Composable
 fun AvatarLine(listAvatars: List<String>) {
@@ -56,7 +56,7 @@ fun AvatarLine(listAvatars: List<String>) {
                     Text(
                         modifier = Modifier.padding(28.dp, 0.dp, 0.dp, 0.dp),
                         text = "+ $notShown",
-                        style = Wb_projectTheme.typography.bodyText1
+                        style = DevMeetTheme.typography.bodyText1
                     )
                 }
             }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.HoverInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,9 +39,10 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import ru.unlim1x.wb_project.R
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatar.MeetingAvatar
 import ru.unlim1x.wb_project.ui.uiKit.avatar.UserAvatar
 import ru.unlim1x.wb_project.ui.uiKit.avatar.state.UserAvatarState
@@ -65,10 +67,12 @@ import ru.unlim1x.wb_project.ui.uiKit.theme.MyTypography
 fun ElementsScreen1() {
 
     val context = LocalContext.current
-
+    val navController = rememberNavController()
+Column {
+    TopBar(backIconIsVisible = true, backIconAction = { navController.navigateUp()})
     LazyColumn(
         modifier = Modifier
-            .padding(start = 4.dp, top = 0.dp, end = 4.dp)
+            .padding(4.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -86,7 +90,7 @@ fun ElementsScreen1() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp)
-                    .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground),
+                    .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Chip("Python", modifier = Modifier.padding(vertical = 4.dp))
@@ -127,6 +131,8 @@ fun ElementsScreen1() {
 
 
     }
+}
+
 
 
 }
@@ -381,11 +387,11 @@ fun UserAvatarGroup() {
         modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "Edit mode", style = Wb_projectTheme.typography.bodyText2)
+        Text(text = "Edit mode", style = DevMeetTheme.typography.bodyText2)
         Switch(colors = SwitchDefaults.colors().copy(
-            checkedBorderColor = Wb_projectTheme.colorScheme.brandDefault,
-            uncheckedBorderColor = Wb_projectTheme.colorScheme.brandDefault,
-            uncheckedThumbColor = Wb_projectTheme.colorScheme.brandDefault
+            checkedBorderColor = DevMeetTheme.colorScheme.brandDefault,
+            uncheckedBorderColor = DevMeetTheme.colorScheme.brandDefault,
+            uncheckedThumbColor = DevMeetTheme.colorScheme.brandDefault
         ),
             checked = checked,
             onCheckedChange = {

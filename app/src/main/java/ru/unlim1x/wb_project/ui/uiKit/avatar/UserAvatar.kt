@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.unlim1x.wb_project.R
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatar.state.UserAvatarState
 import ru.unlim1x.wb_project.ui.uiKit.theme.NoRippleTheme
 
@@ -40,7 +40,7 @@ fun UserAvatar(
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(boxSize)
-                    .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground),
+                    .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
@@ -62,7 +62,7 @@ fun UserAvatar(
                             onClick()
                         }
                         .size(boxSize)
-                        .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground),
+                        .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
@@ -107,7 +107,7 @@ fun UserAvatar(
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(boxSize)
-                    .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground),
+                    .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
@@ -129,7 +129,7 @@ fun UserAvatar(
                             onClick()
                         }
                         .size(boxSize)
-                        .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground),
+                        .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
@@ -175,7 +175,7 @@ fun UserAvatar(
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(boxSize)
-                    .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground),
+                    .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
                 contentAlignment = Alignment.Center
             ) {
                 image()
@@ -193,7 +193,7 @@ fun UserAvatar(
                             onClick()
                         }
                         .size(boxSize)
-                        .background(Wb_projectTheme.colorScheme.neutralSecondaryBackground),
+                        .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
                     contentAlignment = Alignment.Center
                 ) {
                     image()

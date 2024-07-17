@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">wb_project</string>
+    <string name="app_name">DevMeet</string>
     <string name="text_sample">The quick brown fox jumps over the lazy dog</string>
     <string name="heading1_heading">Heading 1</string>
     <string name="heading1_description">SF Pro Display/32/Bold</string>
@@ -33,15 +33,24 @@
 
     <string name="active">АКТИВНЫЕ</string>
     <string name="all_meetings">ВСЕ ВСТРЕЧИ</string>
+    <string name="theme_string">Тема</string>
+    <string name="notifications">Уведомления</string>
+    <string name="safety">Безопасность</string>
+    <string name="memory_res_string">Память и ресурсы</string>
+    <string name="help">Помощь</string>
+    <string name="invite_friend">Пригласи друга</string>
+    <string name="back_str">Назад</string>
     <string name="enter_phone_number">Введите номер телефона</string>
-    <string name="we_will_send_code">Мы вышлем код подтверждения \n на указанный номер</string>
+    <string name="we_will_send_code">Мы вышлем код подтверждения\nна указанный номер</string>
     <string name="continue_text">Продолжить</string>
     <string name="enter_code">Введите код</string>
-    <string name="we_sent_code_to_number">Отправили код на номер \n</string>
+    <string name="we_sent_code_to_number">Отправили код на номер\n</string>
     <string name="request_code_again">Запросить код повторно</string>
     <string name="name_necessarily">Имя (обязательно)</string>
     <string name="surname_optionally">Фамилия (опционально)</string>
     <string name="save">Сохранить</string>
+    <string name="i_will_come_to_meeting">Пойду на встречу!</string>
+    <string name="i_will_come_another_time">Схожу в другой раз</string>
 
     <plurals name="people">
         <item quantity="one">человек</item>

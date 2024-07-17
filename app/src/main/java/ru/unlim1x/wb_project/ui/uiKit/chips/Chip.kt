@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 
 @Composable
 fun Chip(text: String, modifier: Modifier = Modifier) {
@@ -21,7 +21,7 @@ fun Chip(text: String, modifier: Modifier = Modifier) {
         modifier = modifier
             .height(20.dp)
             .background(
-                Wb_projectTheme.colorScheme.brandBackground,
+                DevMeetTheme.colorScheme.brandBackground,
                 shape = RoundedCornerShape(40.dp)
             )
             .padding(
@@ -33,8 +33,8 @@ fun Chip(text: String, modifier: Modifier = Modifier) {
     ) {
         Text(
             text = text,
-            style = Wb_projectTheme.typography.metadata3,
-            color = Wb_projectTheme.colorScheme.brandDark
+            style = DevMeetTheme.typography.metadata3,
+            color = DevMeetTheme.colorScheme.brandDark
         )
     }
 }

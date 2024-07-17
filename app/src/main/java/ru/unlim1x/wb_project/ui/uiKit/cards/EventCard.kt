@@ -23,7 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.unlim1x.wb_project.R
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatar.MeetingAvatar
 import ru.unlim1x.wb_project.ui.uiKit.chips.Chip
 
@@ -38,7 +38,7 @@ fun EventCard(
             view.playSoundEffect(SoundEffectConstants.CLICK)
             onClick()
         }
-        .background(Wb_projectTheme.colorScheme.neutralWhite)
+        .background(DevMeetTheme.colorScheme.neutralWhite)
         .padding(4.dp)
         .fillMaxWidth()
     ) {
@@ -64,15 +64,15 @@ fun CardBody(
 ) {
     Column(modifier = Modifier.padding(start = 12.dp)) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = heading, style = Wb_projectTheme.typography.bodyText1)
+            Text(text = heading, style = DevMeetTheme.typography.bodyText1)
             Text(
                 modifier = Modifier.alpha(if (!meta2Flag) 0f else 1f),
                 text = meta2,
-                style = Wb_projectTheme.typography.metadata2
+                style = DevMeetTheme.typography.metadata2
             )
         }
         Spacer(modifier = Modifier.height(2.dp))
-        Text(text = meta, style = Wb_projectTheme.typography.metadata1)
+        Text(text = meta, style = DevMeetTheme.typography.metadata1)
         Spacer(modifier = Modifier.height(2.dp))
         LazyRow {
             tags?.let { list ->

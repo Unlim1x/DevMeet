@@ -5,21 +5,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ru.unlim1x.wb_project.R
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.cards.TimeAndPlace
 import ru.unlim1x.wb_project.ui.uiKit.cards.model.Event
 import ru.unlim1x.wb_project.ui.uiKit.searchfield.SearchField
@@ -29,24 +24,9 @@ import ru.unlim1x.wb_project.ui.uiKit.tabrow.model.TabData
 @Composable
 fun MeetingScreen(navController: NavController) {
 
-    Scaffold(containerColor = Wb_projectTheme.colorScheme.neutralWhite,
+    Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Wb_projectTheme.colorScheme.neutralWhite,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text(
-                        stringResource(id = R.string.meetings),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = Wb_projectTheme.typography.subheading1
-                    )
-                },
-
-
-                )
+            TopBar(header = stringResource(id = R.string.meetings))
         }) {
 
 
@@ -102,7 +82,7 @@ fun MeetingScreen(navController: NavController) {
 
         Column(modifier = modifier.padding(horizontal = 16.dp)) {
             SearchField(state = rememberTextFieldState()) {}
-            WBTabLayout(tabDataList = tabs, horizontalPaddingOffset = 16)
+            TabLayout(tabDataList = tabs, horizontalPaddingOffset = 16)
         }
 
     }

@@ -7,16 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,14 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.navigation.AuthNavGraphNodes
-import ru.unlim1x.wb_project.ui.theme.Wb_projectTheme
+import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatar.UserAvatar
 import ru.unlim1x.wb_project.ui.uiKit.avatar.state.UserAvatarState
 import ru.unlim1x.wb_project.ui.uiKit.buttons.PrimaryButton
@@ -51,8 +42,6 @@ private val BUTTON_PADDING = 48.dp
 fun AuthProfileScreen(navController: NavController) {
 
 
-    //var topBarAnimation by remember { mutableStateOf(false) }
-
     var buttonState by remember { mutableStateOf(false) }
 
 
@@ -64,36 +53,12 @@ fun AuthProfileScreen(navController: NavController) {
     }
     val focusManager = LocalFocusManager.current
 
-    Scaffold(containerColor = Wb_projectTheme.colorScheme.neutralWhite,
+    Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Wb_projectTheme.colorScheme.neutralWhite,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.navigateUp()
-                    }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Назад"
-                        )
-                    }
+            TopBar(header = stringResource(id = R.string.profile),
+                backIconIsVisible = true,
+                backIconAction = {navController.navigateUp()})
 
-
-                },
-                title = {
-                    Text(
-                        stringResource(id = R.string.profile),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = Wb_projectTheme.typography.subheading1
-                    )
-                }
-
-
-            )
         }) {
 
 
@@ -118,7 +83,7 @@ fun AuthProfileScreen(navController: NavController) {
                 Spacer(modifier = Modifier.size(AVATAR_BOTTOM))
             }
             item {
-                TextInput(hint = stringResource(id = R.string.name_necessarily), onTextChanged = {
+                TextInput(hint = stringResource(R.string.name_necessarily), onTextChanged = {
                     name = it
                     buttonState = it.isNotEmpty()
                 }) {
@@ -130,7 +95,7 @@ fun AuthProfileScreen(navController: NavController) {
             }
             item {
                 TextInput(
-                    hint = stringResource(id = R.string.surname_optionally),
+                    hint = stringResource(R.string.surname_optionally),
                     onTextChanged = { surname = it }) {
                     surname = it
                 }
