@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,7 +32,7 @@ fun TopBar(
     header: String,
     backIcon: Boolean,
     backIconAction: () -> Unit,
-    animate: Boolean,
+    animate: Boolean = true,
     actionMenuItem: AppBarMenuItems? = null,
     actionMenu: (() -> Unit)? = null
 ) {
@@ -43,26 +44,29 @@ fun TopBar(
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         title = {
-            Text(
-                header,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = Wb_projectTheme.typography.subheading1
-            )
+            TopAppBarTitle(header = header)
         },
         navigationIcon = {
             if (backIcon) {
-                AnimatedBackArrow(visible = topBarAnimation) {
-                    backIconAction()
+                when(animate){
+                    true -> {
+                        AnimatedBackArrow(visible = topBarAnimation) {
+                            backIconAction()
+                        }
+                    }
+                    false -> {
+                        StaticBackArrow {
+                            backIconAction()
+                        }
+                    }
                 }
             }
-
         },
         actions = {
             actionMenu?.let { action ->
-                actionMenuItem?.let { item ->
-                    AnimatedAction(item = item, visible = topBarAnimation) {
-
+                if (actionMenuItem != null) {
+                    AnimatedAction(item = actionMenuItem, visible = topBarAnimation) {
+                        action()
                     }
                 }
 
@@ -70,6 +74,20 @@ fun TopBar(
         }
     )
 
+    LaunchedEffect(key1 = Unit) {
+        topBarAnimation = true
+    }
+
+}
+
+@Composable
+private fun TopAppBarTitle(header:String){
+    Text(
+        header,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        style = Wb_projectTheme.typography.subheading1
+    )
 }
 
 @Composable
@@ -87,6 +105,17 @@ private fun AnimatedBackArrow(visible: Boolean, action: () -> Unit) {
                     contentDescription = AppBarMenuItems.BackArrow.description
                 )
             }
+        }
+    }
+}
+@Composable
+private fun StaticBackArrow(action: () -> Unit){
+    IconButton(onClick = { action() }) {
+        AppBarMenuItems.BackArrow.icon?.let {
+            Icon(
+                imageVector = it,
+                contentDescription = AppBarMenuItems.BackArrow.description
+            )
         }
     }
 }
