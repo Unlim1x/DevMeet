@@ -1,4 +1,4 @@
-package ru.unlim1x.wb_project.ui.screens
+package ru.unlim1x.wb_project.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController

@@ -27,6 +27,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import ru.unlim1x.wb_project.ui.screens.BottomBar
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.theme.NoRippleTheme
 import ru.unlim1x.wb_project.ui.uiKit.theme.PrimaryColorRippleTheme
@@ -39,68 +40,3 @@ fun NavigationScreen() {
     }
 }
 
-@Composable
-fun BottomBar(navController: NavHostController) {
-
-    val roots = listOf(
-        NavGraphNodes.MeetingRoot,
-        NavGraphNodes.CommunityRoot,
-        NavGraphNodes.MoreRoot
-    )
-
-    val view = LocalView.current
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-    CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
-        BottomNavigation(
-            backgroundColor = DevMeetTheme.colorScheme.neutralWhite,
-            elevation = 10.dp,
-            modifier = Modifier.height(64.dp)
-        ) {
-
-            roots.forEachIndexed { _, screen ->
-                val selected = currentDestination?.hierarchy?.any {
-                    it.route == screen.route
-                } == true
-                BottomNavigationItem(
-                    icon = {
-                        if (!selected)
-                            CompositionLocalProvider(LocalRippleTheme provides PrimaryColorRippleTheme) {
-                                Icon(
-                                    imageVector = ImageVector.vectorResource(id = screen.iconId),
-                                    contentDescription = screen.route,
-                                    modifier = Modifier.height(25.dp)
-                                )
-                            }
-
-
-                    },
-                    selected = selected,
-                    label = {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(screen.label, style = DevMeetTheme.typography.bodyText1)
-                            Canvas(modifier = Modifier.padding(top = 4.dp)) {
-                                drawCircle(
-                                    color = DevMeetTheme.colorScheme.neutralActive,
-                                    radius = 4f,
-                                    style = Fill
-                                )
-                            }
-                        }
-                    },
-                    alwaysShowLabel = false,
-                    onClick = {
-                        view.playSoundEffect(SoundEffectConstants.CLICK)
-                        navController.navigate(screen.route) {
-                            popUpTo(navController.graph.findStartDestination().id)
-                            launchSingleTop = true
-                        }
-                    },
-
-                    unselectedContentColor = Color(0xFF2E3A59)
-
-                )
-            }
-        }
-    }
-}
