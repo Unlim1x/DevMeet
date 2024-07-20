@@ -12,10 +12,13 @@ material = "1.6.8"
 nav_version="2.7.7"
 
 coil = "2.6.0"
+koin = "3.6.0-wasm-alpha2"
+runtimeLivedata = "1.6.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material = { module = "androidx.compose.material:material", version.ref = "material" }
+androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -32,6 +35,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 navigationCompose={module = "androidx.navigation:navigation-compose", version.ref="nav_version"}
 
 coil = {module = "io.coil-kt:coil-compose", version.ref = "coil"}
+koin = {module= "io.insert-koin:koin-androidx-compose", version.ref = "koin"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -16,10 +16,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatar.state.UserAvatarState
@@ -45,7 +47,7 @@ fun UserAvatar(
             ) {
                 Image(
                     imageVector = ImageVector.vectorResource(id = R.drawable.icon_user),
-                    contentDescription = "User avatar",
+                    contentDescription = stringResource(R.string.user_avatar),
                     modifier = Modifier.size(imageUserSize)
                 )
             }
@@ -67,7 +69,7 @@ fun UserAvatar(
                 ) {
                     Image(
                         imageVector = ImageVector.vectorResource(id = R.drawable.icon_user),
-                        contentDescription = "User avatar",
+                        contentDescription = stringResource(R.string.user_avatar),
                         modifier = Modifier.size(imageUserSize)
                     )
                 }
@@ -76,7 +78,7 @@ fun UserAvatar(
                 ) {
                     Image(
                         imageVector = ImageVector.vectorResource(id = R.drawable.icon_plus),
-                        contentDescription = "User avatar",
+                        contentDescription =stringResource(R.string.user_avatar),
                         modifier = Modifier
                             .size(imagePlusSize)
                             .clickable {
@@ -112,7 +114,7 @@ fun UserAvatar(
             ) {
                 Image(
                     bitmap = bitmap,
-                    contentDescription = "User avatar",
+                    contentDescription = stringResource(R.string.user_avatar),
                     modifier = Modifier.size(imageUserSize)
                 )
             }
@@ -134,7 +136,7 @@ fun UserAvatar(
                 ) {
                     Image(
                         bitmap = bitmap,
-                        contentDescription = "User avatar",
+                        contentDescription = stringResource(R.string.user_avatar),
                         modifier = Modifier.size(imageUserSize)
                     )
                 }
@@ -143,7 +145,7 @@ fun UserAvatar(
                 ) {
                     Image(
                         imageVector = ImageVector.vectorResource(id = R.drawable.icon_plus),
-                        contentDescription = "User avatar",
+                        contentDescription = stringResource(R.string.user_avatar),
                         modifier = Modifier
                             .size(imagePlusSize)
                             .clickable {
@@ -162,9 +164,8 @@ fun UserAvatar(
 fun UserAvatar(
     size: Dp = 100.dp,
     state: UserAvatarState = UserAvatarState.Default,
-    bitmap: ImageBitmap,
-    onClick: () -> Unit,
-    image: @Composable () -> Unit
+    url: String,
+    onClick: () -> Unit
 ) {
     val boxSize = size
     val imageUserSize = ((76f / 200f) * boxSize.value).dp
@@ -178,7 +179,7 @@ fun UserAvatar(
                     .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
                 contentAlignment = Alignment.Center
             ) {
-                image()
+                AsyncImage(model = url, contentDescription = stringResource(R.string.user_avatar))
             }
         }
 
@@ -196,14 +197,14 @@ fun UserAvatar(
                         .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
                     contentAlignment = Alignment.Center
                 ) {
-                    image()
+                    AsyncImage( modifier = Modifier.size(boxSize),model = url, contentDescription = stringResource(R.string.user_avatar))
                 }
                 CompositionLocalProvider(
                     LocalRippleTheme provides NoRippleTheme,
                 ) {
                     Image(
                         imageVector = ImageVector.vectorResource(id = R.drawable.icon_plus),
-                        contentDescription = "User avatar",
+                        contentDescription = stringResource(R.string.user_avatar),
                         modifier = Modifier
                             .size(imagePlusSize)
                             .clickable {

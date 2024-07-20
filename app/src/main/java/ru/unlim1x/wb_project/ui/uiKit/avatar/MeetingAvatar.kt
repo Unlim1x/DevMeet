@@ -16,7 +16,7 @@ import ru.unlim1x.wb_project.R
 fun MeetingAvatar(
     modifier: Modifier = Modifier,
     painter: Painter = painterResource(id = R.drawable.event_avatar),
-    contentDescription: String = "Event avatar"
+    contentDescription: String = "Meeting avatar"
 ) {
     Box(modifier = modifier.size(50.dp)) {
         Image(

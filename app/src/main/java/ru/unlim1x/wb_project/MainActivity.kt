@@ -6,13 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.delay
-import ru.unlim1x.wb_project.ui.screens.AuthentificationScreen
-import ru.unlim1x.wb_project.ui.screens.SplashScreen
+import ru.unlim1x.wb_project.ui.navigation.MainNavGraph
+import ru.unlim1x.wb_project.ui.navigation.MainScreen
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import java.util.Locale
 
@@ -36,18 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val loaded = remember { mutableStateOf(false) }
-
-                    LaunchedEffect(key1 = Unit) {
-                        delay(4000)
-                        loaded.value = true
-
-                    }
-                    if (!loaded.value)
-                        SplashScreen()
-                    else {
-                        AuthentificationScreen()
-                    }
+                    MainScreen()
 
                 }
             }
