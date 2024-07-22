@@ -78,7 +78,6 @@ class MeetingDetailedScreenViewModel(
 
             avatarsURL = meetingFlow.map { it.visitors.map { it.second } }
             meetingInitialValue = meetingFlow.first()
-            Log.e("AAAAA", "size= ${avatarsURL.last().size}")
             if (meetingFlow.last().visitors.any { it.first == currentUserId }) {
                 _viewState.postValue(
                     MeetingDetailedScreenViewState.DisplayGo(
@@ -140,9 +139,7 @@ class MeetingDetailedScreenViewModel(
                 isVisiting = true,
                 meetingId = meetingId
             )
-            //meetingFlow = meetingDetailedInfoByIdUseCase.execute(meetingId)
-            //avatarsURL = meetingFlow.map { it.visitors.map { it.second } }
-            Log.e("AAAAA", "size= ${avatarsURL.last().size}")
+
             _viewState.postValue(
                 MeetingDetailedScreenViewState.DisplayGo(
                     meeting = meetingFlow,
@@ -161,7 +158,6 @@ class MeetingDetailedScreenViewModel(
                 isVisiting = false,
                 meetingId = meetingId
             )
-            Log.e("AAAAA", "size= ${avatarsURL.last().size}")
             _viewState.postValue(
                 MeetingDetailedScreenViewState.DisplayNotGo(
                     meeting = meetingFlow,
