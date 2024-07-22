@@ -1,4 +1,4 @@
-package ru.unlim1x.wb_project
+package ru.unlim1x.wb_project.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack

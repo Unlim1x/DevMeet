@@ -4,10 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import ru.lim1x.domain.interfaces.usecases.ISaveNumberUseCase
+import ru.lim1x.domain.interfaces.usecases.IValidateCodeUseCase
 import ru.unlim1x.wb_project.ui.uiKit.custominputview.model.Country
 import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 
-class AuthCodeInputScreenViewModel():MainViewModel<AuthCodeInputScreenEvent, AuthCodeInputScreenViewState>() {
+class AuthCodeInputScreenViewModel(private val validateCodeUseCase:IValidateCodeUseCase,
+    private val savePhoneUseCase:ISaveNumberUseCase):MainViewModel<AuthCodeInputScreenEvent, AuthCodeInputScreenViewState>() {
 
 
     private val _viewState: MutableLiveData<AuthCodeInputScreenViewState> =
@@ -27,9 +30,13 @@ class AuthCodeInputScreenViewModel():MainViewModel<AuthCodeInputScreenEvent, Aut
     private fun reduce(event: AuthCodeInputScreenEvent, state: AuthCodeInputScreenViewState.Display){
         when(event){
             is AuthCodeInputScreenEvent.Validate->{
-                //TODO: юзейкс проверки кода
                 viewModelScope.launch {
-                    _viewState.postValue(AuthCodeInputScreenViewState.Valid)
+                    if(validateCodeUseCase.execute(event.code).isSuccessful) {
+                        savePhoneUseCase.execute(event.phone)
+                        _viewState.postValue(AuthCodeInputScreenViewState.Valid)
+                    }
+                    //todo: обработать неверный код,
+                    //todo: обработать сохранение id пользователя
                 }
             }
             AuthCodeInputScreenEvent.Resend->{

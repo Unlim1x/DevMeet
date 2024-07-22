@@ -76,4 +76,7 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:6.4.1")
     implementation(libs.koin)
     implementation (libs.androidx.runtime.livedata)
+
+    implementation(project(":domain"))
+    implementation(project(":repository"))
 }

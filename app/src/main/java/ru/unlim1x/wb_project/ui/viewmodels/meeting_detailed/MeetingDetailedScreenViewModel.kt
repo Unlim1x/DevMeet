@@ -1,57 +1,130 @@
 package ru.unlim1x.wb_project.ui.viewmodels.meeting_detailed
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import ru.unlim1x.wb_project.ui.uiKit.cards.TimeAndPlace
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.Meeting
+import ru.lim1x.domain.interfaces.usecases.IGetCurrentUserIdUseCase
+import ru.lim1x.domain.interfaces.usecases.IGetMeetingDetailedInfoByIdUseCase
+import ru.lim1x.domain.interfaces.usecases.ISetUserVisitingMeetingValueUseCase
+import ru.lim1x.domain.models.MeetingDetailedExt
 import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.profile_screen.ProfileScreenViewState
 
-class MeetingDetailedScreenViewModel():MainViewModel<MeetingDetailedScreenEvent, MeetingDetailedScreenViewState>() {
+class MeetingDetailedScreenViewModel(
+    private val meetingDetailedInfoByIdUseCase: IGetMeetingDetailedInfoByIdUseCase,
+    private val setUserVisitingUseCase: ISetUserVisitingMeetingValueUseCase,
+    private val getCurrentUserUseCase: IGetCurrentUserIdUseCase
+) : MainViewModel<MeetingDetailedScreenEvent, MeetingDetailedScreenViewState>() {
     private val _viewState: MutableLiveData<MeetingDetailedScreenViewState> =
         MutableLiveData(MeetingDetailedScreenViewState.Init)
 
-    private val emptyMeeting = Meeting("", TimeAndPlace("",1,2,3), true, emptyList())
+    private lateinit var meetingFlow: Flow<MeetingDetailedExt>
+    private lateinit var avatarsURL: Flow<List<String>>
+
+    private lateinit var meetingInitialValue :MeetingDetailedExt
+
     override fun obtain(event: MeetingDetailedScreenEvent) {
-        when(event){
-            MeetingDetailedScreenEvent.OpenScreen -> reduce(event, MeetingDetailedScreenViewState.Init)
-            MeetingDetailedScreenEvent.WillGo -> reduce(event, MeetingDetailedScreenViewState.DisplayNotGo(
-                emptyMeeting,
-                emptyList(),
-                false
-            ))
+        when (event) {
+            is MeetingDetailedScreenEvent.OpenScreen -> reduce(
+                event,
+                MeetingDetailedScreenViewState.Init
+            )
 
-            MeetingDetailedScreenEvent.WillNotGo -> reduce(event, MeetingDetailedScreenViewState.DisplayGo(
-                emptyMeeting,
-                emptyList(),
-                true
-            ))
+            is MeetingDetailedScreenEvent.WillGo -> reduce(
+                event, MeetingDetailedScreenViewState.DisplayNotGo(
+                    meetingFlow,
+                    avatarsURL,
+                    false,
+                    meetingInitialValue
+                )
+            )
+
+            is MeetingDetailedScreenEvent.WillNotGo -> reduce(
+                event, MeetingDetailedScreenViewState.DisplayGo(
+                    meetingFlow,
+                    avatarsURL,
+                    true,
+                    meetingInitialValue
+                )
+            )
+
+
         }
     }
 
-    private fun reduce(event: MeetingDetailedScreenEvent, state: MeetingDetailedScreenViewState.Init){
-        //todo: загрузить и узнать идет ли пользователь
-        fetchNotGo()
-    }
-    private fun reduce(event: MeetingDetailedScreenEvent, state: MeetingDetailedScreenViewState.DisplayGo){
-        //TODO: Обработать " не пойду"
-        when(event){
-            MeetingDetailedScreenEvent.WillNotGo -> {
-                fetchNotGo()
+    private fun reduce(
+        event: MeetingDetailedScreenEvent,
+        state: MeetingDetailedScreenViewState.Init
+    ) {
+        when (event) {
+            is MeetingDetailedScreenEvent.OpenScreen -> {
+                loadDetails(event.meetingId)
             }
-            else->throw NotImplementedError("Unexpected state")
+
+            else -> throw NotImplementedError("Unexpected state")
         }
     }
 
-    private fun reduce(event: MeetingDetailedScreenEvent, state: MeetingDetailedScreenViewState.DisplayNotGo){
-        //TODO: Обработать " пойду"
-        when(event){
-            MeetingDetailedScreenEvent.WillGo -> {
-                fetchGo()
+    fun loadDetails(meetingId: Int) {
+        viewModelScope.launch {
+
+            meetingFlow = meetingDetailedInfoByIdUseCase.execute(meetingId)
+            val currentUserId = getCurrentUserUseCase.execute()
+
+            avatarsURL = meetingFlow.map { it.visitors.map { it.second } }
+            meetingInitialValue = meetingFlow.first()
+            if (meetingFlow.last().visitors.any { it.first == currentUserId }) {
+                _viewState.postValue(
+                    MeetingDetailedScreenViewState.DisplayGo(
+                        meeting = meetingFlow,
+                        avatarsURL,
+                        true,
+                        meetingInitialValue
+                    )
+                )
+            } else {
+                _viewState.postValue(
+                    MeetingDetailedScreenViewState.DisplayNotGo(
+                        meeting = meetingFlow,
+                        avatarsURL,
+                        false,
+                        meetingInitialValue
+                    )
+                )
             }
-            else->throw NotImplementedError("Unexpected state")
+        }
+    }
+
+    private fun reduce(
+        event: MeetingDetailedScreenEvent,
+        state: MeetingDetailedScreenViewState.DisplayGo
+    ) {
+
+        when (event) {
+            is MeetingDetailedScreenEvent.WillNotGo -> {
+                fetchNotGo(event.meetingId)
+            }
+
+            else -> throw NotImplementedError("Unexpected state")
+        }
+    }
+
+    private fun reduce(
+        event: MeetingDetailedScreenEvent,
+        state: MeetingDetailedScreenViewState.DisplayNotGo
+    ) {
+
+        when (event) {
+            is MeetingDetailedScreenEvent.WillGo -> {
+                fetchGo(event.meetingId)
+            }
+
+            else -> throw NotImplementedError("Unexpected state")
         }
     }
 
@@ -59,45 +132,40 @@ class MeetingDetailedScreenViewModel():MainViewModel<MeetingDetailedScreenEvent,
         return _viewState
     }
 
-    private fun fetchGo(){
+    private fun fetchGo(meetingId: Int) {
         viewModelScope.launch {
-            val listOfAvatars: MutableList<String> =
-                MutableList(11) { "https://get.wallhere.com/photo/face-women-model-portrait-long-hair-photography-hair-nose-solo-Person-skin-head-supermodel-girl-beauty-eye-lip-blond-hairstyle-portrait-photography-photo-shoot-brown-hair-art-model-human-hair-color-hair-coloring-human-body-organ-close-up-layered-hair-5168.jpg" }
-            val listOfTags = listOf("Junior", "Python", "Moscow")
-            val meeting = Meeting(
-                name = "Developer meeting",
-                timeAndPlace = TimeAndPlace(
-                    place = "Moscow",
-                    date = 13,
-                    month = 9,
-                    year = 2024
-                ),
-                isFinished = false,
-                tags = listOfTags
+            setUserVisitingUseCase.execute(
+                userId = getCurrentUserUseCase.execute(),
+                isVisiting = true,
+                meetingId = meetingId
             )
 
-        _viewState.postValue(MeetingDetailedScreenViewState.DisplayGo(meeting=meeting, comingAvatars = listOfAvatars, true))
+            _viewState.postValue(
+                MeetingDetailedScreenViewState.DisplayGo(
+                    meeting = meetingFlow,
+                    avatarsURL,
+                    true,
+                    meetingInitialValue
+                )
+            )
         }
     }
 
-    private fun fetchNotGo(){
+    private fun fetchNotGo(meetingId: Int) {
         viewModelScope.launch {
-            val listOfAvatars: MutableList<String> =
-                MutableList(10) { "https://get.wallhere.com/photo/face-women-model-portrait-long-hair-photography-hair-nose-solo-Person-skin-head-supermodel-girl-beauty-eye-lip-blond-hairstyle-portrait-photography-photo-shoot-brown-hair-art-model-human-hair-color-hair-coloring-human-body-organ-close-up-layered-hair-5168.jpg" }
-            val listOfTags = listOf("Junior", "Python", "Moscow")
-            val meeting = Meeting(
-                name = "Developer meeting",
-                timeAndPlace = TimeAndPlace(
-                    place = "Moscow",
-                    date = 13,
-                    month = 9,
-                    year = 2024
-                ),
-                isFinished = false,
-                tags = listOfTags
+            setUserVisitingUseCase.execute(
+                userId = getCurrentUserUseCase.execute(),
+                isVisiting = false,
+                meetingId = meetingId
             )
-
-            _viewState.postValue(MeetingDetailedScreenViewState.DisplayNotGo(meeting=meeting, comingAvatars = listOfAvatars, false))
+            _viewState.postValue(
+                MeetingDetailedScreenViewState.DisplayNotGo(
+                    meeting = meetingFlow,
+                    avatarsURL,
+                    false,
+                    meetingInitialValue
+                )
+            )
         }
     }
 }

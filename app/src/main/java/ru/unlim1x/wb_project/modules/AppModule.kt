@@ -16,16 +16,16 @@ import ru.unlim1x.wb_project.ui.viewmodels.profile_screen.ProfileScreenViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.splash_screen.SplashScreenViewModel
 
 val appModule = module {
-    viewModel{ MeetingScreenViewModel() }
-    viewModel{ MyMeetingScreenViewModel() }
-    viewModel{ CommunityScreenViewModel() }
-    viewModel{ ProfileScreenViewModel() }
-    viewModel{MoreScreenViewModel()}
+    viewModel{ MeetingScreenViewModel(get(),get()) }
+    viewModel{ MyMeetingScreenViewModel(get(),get()) }
+    viewModel{ CommunityScreenViewModel(get()) }
+    viewModel{ ProfileScreenViewModel(get(),get()) }
+    viewModel{MoreScreenViewModel(get(),get())}
     viewModel{SplashScreenViewModel()}
     viewModel{BottomBarViewModel()}
-    viewModel{AuthPhoneInputScreenViewModel()}
-    viewModel{AuthCodeInputScreenViewModel()}
-    viewModel{ AuthProfileScreenViewModel() }
-    viewModel{MeetingDetailedScreenViewModel()}
-    viewModel{CommunityDetailedScreenViewModel()}
+    viewModel{AuthPhoneInputScreenViewModel(get())}
+    viewModel{AuthCodeInputScreenViewModel(get(),get())}
+    viewModel{ AuthProfileScreenViewModel(get(),get()) }
+    viewModel{MeetingDetailedScreenViewModel(get(),get(), get())}
+    viewModel{CommunityDetailedScreenViewModel(get(),get())}
 }

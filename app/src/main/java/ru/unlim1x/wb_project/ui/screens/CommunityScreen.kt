@@ -27,8 +27,7 @@ import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.cards.CommunityCard
 import ru.unlim1x.wb_project.ui.uiKit.cards.QuantityMembers
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.Community
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.LoremIpsum
+import ru.lim1x.domain.models.Community
 import ru.unlim1x.wb_project.ui.uiKit.searchfield.SearchField
 import ru.unlim1x.wb_project.ui.viewmodels.community_screen.CommunityScreenEvent
 import ru.unlim1x.wb_project.ui.viewmodels.community_screen.CommunityScreenViewModel

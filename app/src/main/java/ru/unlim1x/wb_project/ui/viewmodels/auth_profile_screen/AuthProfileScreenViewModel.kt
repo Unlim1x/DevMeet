@@ -3,15 +3,16 @@ package ru.unlim1x.wb_project.ui.viewmodels.auth_profile_screen
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ru.unlim1x.wb_project.ui.uiKit.custominputview.model.Country
+import ru.lim1x.domain.interfaces.usecases.IGetCurrentUserIdUseCase
+import ru.lim1x.domain.interfaces.usecases.ISaveUserProfileNameUseCase
 import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 
-class AuthProfileScreenViewModel():MainViewModel<AuthProfileScreenEvent, AuthProfileScreenViewState>() {
+class AuthProfileScreenViewModel(
+    private val saveUserNameUseCase:ISaveUserProfileNameUseCase,
+    private val getCurrentUserUseCase: IGetCurrentUserIdUseCase
+    ):MainViewModel<AuthProfileScreenEvent, AuthProfileScreenViewState>() {
 
-    private var name = ""
-    private var surname = ""
 
     private val _viewState: MutableLiveData<AuthProfileScreenViewState> =
         MutableLiveData(AuthProfileScreenViewState.Display)
@@ -27,14 +28,15 @@ class AuthProfileScreenViewModel():MainViewModel<AuthProfileScreenEvent, AuthPro
     fun reduce(event: AuthProfileScreenEvent, state: AuthProfileScreenViewState.Display){
         when (event){
             is AuthProfileScreenEvent.Save->{
-                name = event.name
-                surname = event.surname
+
+                viewModelScope.launch {
+                    val userId = getCurrentUserUseCase.execute()
+                    saveUserNameUseCase.execute(userId = userId, event.name, event.surname)
+                    _viewState.postValue(AuthProfileScreenViewState.Saved)
+                }
             }
         }
-        //TODO: юзкейс регистрации пользователя
-        viewModelScope.launch {
-            _viewState.postValue(AuthProfileScreenViewState.Saved)
-        }
+
     }
 
 

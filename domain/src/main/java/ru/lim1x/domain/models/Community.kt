@@ -1,12 +1,20 @@
-package ru.unlim1x.wb_project.ui.uiKit.cards.model
+package ru.lim1x.domain.models
 
 
 data class Community(
     val name: String,
     val imageUrl: String? = null,
     val quantityMembers: Int,
+    val id: Int
+)
+
+data class CommunityDetailed(
+    val name: String,
+    val imageUrl: String? = null,
+    val quantityMembers: Int,
     val id: Int,
-    val description: String
+    val description: String,
+    val coordinates:Coordinates
 )
 
 sealed class LoremIpsum(

@@ -3,15 +3,17 @@ package ru.unlim1x.wb_project.ui.viewmodels.profile_screen
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
-import ru.unlim1x.wb_project.ui.screens.model.User
+import ru.lim1x.domain.interfaces.usecases.IGetCurrentUserIdUseCase
+import ru.lim1x.domain.interfaces.usecases.IGetUserProfileDataUseCase
 import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.community_screen.CommunityScreenEvent
-import ru.unlim1x.wb_project.ui.viewmodels.community_screen.CommunityScreenViewState
 
 
-class ProfileScreenViewModel():MainViewModel<ProfileScreenEvent, ProfileScreenViewState>() {
+class ProfileScreenViewModel(
+    private val getCurrentUserUseCase: IGetCurrentUserIdUseCase,
+    private val getUserProfileDataUseCase: IGetUserProfileDataUseCase
+):MainViewModel<ProfileScreenEvent, ProfileScreenViewState>() {
 
     private val _viewState: MutableLiveData<ProfileScreenViewState> =
         MutableLiveData(ProfileScreenViewState.Init)
@@ -33,13 +35,10 @@ class ProfileScreenViewModel():MainViewModel<ProfileScreenEvent, ProfileScreenVi
 
     private fun showScreen(){
         viewModelScope.launch {
-            _viewState.postValue(ProfileScreenViewState.Display(user =
-            User(
-                    name = "Иван Иванов",
-                    phone = "+7 999 999-99-99",
-                    avatarURL = "",
-                    hasAvatar = false
-                ))
+            val user = getUserProfileDataUseCase.execute(getCurrentUserUseCase.execute())
+            _viewState.postValue(ProfileScreenViewState.Display(user =user.last()
+
+            )
             )
         }
     }

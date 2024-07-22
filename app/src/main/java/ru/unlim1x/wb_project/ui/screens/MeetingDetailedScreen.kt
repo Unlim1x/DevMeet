@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -36,14 +37,14 @@ import coil.request.ImageRequest
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import org.koin.androidx.compose.koinViewModel
-import ru.unlim1x.wb_project.AppBarMenuItems
+import ru.unlim1x.wb_project.ui.AppBarMenuItems
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatarline.AvatarLine
 import ru.unlim1x.wb_project.ui.uiKit.buttons.PrimaryButton
 import ru.unlim1x.wb_project.ui.uiKit.buttons.SecondaryButton
-import ru.unlim1x.wb_project.ui.uiKit.cards.TimeAndPlace
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.Meeting
+import ru.lim1x.domain.models.Meeting
+import ru.lim1x.domain.models.MeetingDetailedExt
 import ru.unlim1x.wb_project.ui.viewmodels.meeting_detailed.MeetingDetailedScreenEvent
 import ru.unlim1x.wb_project.ui.viewmodels.meeting_detailed.MeetingDetailedScreenViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.meeting_detailed.MeetingDetailedScreenViewState
@@ -61,23 +62,23 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
         is MeetingDetailedScreenViewState.DisplayGo -> {
             MeetingDetailedBody(
                 navController = navController,
-                meeting = state.meeting,
-                listOfAvatars = state.comingAvatars,
+                meeting = state.meeting.collectAsState(state.initial).value,
+                listOfAvatars = state.listAvatars.collectAsState(initial = emptyList()).value,
                 meGo = state.go) {
-                viewModel.obtain(MeetingDetailedScreenEvent.WillNotGo)
+                viewModel.obtain(MeetingDetailedScreenEvent.WillNotGo(eventId))
             }
         }
         is MeetingDetailedScreenViewState.DisplayNotGo -> {
             MeetingDetailedBody(
                 navController = navController,
-                meeting = state.meeting,
-                listOfAvatars = state.comingAvatars,
+                meeting = state.meeting.collectAsState(state.initial).value,
+                listOfAvatars = state.listAvatars.collectAsState(initial = emptyList()).value,
                 meGo = state.go) {
-                viewModel.obtain(MeetingDetailedScreenEvent.WillGo)
+                viewModel.obtain(MeetingDetailedScreenEvent.WillGo(eventId))
             }
         }
         MeetingDetailedScreenViewState.Init -> {
-            viewModel.obtain(MeetingDetailedScreenEvent.OpenScreen)
+            viewModel.obtain(MeetingDetailedScreenEvent.OpenScreen(meetingId = eventId))
         }
         else -> {throw  NotImplementedError("Unexpected state")}
     }
@@ -89,11 +90,10 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
 @Composable
 private fun MeetingDetailedBody(
     navController: NavController,
-    meeting: Meeting,
+    meeting: MeetingDetailedExt,
     listOfAvatars:List<String>,
     meGo:Boolean,
     onButtonClick:()->Unit){
-    //val meGo = remember { mutableStateOf(false) }
 
     var showDialog by remember {
         mutableStateOf(false)
@@ -180,7 +180,6 @@ private fun MeetingDetailedBody(
                             modifier = Modifier.fillMaxWidth(),
                             buttonText = stringResource(R.string.i_will_come_to_meeting)
                         ) {
-                            //listOfAvatars.add("https://10wallpaper.com/wallpaper/1280x1024/2012/Ann_Sophie_2020_Fashion_Model_Celebrity_Photo_1280x1024.jpg")
                             onButtonClick()
                         }
                     }

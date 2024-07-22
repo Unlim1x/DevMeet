@@ -5,15 +5,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,15 +21,12 @@ import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.cards.EventCard
-import ru.unlim1x.wb_project.ui.uiKit.cards.TimeAndPlace
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.Community
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.Meeting
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.LoremIpsum
+import ru.lim1x.domain.models.Community
+import ru.lim1x.domain.models.CommunityDetailed
+import ru.lim1x.domain.models.Meeting
 import ru.unlim1x.wb_project.ui.viewmodels.community_detailed_screen.CommunityDetailedScreenEvent
 import ru.unlim1x.wb_project.ui.viewmodels.community_detailed_screen.CommunityDetailedScreenViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.community_detailed_screen.CommunityDetailedScreenViewState
-import ru.unlim1x.wb_project.ui.viewmodels.community_screen.CommunityScreenViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.community_screen.CommunityScreenViewState
 
 private val FIGMA_HORIZONTAL_PADDING = 16.dp
 private val FIGMA_GAP_BIG = 20.dp
@@ -59,10 +52,10 @@ fun CommunityDetailedScreen(navController: NavController, communityName: String,
                 CommunityDetailedBody(
                     modifier = modifier,
                     navController = navController,
-                    community = state.community,
-                    listMeetings = state.listOfMeetings)
+                    community = state.community.collectAsState(state.initial).value,
+                    listMeetings = state.listOfMeetings.collectAsState(emptyList()).value)
             }
-            CommunityDetailedScreenViewState.Init -> {viewModel.obtain(CommunityDetailedScreenEvent.OpenScreen)}
+            CommunityDetailedScreenViewState.Init -> {viewModel.obtain(CommunityDetailedScreenEvent.OpenScreen(id = communityId))}
             else->throw NotImplementedError("Unexpected state")
         }
 
@@ -75,7 +68,7 @@ fun CommunityDetailedScreen(navController: NavController, communityName: String,
 @Composable
 private fun CommunityDetailedBody(modifier: Modifier=Modifier,
                                   navController: NavController,
-                                  community: Community,
+                                  community: CommunityDetailed,
                                   listMeetings:List<Meeting>){
     LazyColumn(modifier = modifier.padding(horizontal = FIGMA_HORIZONTAL_PADDING)) {
         item { Spacer(modifier = Modifier.size(FIGMA_GAP_BIG)) }

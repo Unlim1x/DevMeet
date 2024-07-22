@@ -18,7 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.koinViewModel
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.Meeting
+import ru.lim1x.domain.models.Meeting
 import ru.unlim1x.wb_project.ui.uiKit.searchfield.SearchField
 import ru.unlim1x.wb_project.ui.uiKit.tabrow.model.TabData
 import ru.unlim1x.wb_project.ui.viewmodels.meeting_screen.MeetingScreenEvent

@@ -3,16 +3,25 @@ package ru.unlim1x.wb_project.ui.viewmodels.meeting_screen
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import ru.unlim1x.wb_project.ui.uiKit.cards.TimeAndPlace
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.Meeting
+import ru.lim1x.domain.interfaces.usecases.IGetActiveMeetingsUseCase
+import ru.lim1x.domain.interfaces.usecases.IGetAllMeetingsUseCase
+import ru.lim1x.domain.models.TimeAndPlace
+import ru.lim1x.domain.models.Meeting
 import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 
-class MeetingScreenViewModel() : MainViewModel<MeetingScreenEvent, MeetingScreenViewState>() {
+class MeetingScreenViewModel(
+    private val getAllMeetingsUseCase: IGetAllMeetingsUseCase,
+    private val getActiveMeetingsUseCase: IGetActiveMeetingsUseCase
+) : MainViewModel<MeetingScreenEvent, MeetingScreenViewState>() {
 
     private val _viewState: MutableLiveData<MeetingScreenViewState> =
         MutableLiveData(MeetingScreenViewState.Loading)
+
+    private lateinit var meetingsAllFlow: Flow<List<Meeting>>
+    private lateinit var meetingsActiveFlow: Flow<List<Meeting>>
 
     private fun reduce(event: MeetingScreenEvent, state: MeetingScreenViewState.Loading) {
         when (event) {
@@ -37,38 +46,13 @@ class MeetingScreenViewModel() : MainViewModel<MeetingScreenEvent, MeetingScreen
 
     private fun showMeetings() {
         viewModelScope.launch {
-            val listOfTags = listOf("Junior", "Python", "Moscow")
-            val listMeetingsAll: MutableList<Meeting> = MutableList(15) {
-                Meeting(
-                    name = "Developer meeting",
-                    timeAndPlace = TimeAndPlace(
-                        place = "Moscow",
-                        date = 13,
-                        month = 9,
-                        year = 2024
-                    ),
-                    isFinished = it % 4 == 0,
-                    tags = listOfTags
-                )
-            }
-            val listMeetingsActive: MutableList<Meeting> = MutableList(3) {
-                Meeting(
-                    name = "Developer meeting",
-                    timeAndPlace = TimeAndPlace(
-                        place = "Moscow",
-                        date = 13,
-                        month = 9,
-                        year = 2024
-                    ),
-                    isFinished = it % 4 == 0,
-                    tags = listOfTags
-                )
-            }
+            meetingsAllFlow = getAllMeetingsUseCase.execute()
+            meetingsActiveFlow = getActiveMeetingsUseCase.execute()
 
             _viewState.postValue(
                 MeetingScreenViewState.Display(
-                    allMeetings = flow{emit(listMeetingsAll)},
-                    activeMeetings = flow{emit(listMeetingsActive)}
+                    allMeetings = meetingsAllFlow,
+                    activeMeetings = meetingsActiveFlow
                 )
             )
         }

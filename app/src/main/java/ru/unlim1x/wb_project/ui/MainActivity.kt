@@ -1,4 +1,4 @@
-package ru.unlim1x.wb_project
+package ru.unlim1x.wb_project.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
