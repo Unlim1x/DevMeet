@@ -9,11 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,8 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.koinViewModel
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
-import ru.unlim1x.wb_project.ui.uiKit.cards.TimeAndPlace
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.Meeting
+import ru.lim1x.domain.models.Meeting
 import ru.unlim1x.wb_project.ui.uiKit.searchfield.SearchField
 import ru.unlim1x.wb_project.ui.uiKit.tabrow.model.TabData
 import ru.unlim1x.wb_project.ui.viewmodels.my_meetings.MyMeetingScreenEvent

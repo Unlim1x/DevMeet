@@ -6,10 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.lim1x.domain.interfaces.usecases.ISendCodeToPhoneUseCase
 import ru.unlim1x.wb_project.ui.uiKit.custominputview.model.Country
 import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 
-class AuthPhoneInputScreenViewModel():MainViewModel<AuthPhoneInputScreenEvent, AuthPhoneInputScreenViewState>() {
+class AuthPhoneInputScreenViewModel(private val sendCodeUseCase:ISendCodeToPhoneUseCase):MainViewModel<AuthPhoneInputScreenEvent, AuthPhoneInputScreenViewState>() {
 
     init {
         Log.e("AUTH", "AUTH VIEW MODEL CREATED")
@@ -34,9 +35,9 @@ class AuthPhoneInputScreenViewModel():MainViewModel<AuthPhoneInputScreenEvent, A
             is AuthPhoneInputScreenEvent.SendCode->{
                 countryCode = event.countryCode
                 phoneNumber = event.phoneNumber
-                //TODO: юзкейс отправки кода
-                viewModelScope.launch {
 
+                viewModelScope.launch {
+                    sendCodeUseCase.execute(phoneNumber)
                     _viewState.postValue(AuthPhoneInputScreenViewState.Sent(countryCode, phoneNumber))
                     delay(100)
                     _viewState.postValue(AuthPhoneInputScreenViewState.Display)

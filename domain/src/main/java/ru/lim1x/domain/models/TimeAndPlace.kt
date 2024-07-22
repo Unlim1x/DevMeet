@@ -1,4 +1,4 @@
-package ru.unlim1x.wb_project.ui.uiKit.cards
+package ru.lim1x.domain.models
 
 import java.security.InvalidParameterException
 import java.util.Date
@@ -15,9 +15,9 @@ class TimeAndPlace(
 ) {
     val calendar =
         GregorianCalendar(TimeZone.getTimeZone("Europe/Moscow")) //На всякий случай, мало ли потом будет фильтр по дате
-    private lateinit var stringDate: String
-    private lateinit var stringMonth: String
-    private lateinit var stringYear: String
+    private var stringDate: String
+    private var stringMonth: String
+    private var stringYear: String
 
     init {
         if (month > 12 || month <= 0)

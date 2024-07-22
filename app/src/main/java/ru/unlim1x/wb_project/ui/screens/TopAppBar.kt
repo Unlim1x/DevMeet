@@ -17,7 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.style.TextOverflow
-import ru.unlim1x.wb_project.AppBarMenuItems
+import ru.unlim1x.wb_project.ui.AppBarMenuItems
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 
 private const val ANIMATION_DURATION = 300

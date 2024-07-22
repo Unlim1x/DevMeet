@@ -58,7 +58,7 @@ fun AuthCodeInputScreen(navController: NavController, phone: String, code: Strin
     Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
             TopBar(backIconIsVisible = true,
-                backIconAction = {navController.navigateUp()}
+                backIconAction = {navController.popBackStack()}
             )
         }) {
         val modifier = Modifier.padding(top = it.calculateTopPadding())
@@ -67,7 +67,7 @@ fun AuthCodeInputScreen(navController: NavController, phone: String, code: Strin
             AuthCodeInputScreenViewState.Display -> {
                 CodeInputBody(modifier = modifier,code = code, phone = phone, actionDone = {pinCode->
                     if (validateCode(pinCode)) {
-                        viewModel.obtain(AuthCodeInputScreenEvent.Validate(pinCode))
+                        viewModel.obtain(AuthCodeInputScreenEvent.Validate(phone = phone,pinCode))
                     }
                 }) {
                     viewModel.obtain(AuthCodeInputScreenEvent.Resend)

@@ -5,12 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.Community
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.LoremIpsum
+import ru.lim1x.domain.interfaces.usecases.IGetCommunitiesUseCase
+import ru.lim1x.domain.models.Community
+import ru.lim1x.domain.models.LoremIpsum
 import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 
 
-class CommunityScreenViewModel():MainViewModel<CommunityScreenEvent, CommunityScreenViewState>() {
+class CommunityScreenViewModel(
+    private val getCommunitiesUseCase: IGetCommunitiesUseCase
+):MainViewModel<CommunityScreenEvent, CommunityScreenViewState>() {
 
     private val _viewState: MutableLiveData<CommunityScreenViewState> =
         MutableLiveData(CommunityScreenViewState.Loading)
@@ -35,17 +38,10 @@ class CommunityScreenViewModel():MainViewModel<CommunityScreenEvent, CommunitySc
 
     private fun showScreen(){
         viewModelScope.launch {
-            val communityList: List<Community> = List(20) { id->
-                Community(
-                    "Designa",
-                    quantityMembers = 10000,
-                    id = id,
-                    description = LoremIpsum.Short.text
-                )
-            }
+            val communityListFlow = getCommunitiesUseCase.execute()
 
             _viewState.postValue(
-                CommunityScreenViewState.Display(communities = flow { emit(communityList) })
+                CommunityScreenViewState.Display(communities = communityListFlow)
             )
         }
 

@@ -1,17 +1,21 @@
 package ru.unlim1x.wb_project.ui.viewmodels.more_screen
 
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
+import ru.lim1x.domain.interfaces.usecases.IGetCurrentUserIdUseCase
+import ru.lim1x.domain.interfaces.usecases.IGetUserProfileDataUseCase
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.screens.model.MoreContainerData
-import ru.unlim1x.wb_project.ui.screens.model.User
 import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 
-class MoreScreenViewModel() : MainViewModel<MoreScreenEvent, MoreScreenViewState>() {
+class MoreScreenViewModel(
+    private val getUserProfileDataUseCase: IGetUserProfileDataUseCase,
+    private val getCurrentUserUseCase: IGetCurrentUserIdUseCase
+) : MainViewModel<MoreScreenEvent, MoreScreenViewState>() {
 
     private val _viewState: MutableLiveData<MoreScreenViewState> =
         MutableLiveData(MoreScreenViewState.Init)
@@ -34,12 +38,7 @@ class MoreScreenViewModel() : MainViewModel<MoreScreenEvent, MoreScreenViewState
 
     private fun showScreen() {
         viewModelScope.launch {
-            val user = User(
-                name = "Иван Иванов",
-                phone = "+7 999 999-99-99",
-                avatarURL = "",
-                hasAvatar = false
-            )
+            val user = getUserProfileDataUseCase.execute(getCurrentUserUseCase.execute())
             val myMeetings =
                 MoreContainerData(iconId = R.drawable.icon_meeting, textId = R.string.my_meetings, navigationRoute = NavGraphNodes.MoreRoot.MyMeetings.route)
             val theme =
@@ -62,7 +61,7 @@ class MoreScreenViewModel() : MainViewModel<MoreScreenEvent, MoreScreenViewState
 
             _viewState.postValue(
                 MoreScreenViewState.Display(
-                    user = user,
+                    user = user.last(),
                     containerList = listOfContainers
                 )
             )

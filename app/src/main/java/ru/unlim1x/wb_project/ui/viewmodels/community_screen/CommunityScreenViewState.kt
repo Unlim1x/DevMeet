@@ -1,7 +1,7 @@
 package ru.unlim1x.wb_project.ui.viewmodels.community_screen
 
 import kotlinx.coroutines.flow.Flow
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.Community
+import ru.lim1x.domain.models.Community
 
 sealed class CommunityScreenViewState{
 

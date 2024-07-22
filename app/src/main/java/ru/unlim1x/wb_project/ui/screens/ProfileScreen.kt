@@ -12,7 +12,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -26,9 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.koinViewModel
-import ru.unlim1x.wb_project.AppBarMenuItems
+import ru.unlim1x.wb_project.ui.AppBarMenuItems
 import ru.unlim1x.wb_project.R
-import ru.unlim1x.wb_project.ui.screens.model.User
+import ru.lim1x.domain.models.User
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatar.UserAvatar
 import ru.unlim1x.wb_project.ui.uiKit.avatar.state.UserAvatarState
@@ -77,7 +76,7 @@ fun ProfileScreen(navController: NavController, viewModel:ProfileScreenViewModel
 }
 
 @Composable
-private fun ProfileBody(modifier: Modifier, avatarState:UserAvatarState, user:User){
+private fun ProfileBody(modifier: Modifier, avatarState:UserAvatarState, user: User){
     LazyColumn(
         modifier = modifier
             .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
