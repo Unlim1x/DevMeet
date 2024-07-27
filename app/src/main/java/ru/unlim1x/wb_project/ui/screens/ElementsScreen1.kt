@@ -53,7 +53,7 @@ import ru.unlim1x.wb_project.ui.uiKit.buttons.SecondaryButton
 import ru.unlim1x.wb_project.ui.uiKit.cards.CommunityCard
 import ru.unlim1x.wb_project.ui.uiKit.cards.EventCard
 import ru.unlim1x.wb_project.ui.uiKit.cards.QuantityMembers
-import ru.unlim1x.wb_project.ui.uiKit.cards.TimeAndPlace
+import ru.lim1x.domain.models.TimeAndPlace
 import ru.unlim1x.wb_project.ui.uiKit.chips.Chip
 import ru.unlim1x.wb_project.ui.uiKit.custominputview.PassCodeInput
 import ru.unlim1x.wb_project.ui.uiKit.custominputview.PhoneInput

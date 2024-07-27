@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.cards.EventCard
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.Event
+import ru.lim1x.domain.models.Meeting
 import ru.unlim1x.wb_project.ui.uiKit.tabrow.model.TabData
 import java.security.InvalidParameterException
 
@@ -71,7 +71,6 @@ fun TabLayout(
         }
 
         HorizontalPager(state = pagerState) { page ->
-            Log.e("PAGER", "${page}")
             tabDataList[pagerState.currentPage].screen()
 
         }
@@ -80,13 +79,13 @@ fun TabLayout(
 }
 
 @Composable
-fun PageMeetingsAll(navController: NavController, listEvents: List<Event>) {
+fun PageMeetingsAll(navController: NavController, listMeetings: List<Meeting>) {
     LazyColumn(
         modifier = Modifier
             .background(color = DevMeetTheme.colorScheme.neutralWhite)
             .padding(top = 4.dp)
     ) {
-        itemsIndexed(listEvents) { index, event ->
+        itemsIndexed(listMeetings) { index, event ->
             EventCard(
                 heading = event.name,
                 timeAndPlace = event.timeAndPlace.dateAndPlaceString,
@@ -102,13 +101,13 @@ fun PageMeetingsAll(navController: NavController, listEvents: List<Event>) {
 }
 
 @Composable
-fun PageMeetingsActive(navController: NavController, listEvents: List<Event>) {
+fun PageMeetingsActive(navController: NavController, listMeetings: List<Meeting>) {
     LazyColumn(
         modifier = Modifier
             .background(color = DevMeetTheme.colorScheme.neutralWhite)
             .padding(top = 4.dp)
     ) {
-        itemsIndexed(listEvents) { index, event ->
+        itemsIndexed(listMeetings) { index, event ->
             EventCard(
                 heading = event.name,
                 timeAndPlace = event.timeAndPlace.dateAndPlaceString,
@@ -124,13 +123,13 @@ fun PageMeetingsActive(navController: NavController, listEvents: List<Event>) {
 }
 
 @Composable
-fun PageMeetingsPlanned(navController: NavController, listEvents: List<Event>) {
+fun PageMeetingsPlanned(navController: NavController, listMeetings: List<Meeting>) {
     LazyColumn(
         modifier = Modifier
             .background(color = DevMeetTheme.colorScheme.neutralWhite)
             .padding(top = 4.dp)
     ) {
-        itemsIndexed(listEvents) { index, event ->
+        itemsIndexed(listMeetings) { index, event ->
             EventCard(
                 heading = event.name,
                 timeAndPlace = event.timeAndPlace.dateAndPlaceString,
@@ -145,13 +144,13 @@ fun PageMeetingsPlanned(navController: NavController, listEvents: List<Event>) {
 }
 
 @Composable
-fun PageMeetingsPassed(navController: NavController, listEvents: List<Event>) {
+fun PageMeetingsPassed(navController: NavController, listMeetings: List<Meeting>) {
     LazyColumn(
         modifier = Modifier
             .background(color = DevMeetTheme.colorScheme.neutralWhite)
             .padding(top = 4.dp)
     ) {
-        itemsIndexed(listEvents) { index, event ->
+        itemsIndexed(listMeetings) { index, event ->
             EventCard(
                 heading = event.name,
                 timeAndPlace = event.timeAndPlace.dateAndPlaceString,

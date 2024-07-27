@@ -14,122 +14,113 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import org.koin.androidx.compose.koinViewModel
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.screens.model.MoreContainerData
-import ru.unlim1x.wb_project.ui.screens.model.User
+import ru.lim1x.domain.models.User
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatar.UserAvatar
+import ru.unlim1x.wb_project.ui.viewmodels.more_screen.MoreScreenEvent
+import ru.unlim1x.wb_project.ui.viewmodels.more_screen.MoreScreenViewModel
+import ru.unlim1x.wb_project.ui.viewmodels.more_screen.MoreScreenViewState
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+private const val PROFILE_CARD_VERTICAL_PADDING = 8
+private const val COLUMN_HORIZONTAL_PADDING = 16
+
 @Composable
-fun MoreScreen(navController: NavController) {
+fun MoreScreen(navController: NavController, viewModel: MoreScreenViewModel = koinViewModel()) {
 
+    val viewState = viewModel.viewState().observeAsState()
     Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
             TopBar(header = stringResource(id = R.string.more))
 
         }) {
-        //TODO: потом во ViewModel?
-        val user = User(
-            name = "Иван Иванов",
-            phone = "+7 999 999-99-99",
-            avatarURL = "",
-            hasAvatar = false
-        )
-        val myMeetings = MoreContainerData(iconId = R.drawable.icon_meeting, text = stringResource(
-            id = R.string.my_meetings
-        ))
-        val theme = MoreContainerData(iconId = R.drawable.icon_theme, text = stringResource(R.string.theme_string))
-        val notification =
-            MoreContainerData(iconId = R.drawable.icon_notification, text = stringResource(R.string.notifications))
-        val safety = MoreContainerData(iconId = R.drawable.icon_safety, text = stringResource(R.string.safety))
-        val memory = MoreContainerData(iconId = R.drawable.icon_res, text = stringResource(R.string.memory_res_string))
-        val help = MoreContainerData(iconId = R.drawable.icon_help, text = stringResource(R.string.help))
-        val invite = MoreContainerData(iconId = R.drawable.icon_invite, text = stringResource(R.string.invite_friend))
+        val modifier = Modifier.padding(top = it.calculateTopPadding())
 
-        val listOfContainers = listOf(myMeetings, theme, notification, safety, memory, help, invite)
+        when (val state = viewState.value) {
+            is MoreScreenViewState.Display -> {
+                MoreScreenBody(
+                    navController = navController,
+                    modifier = modifier,
+                    user = state.user,
+                    containerList = state.containerList
+                )
+            }
 
+            MoreScreenViewState.Init -> {
+                viewModel.obtain(MoreScreenEvent.OpenScreen)
+            }
 
+            null -> throw NotImplementedError("Unexpected state")
+        }
+    }
+    LaunchedEffect(key1 = viewState) {
+        viewModel.obtain(MoreScreenEvent.OpenScreen)
+    }
+}
 
-        LazyColumn(
-            modifier = Modifier.padding(
-                top = it.calculateTopPadding()
-            )
-        ) {
+@Composable
+private fun MoreScreenBody(
+    navController: NavController,
+    modifier: Modifier,
+    user: User,
+    containerList: List<MoreContainerData>
+) {
+    val firstContainer = 0
+    val lastContainer = containerList.size - 1
+    val containerWithDivider = 4
 
-
-            item {
-                MoreContainer(
-                    user = user,
-                    modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
-                ) {
-                    navController.navigate(NavGraphNodes.MoreRoot.Profile.route)
+    LazyColumn(
+        modifier = modifier.padding(horizontal = COLUMN_HORIZONTAL_PADDING.dp)
+    ) {
+        item {
+            MoreContainer(
+                user = user,
+                modifier = Modifier.padding(vertical = PROFILE_CARD_VERTICAL_PADDING.dp)
+            ) {
+                navController.navigate(NavGraphNodes.MoreRoot.Profile.route)
+            }
+        }
+        itemsIndexed(containerList) { index, item ->
+            val bottomPadding = when (index) {
+                firstContainer -> 16.dp
+                else -> 8.dp
+            }
+            val topPadding = when (index) {
+                firstContainer -> 8.dp
+                lastContainer -> 8.dp
+                else -> 0.dp
+            }
+            when(index) {
+                containerWithDivider ->{
+                    HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp))
                 }
             }
-            // TODO: items(listOfContainers){container->
-          //      MoreContainer()
-        //    }
-            item {
-                MoreContainer(
-                    moreContainerData = myMeetings,
-                    modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
-                ) {
-                    navController.navigate(NavGraphNodes.MoreRoot.MyMeetings.route)
+            MoreContainer(
+                moreContainerData = item,
+                modifier = Modifier.padding(top = topPadding, bottom = bottomPadding)
+            ) {
+                item.navigationRoute?.let { route ->
+                    navController.navigate(route = route)
                 }
-            }
-            item {
-                MoreContainer(
-                    moreContainerData = theme,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                ) {}
-            }
-            item {
-                MoreContainer(
-                    moreContainerData = notification,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                ) {}
-            }
-            item {
-                MoreContainer(
-                    moreContainerData = safety,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                ) {}
-            }
-            item {
-                MoreContainer(
-                    moreContainerData = memory,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                ) {}
-            }
-            item {
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp))
-            }
-            item {
-                MoreContainer(
-                    moreContainerData = help,
-                    modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
-                ) {
-                    navController.navigate(NavGraphNodes.MoreRoot.Elements.route)
-                }
-            }
-            item {
-                MoreContainer(moreContainerData = invite) {}
             }
         }
     }
@@ -149,13 +140,16 @@ fun MoreContainer(
         ) {
             Icon(
                 imageVector = ImageVector.vectorResource(id = moreContainerData.iconId),
-                contentDescription = moreContainerData.text,
+                contentDescription = stringResource(moreContainerData.textId),
                 modifier = Modifier
                     .height(20.dp)
                     .width(18.dp)
             )
             Spacer(modifier = Modifier.size(8.dp))
-            Text(text = moreContainerData.text, style = DevMeetTheme.typography.bodyText1)
+            Text(
+                text = stringResource(moreContainerData.textId),
+                style = DevMeetTheme.typography.bodyText1
+            )
         }
     }
 
@@ -163,13 +157,13 @@ fun MoreContainer(
         .requiredHeightIn(min = 40.dp, max = 50.dp)
         .clickable { onClick() }
         .fillMaxWidth()
-        .padding(horizontal = 8.dp),
+        .padding(end = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically) {
         MoreContainerWrapper()
         Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.icon_right_arrow),
-            contentDescription = moreContainerData.text,
+            contentDescription = stringResource(moreContainerData.textId),
             modifier = Modifier.height(20.dp)
         )
     }
@@ -200,15 +194,16 @@ fun MoreContainer(user: User, modifier: Modifier = Modifier, onClick: () -> Unit
     Row(modifier = modifier
         .requiredHeightIn(min = 40.dp, max = 50.dp)
         .clickable { onClick() }
-        .fillMaxWidth()
-        .padding(horizontal = 8.dp),
+        .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically) {
-        if (user.hasAvatar)
-            TODO()
-        else
+
             MoreContainerWrapper {
-                UserAvatar {}
+                if (user.hasAvatar) {
+                    UserAvatar(url = user.avatarURL) {}
+                } else {
+                    UserAvatar {}
+                }
             }
         Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.icon_right_arrow),
@@ -218,19 +213,3 @@ fun MoreContainer(user: User, modifier: Modifier = Modifier, onClick: () -> Unit
     }
 
 }
-
-@Preview
-@Composable
-fun MoreContainerPreview() {
-    val user =
-        User(name = "Иван Иванов", phone = "+7 999 999-99-99", avatarURL = "", hasAvatar = false)
-    val element = MoreContainerData(iconId = R.drawable.icon_invite, text = "Пригласить друга")
-//    Column {
-//        MoreContainer(moreContainerData = element) {}
-//        MoreContainer(user = user) {}
-//    }
-    MoreScreen(rememberNavController())
-}
-
-
-

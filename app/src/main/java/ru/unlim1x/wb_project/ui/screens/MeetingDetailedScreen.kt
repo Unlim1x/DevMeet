@@ -1,5 +1,6 @@
 package ru.unlim1x.wb_project.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -8,12 +9,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -34,66 +39,98 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
-import ru.unlim1x.wb_project.AppBarMenuItems
+import org.koin.androidx.compose.koinViewModel
+import ru.unlim1x.wb_project.ui.AppBarMenuItems
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatarline.AvatarLine
 import ru.unlim1x.wb_project.ui.uiKit.buttons.PrimaryButton
 import ru.unlim1x.wb_project.ui.uiKit.buttons.SecondaryButton
-import ru.unlim1x.wb_project.ui.uiKit.cards.TimeAndPlace
-import ru.unlim1x.wb_project.ui.uiKit.cards.model.Event
+import ru.lim1x.domain.models.Meeting
+import ru.lim1x.domain.models.MeetingDetailedExt
+import ru.unlim1x.wb_project.ui.viewmodels.meeting_detailed.MeetingDetailedScreenEvent
+import ru.unlim1x.wb_project.ui.viewmodels.meeting_detailed.MeetingDetailedScreenViewModel
+import ru.unlim1x.wb_project.ui.viewmodels.meeting_detailed.MeetingDetailedScreenViewState
 
+private val FIGMA_HORIZONTAL_PADDING = 16.dp
+private val FIGMA_GAP = 16.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MeetingDetailedScreen(navController: NavController, eventName: String, eventId: Int) {
+fun MeetingDetailedScreen(navController: NavController, eventName: String, eventId: Int, viewModel:MeetingDetailedScreenViewModel = koinViewModel()) {
 
-    val FIGMA_HORIZONTAL_PADDING = 16.dp
-    val FIGMA_GAP = 16.dp
+    val viewState = viewModel.viewState().observeAsState()
+    val lazyListState = rememberLazyListState()
 
-    val meGo = remember { mutableStateOf(false) }
+    when(val state = viewState.value){
+        is MeetingDetailedScreenViewState.DisplayGo -> {
+            MeetingDetailedBody(
+                navController = navController,
+                meeting = state.meeting.collectAsState(state.initial).value,
+                listOfAvatars = state.listAvatars.collectAsState(initial = emptyList()).value,
+                meGo = state.go,
+                lazyListState = lazyListState) {
+                viewModel.obtain(MeetingDetailedScreenEvent.WillNotGo(eventId))
+            }
+        }
+        is MeetingDetailedScreenViewState.DisplayNotGo -> {
+            MeetingDetailedBody(
+                navController = navController,
+                meeting = state.meeting.collectAsState(state.initial).value,
+                listOfAvatars = state.listAvatars.collectAsState(initial = emptyList()).value,
+                meGo = state.go,
+                lazyListState = lazyListState) {
+                viewModel.obtain(MeetingDetailedScreenEvent.WillGo(eventId))
+            }
+        }
+        MeetingDetailedScreenViewState.Init -> {
+            viewModel.obtain(MeetingDetailedScreenEvent.OpenScreen(meetingId = eventId))
+        }
+        else -> {throw  NotImplementedError("Unexpected state")}
+    }
+
+
+
+}
+
+@Composable
+private fun MeetingDetailedBody(
+    navController: NavController,
+    lazyListState: LazyListState,
+    meeting: MeetingDetailedExt,
+    listOfAvatars:List<String>,
+    meGo:Boolean,
+    onButtonClick:()->Unit){
 
     var showDialog by remember {
         mutableStateOf(false)
     }
-
     Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
-            TopBar(header = eventName,
+            TopBar(header = meeting.name,
                 backIconIsVisible = true,
                 backIconAction = {navController.navigateUp()},
-                actionMenuItem = if (meGo.value) AppBarMenuItems.GoCheck else null)
+                actionMenuItem = if (meGo) AppBarMenuItems.GoCheck else null)
 
         }) {
 
         val modifier = Modifier.padding(top = it.calculateTopPadding())
-        val listOfAvatars: MutableList<String> =
-            MutableList(10) { "https://get.wallhere.com/photo/face-women-model-portrait-long-hair-photography-hair-nose-solo-Person-skin-head-supermodel-girl-beauty-eye-lip-blond-hairstyle-portrait-photography-photo-shoot-brown-hair-art-model-human-hair-color-hair-coloring-human-body-organ-close-up-layered-hair-5168.jpg" }
-        val listOfTags = listOf("Junior", "Python", "Moscow")
-        val event = Event(
-            name = "Developer meeting",
-            timeAndPlace = TimeAndPlace(
-                place = "Moscow",
-                date = 13,
-                month = 9,
-                year = 2024
-            ),
-            isFinished = false,
-            tags = listOfTags
-        )
+
 
         if (showDialog)
             ShowImageFullScreen {
                 showDialog = false
             }
 
-        LazyColumn(modifier = modifier.padding(horizontal = FIGMA_HORIZONTAL_PADDING)) {
+        LazyColumn(
+            modifier = modifier.padding(horizontal = FIGMA_HORIZONTAL_PADDING),
+            state = lazyListState) {
 
             item { Spacer(modifier = Modifier.size(FIGMA_GAP)) }
 
             item {
                 Text(
-                    text = event.timeAndPlace.dateAndPlaceString,
+                    text = meeting.timeAndPlace.dateAndPlaceString,
                     style = DevMeetTheme.typography.bodyText1,
                     color = DevMeetTheme.colorScheme.neutralWeak
                 )
@@ -125,7 +162,7 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
 
             item { Spacer(modifier = Modifier.size(FIGMA_GAP)) }
 
-            item { Text(text = event.description, style = DevMeetTheme.typography.metadata1) }
+            item { Text(text = meeting.description, style = DevMeetTheme.typography.metadata1) }
 
             item { Spacer(modifier = Modifier.size(FIGMA_GAP)) }
 
@@ -133,15 +170,14 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
 
             item { Spacer(modifier = Modifier.size(FIGMA_GAP)) }
 
-            when (meGo.value) {
+            when (meGo) {
                 true -> {
                     item {
                         SecondaryButton(
                             modifier = Modifier.fillMaxWidth(),
                             buttonText = stringResource(R.string.i_will_come_another_time)
                         ) {
-                            listOfAvatars.removeLast()
-                            meGo.value = false
+                            onButtonClick()
                         }
                     }
                 }
@@ -152,8 +188,7 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
                             modifier = Modifier.fillMaxWidth(),
                             buttonText = stringResource(R.string.i_will_come_to_meeting)
                         ) {
-                            listOfAvatars.add("https://10wallpaper.com/wallpaper/1280x1024/2012/Ann_Sophie_2020_Fashion_Model_Celebrity_Photo_1280x1024.jpg")
-                            meGo.value = true
+                            onButtonClick()
                         }
                     }
 

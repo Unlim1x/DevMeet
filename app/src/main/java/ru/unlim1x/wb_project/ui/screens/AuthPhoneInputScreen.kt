@@ -12,7 +12,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,11 +28,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.navigation.AuthNavGraphNodes
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.buttons.PrimaryButton
 import ru.unlim1x.wb_project.ui.uiKit.custominputview.PhoneInput
+import ru.unlim1x.wb_project.ui.viewmodels.auth_phone_input_screen.AuthPhoneInputScreenViewModel
+import ru.unlim1x.wb_project.ui.viewmodels.auth_phone_input_screen.AuthPhoneInputScreenEvent
+import ru.unlim1x.wb_project.ui.viewmodels.auth_phone_input_screen.AuthPhoneInputScreenViewState
 
 private val FIGMA_MAIN_TEXT_HORIZONTAL_PADDING = 40.dp
 private val FIGMA_MAIN_TEXT_TOP_PADDING = 169.dp
@@ -39,78 +45,99 @@ private val BOTTOM_PADDING = 48.dp
 private val MAIN_TEXT_HORIZONTAL_PADDING =
     FIGMA_MAIN_TEXT_HORIZONTAL_PADDING - COLUMN_HORIZONTAL_PADDING
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuthPhoneInputScreen(navController: NavController) {
+fun AuthPhoneInputScreen(navController: NavController, viewModel: AuthPhoneInputScreenViewModel = koinViewModel()) {
 
-    var buttonState by remember { mutableStateOf(false) }
-    var codeCountry by remember { mutableStateOf("") }
-    var phoneNumber by remember { mutableStateOf("") }
-    val coroutineScope = rememberCoroutineScope()
+    val viewState = viewModel.viewState().observeAsState()
+
     Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
         }) {
-        LazyColumn(
-            modifier = Modifier.padding(
-                start = COLUMN_HORIZONTAL_PADDING, end = COLUMN_HORIZONTAL_PADDING
-            ),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround,
-            contentPadding = PaddingValues(
-                top = it.calculateTopPadding() +
-                        FIGMA_MAIN_TEXT_TOP_PADDING - it.calculateTopPadding()
-            )
-        ) {
+        val modifier = Modifier.padding(top = it.calculateTopPadding())
 
-            item {
-                Text(
-                    modifier = Modifier.padding(horizontal = MAIN_TEXT_HORIZONTAL_PADDING),
-                    text = stringResource(R.string.enter_phone_number),
-                    style = DevMeetTheme.typography.heading2
-                )
-            }
-            item {
-                Spacer(modifier = Modifier.size(8.dp))
-            }
-            item {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = MAIN_TEXT_HORIZONTAL_PADDING)
-                        .padding(bottom = BOTTOM_PADDING),
-                    text = stringResource(R.string.we_will_send_code),
-                    style = DevMeetTheme.typography.bodyText2,
-                    textAlign = TextAlign.Center,
-                )
-            }
-
-            item {
-                PhoneInput(modifier = Modifier.padding(bottom = BOTTOM_PADDING)) { code, phone ->
-                    coroutineScope.launch {
-                        buttonState = validatePhoneNumber(phone)
-                        codeCountry = code
-                        phoneNumber = phone
-                        Log.e("callback", code + phone)
-                    }
+        when (val state = viewState.value){
+            is AuthPhoneInputScreenViewState.Display -> {
+                PhoneInputBody(modifier = modifier) {countryCode, phoneNumber->
+                    viewModel.obtain(AuthPhoneInputScreenEvent.SendCode(countryCode,phoneNumber))
                 }
             }
 
-            item {
-                PrimaryButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    buttonText = stringResource(R.string.continue_text),
-                    enabled = buttonState
-                ) {
-                    navController.navigate(route = AuthNavGraphNodes.CodeNode.route + "/${codeCountry}/${phoneNumber}")
+            is AuthPhoneInputScreenViewState.Sent -> {
+                LaunchedEffect(key1 = viewState) {
+                    navController.navigate(route = AuthNavGraphNodes.CodeNode.route + "/${state.countryCode}/${state.phone}")
                 }
             }
-
-
+            else-> throw NotImplementedError("Unexpected state")
         }
 
     }
 
 }
 
+@Composable
+private fun PhoneInputBody(modifier: Modifier = Modifier,
+                           onButtonClick:(countyCode:String, phoneNumber:String)->Unit){
+    var buttonState by remember { mutableStateOf(false) }
+    var codeCountry by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+
+    LazyColumn(
+        modifier = modifier.padding(
+            horizontal = COLUMN_HORIZONTAL_PADDING
+        ),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceAround,
+        contentPadding = PaddingValues(
+            top = FIGMA_MAIN_TEXT_TOP_PADDING
+        )
+    ) {
+
+        item {
+            Text(
+                modifier = Modifier.padding(horizontal = MAIN_TEXT_HORIZONTAL_PADDING),
+                text = stringResource(R.string.enter_phone_number),
+                style = DevMeetTheme.typography.heading2
+            )
+        }
+        item {
+            Spacer(modifier = Modifier.size(8.dp))
+        }
+        item {
+            Text(
+                modifier = Modifier
+                    .padding(horizontal = MAIN_TEXT_HORIZONTAL_PADDING)
+                    .padding(bottom = BOTTOM_PADDING),
+                text = stringResource(R.string.we_will_send_code),
+                style = DevMeetTheme.typography.bodyText2,
+                textAlign = TextAlign.Center,
+            )
+        }
+
+        item {
+            PhoneInput(modifier = Modifier.padding(bottom = BOTTOM_PADDING)) { code, phone ->
+                coroutineScope.launch {
+                    buttonState = validatePhoneNumber(phone)
+                    codeCountry = code
+                    phoneNumber = phone
+                    Log.e("callback", code + phone)
+                }
+            }
+        }
+
+        item {
+            PrimaryButton(
+                modifier = Modifier.fillMaxWidth(),
+                buttonText = stringResource(R.string.continue_text),
+                enabled = buttonState
+            ) {
+                onButtonClick(codeCountry, phoneNumber)
+            }
+        }
+
+
+    }
+}
 fun validatePhoneNumber(phoneNumber: String): Boolean {
     return phoneNumber.length == 10
 }

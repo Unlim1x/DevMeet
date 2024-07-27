@@ -5,14 +5,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ru.unlim1x.wb_project.ui.screens.AuthCodeInputScreen
 import ru.unlim1x.wb_project.ui.screens.AuthPhoneInputScreen
 import ru.unlim1x.wb_project.ui.screens.AuthProfileScreen
 
 @Composable
-fun AuthNavGraph(navController: NavHostController) {
-
+fun AuthNavGraph(navController:NavHostController) {
 
     NavHost(navController = navController, startDestination = AuthNavGraphNodes.PhoneNode.route) {
 

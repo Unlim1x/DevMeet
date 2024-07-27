@@ -74,4 +74,9 @@ dependencies {
     implementation(libs.coil)
     implementation("net.engawapg.lib:zoomable:1.6.1")
     implementation("com.airbnb.android:lottie-compose:6.4.1")
+    implementation(libs.koin)
+    implementation (libs.androidx.runtime.livedata)
+
+    implementation(project(":domain"))
+    implementation(project(":repository"))
 }
