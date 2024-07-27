@@ -84,7 +84,7 @@ private fun PhoneInputBody(modifier: Modifier = Modifier,
 
     LazyColumn(
         modifier = modifier.padding(
-            start = COLUMN_HORIZONTAL_PADDING, end = COLUMN_HORIZONTAL_PADDING
+            horizontal = COLUMN_HORIZONTAL_PADDING
         ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround,

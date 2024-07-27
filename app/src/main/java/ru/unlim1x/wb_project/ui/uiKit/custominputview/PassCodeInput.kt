@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +25,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 
 @Composable
@@ -32,6 +34,8 @@ fun PassCodeInput(modifier: Modifier = Modifier, actionDone: (code: String) -> U
         mutableStateOf("")
     }
     val focusManager = LocalFocusManager.current
+    val coroutineScope = rememberCoroutineScope()
+
     BasicTextField(modifier = modifier.padding(vertical = 16.dp),
         value = pin,
         onValueChange = { pin = it.take(4) },
@@ -54,7 +58,9 @@ fun PassCodeInput(modifier: Modifier = Modifier, actionDone: (code: String) -> U
         keyboardActions = KeyboardActions(
             onDone = {
                 focusManager.clearFocus()
-                actionDone(pin)
+                coroutineScope.launch {
+                    actionDone(pin)
+                }
             }
         )
     )

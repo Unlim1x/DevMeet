@@ -71,7 +71,6 @@ fun TabLayout(
         }
 
         HorizontalPager(state = pagerState) { page ->
-            Log.e("PAGER", "${page}")
             tabDataList[pagerState.currentPage].screen()
 
         }

@@ -39,8 +39,6 @@ class AuthPhoneInputScreenViewModel(private val sendCodeUseCase:ISendCodeToPhone
                 viewModelScope.launch {
                     sendCodeUseCase.execute(phoneNumber)
                     _viewState.postValue(AuthPhoneInputScreenViewState.Sent(countryCode, phoneNumber))
-                    delay(100)
-                    _viewState.postValue(AuthPhoneInputScreenViewState.Display)
                 }
             }
         }

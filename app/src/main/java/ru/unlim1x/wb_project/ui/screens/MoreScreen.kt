@@ -42,6 +42,7 @@ import ru.unlim1x.wb_project.ui.viewmodels.more_screen.MoreScreenViewState
 
 
 private const val PROFILE_CARD_VERTICAL_PADDING = 8
+private const val COLUMN_HORIZONTAL_PADDING = 16
 
 @Composable
 fun MoreScreen(navController: NavController, viewModel: MoreScreenViewModel = koinViewModel()) {
@@ -83,8 +84,12 @@ private fun MoreScreenBody(
     user: User,
     containerList: List<MoreContainerData>
 ) {
+    val firstContainer = 0
+    val lastContainer = containerList.size - 1
+    val containerWithDivider = 4
+
     LazyColumn(
-        modifier = modifier
+        modifier = modifier.padding(horizontal = COLUMN_HORIZONTAL_PADDING.dp)
     ) {
         item {
             MoreContainer(
@@ -96,16 +101,16 @@ private fun MoreScreenBody(
         }
         itemsIndexed(containerList) { index, item ->
             val bottomPadding = when (index) {
-                0 -> 16.dp
+                firstContainer -> 16.dp
                 else -> 8.dp
             }
             val topPadding = when (index) {
-                0 -> 8.dp
-                containerList.size - 1 -> 8.dp
+                firstContainer -> 8.dp
+                lastContainer -> 8.dp
                 else -> 0.dp
             }
             when(index) {
-                4 ->{
+                containerWithDivider ->{
                     HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp))
                 }
             }
@@ -152,7 +157,7 @@ fun MoreContainer(
         .requiredHeightIn(min = 40.dp, max = 50.dp)
         .clickable { onClick() }
         .fillMaxWidth()
-        .padding(horizontal = 8.dp),
+        .padding(end = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically) {
         MoreContainerWrapper()
@@ -189,13 +194,10 @@ fun MoreContainer(user: User, modifier: Modifier = Modifier, onClick: () -> Unit
     Row(modifier = modifier
         .requiredHeightIn(min = 40.dp, max = 50.dp)
         .clickable { onClick() }
-        .fillMaxWidth()
-        .padding(horizontal = 8.dp),
+        .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically) {
-        if (user.hasAvatar)
-            TODO()
-        else
+
             MoreContainerWrapper {
                 if (user.hasAvatar) {
                     UserAvatar(url = user.avatarURL) {}

@@ -70,9 +70,8 @@ class MeetingDetailedScreenViewModel(
         }
     }
 
-    fun loadDetails(meetingId: Int) {
+    private fun loadDetails(meetingId: Int) {
         viewModelScope.launch {
-
             meetingFlow = meetingDetailedInfoByIdUseCase.execute(meetingId)
             val currentUserId = getCurrentUserUseCase.execute()
 
@@ -139,7 +138,7 @@ class MeetingDetailedScreenViewModel(
                 isVisiting = true,
                 meetingId = meetingId
             )
-
+            avatarsURL = meetingFlow.map { it.visitors.map { it.second } }
             _viewState.postValue(
                 MeetingDetailedScreenViewState.DisplayGo(
                     meeting = meetingFlow,
@@ -158,6 +157,7 @@ class MeetingDetailedScreenViewModel(
                 isVisiting = false,
                 meetingId = meetingId
             )
+            avatarsURL = meetingFlow.map { it.visitors.map { it.second } }
             _viewState.postValue(
                 MeetingDetailedScreenViewState.DisplayNotGo(
                     meeting = meetingFlow,

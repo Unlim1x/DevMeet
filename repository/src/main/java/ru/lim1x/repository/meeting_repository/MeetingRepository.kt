@@ -25,7 +25,7 @@ internal class MeetingRepository(private val dataSource:MockDataSource) : IMeeti
     }
 
     override suspend fun loadMeetingDetailed(meetingId: Int): Flow<MeetingDetailed> {
-        return flowOf(dataSource.getDetailedMeetingInfo(meetingId=meetingId))
+        return (dataSource.getDetailedMeetingInfo(meetingId=meetingId))
     }
 
     override suspend fun removeUserFromVisitingList(meetingId: Int, userId: Int): Boolean {

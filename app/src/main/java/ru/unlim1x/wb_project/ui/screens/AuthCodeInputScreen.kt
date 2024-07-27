@@ -96,7 +96,7 @@ private fun CodeInputBody(modifier: Modifier = Modifier, code : String, phone: S
     val phoneNumberText = transformPhoneNumber(code, phone)
     var buttonState by remember { mutableStateOf(true) }
     val focusRequester = remember { FocusRequester() }
-    val coroutineScope = rememberCoroutineScope()
+
 
     LazyColumn(
         modifier = modifier.padding(
@@ -137,9 +137,7 @@ private fun CodeInputBody(modifier: Modifier = Modifier, code : String, phone: S
                     .padding(bottom = BOTTOM_PADDING)
                     .focusRequester(focusRequester)
             ) { code ->
-                coroutineScope.launch {
-                    actionDone(code)
-                }
+                actionDone(code)
             }
             LaunchedEffect(Unit) {
                 focusRequester.requestFocus()

@@ -1,6 +1,7 @@
 package ru.lim1x.domain.usecase_implementation.meetings
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import ru.lim1x.domain.interfaces.repositories.IMeetingsRepository
 import ru.lim1x.domain.interfaces.usecases.IGetMeetingDetailedInfoByIdUseCase

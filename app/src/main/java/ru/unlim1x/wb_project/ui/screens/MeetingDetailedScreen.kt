@@ -1,5 +1,6 @@
 package ru.unlim1x.wb_project.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -57,6 +60,7 @@ private val FIGMA_GAP = 16.dp
 fun MeetingDetailedScreen(navController: NavController, eventName: String, eventId: Int, viewModel:MeetingDetailedScreenViewModel = koinViewModel()) {
 
     val viewState = viewModel.viewState().observeAsState()
+    val lazyListState = rememberLazyListState()
 
     when(val state = viewState.value){
         is MeetingDetailedScreenViewState.DisplayGo -> {
@@ -64,7 +68,8 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
                 navController = navController,
                 meeting = state.meeting.collectAsState(state.initial).value,
                 listOfAvatars = state.listAvatars.collectAsState(initial = emptyList()).value,
-                meGo = state.go) {
+                meGo = state.go,
+                lazyListState = lazyListState) {
                 viewModel.obtain(MeetingDetailedScreenEvent.WillNotGo(eventId))
             }
         }
@@ -73,7 +78,8 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
                 navController = navController,
                 meeting = state.meeting.collectAsState(state.initial).value,
                 listOfAvatars = state.listAvatars.collectAsState(initial = emptyList()).value,
-                meGo = state.go) {
+                meGo = state.go,
+                lazyListState = lazyListState) {
                 viewModel.obtain(MeetingDetailedScreenEvent.WillGo(eventId))
             }
         }
@@ -90,6 +96,7 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
 @Composable
 private fun MeetingDetailedBody(
     navController: NavController,
+    lazyListState: LazyListState,
     meeting: MeetingDetailedExt,
     listOfAvatars:List<String>,
     meGo:Boolean,
@@ -98,7 +105,6 @@ private fun MeetingDetailedBody(
     var showDialog by remember {
         mutableStateOf(false)
     }
-
     Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
             TopBar(header = meeting.name,
@@ -116,7 +122,9 @@ private fun MeetingDetailedBody(
                 showDialog = false
             }
 
-        LazyColumn(modifier = modifier.padding(horizontal = FIGMA_HORIZONTAL_PADDING)) {
+        LazyColumn(
+            modifier = modifier.padding(horizontal = FIGMA_HORIZONTAL_PADDING),
+            state = lazyListState) {
 
             item { Spacer(modifier = Modifier.size(FIGMA_GAP)) }
 
