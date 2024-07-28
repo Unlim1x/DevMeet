@@ -30,10 +30,17 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
 }
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.koin.core)
     implementation(project(":domain"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
