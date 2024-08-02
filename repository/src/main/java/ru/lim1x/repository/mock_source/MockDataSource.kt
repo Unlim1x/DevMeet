@@ -21,8 +21,7 @@ import java.lang.Thread.State
 
 internal class MockDataSource {
 
-    //Надо с флоу еще разобраться, как нормально передать состояние meetingDetailed
-    //Потому что сейчас оно не работает
+
     private val listOfTags = listOf("Junior", "Python", "Moscow")
     private val visitorsIds = listOf(2, 3, 4, 5)
     private val visitorAvatarUrl =

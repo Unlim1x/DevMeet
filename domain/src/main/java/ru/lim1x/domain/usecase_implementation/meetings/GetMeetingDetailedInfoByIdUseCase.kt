@@ -11,10 +11,8 @@ import ru.lim1x.domain.models.MeetingDetailed
 import ru.lim1x.domain.models.MeetingDetailedExt
 
 internal class GetMeetingDetailedInfoByIdUseCase(private val meetingRepository: IMeetingsRepository): IGetMeetingDetailedInfoByIdUseCase {
-    override suspend fun execute(meetingId: Int): MutableStateFlow<MeetingDetailed> {
+    override fun execute(meetingId: Int): StateFlow<MeetingDetailed?> {
        return meetingRepository.loadMeetingDetailed(meetingId)
-           //.map {
-          // it.mapToExt(visitors = it.visitorsIds.map {visitorId-> IdAndAvatar(visitorId, meetingRepository.getUserAvatar(visitorId)) })
-       //}
+
     }
 }

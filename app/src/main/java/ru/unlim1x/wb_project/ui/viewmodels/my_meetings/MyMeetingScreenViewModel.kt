@@ -47,7 +47,7 @@ class MyMeetingScreenViewModel(
     fun showScreen() {
         viewModelScope.launch {
             //todo: потом передать параметр id встречи, сейчас моки возвращают конкретные списки
-            plannedMeetingsFlow = getPlannedMeetingsUseCase.execute()
+            plannedMeetingsFlow = getPlannedMeetingsUseCase.execute(0)
             finishedMeetingsFlow = getFinishedMeetingsUseCase.execute()
 
             _viewState.postValue(

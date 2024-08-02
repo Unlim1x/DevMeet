@@ -31,7 +31,7 @@ class AuthCodeInputScreenViewModel(private val validateCodeUseCase:IValidateCode
         when(event){
             is AuthCodeInputScreenEvent.Validate->{
                 viewModelScope.launch {
-                    if(validateCodeUseCase.execute(event.code).isSuccessful) {
+                    if(validateCodeUseCase.execute(event.code).value?.isSuccessful == true) {
                         savePhoneUseCase.execute(event.phone)
                         _viewState.postValue(AuthCodeInputScreenViewState.Valid)
                     }

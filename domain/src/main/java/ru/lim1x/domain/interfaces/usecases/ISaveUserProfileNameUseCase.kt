@@ -1,5 +1,7 @@
 package ru.lim1x.domain.interfaces.usecases
 
+import kotlinx.coroutines.flow.StateFlow
+
 interface ISaveUserProfileNameUseCase {
-    suspend fun execute(userId:Int, name:String, surname:String = ""):Boolean
+    fun execute(userId:Int, name:String, surname:String = ""): Boolean
 }

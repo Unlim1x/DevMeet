@@ -3,6 +3,7 @@ package ru.unlim1x.wb_project.ui.viewmodels.community_detailed_screen
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import ru.lim1x.domain.interfaces.usecases.IGetCommunityDetailedInfoByIdUseCase
@@ -47,8 +48,8 @@ class CommunityDetailedScreenViewModel(
         viewModelScope.launch {
            val community = communityDetailedInfoByIdUseCase.execute(id)
             val meetingsList = meetingsByCommunityIdUseCase.execute(id)
-            communityInitial = community.first()
-        _viewState.postValue(CommunityDetailedScreenViewState.Display(community = community, listOfMeetings = meetingsList, initial = communityInitial))
+            communityInitial = community.first()!!
+        _viewState.postValue(CommunityDetailedScreenViewState.Display(community = community.filterNotNull(), listOfMeetings = meetingsList, initial = communityInitial))
         }
     }
 

@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
@@ -62,34 +63,33 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
     parameters = { parametersOf(eventId)}
 )) {
 
-    val viewState = viewModel.viewState().observeAsState()
+    val viewState = viewModel.viewState().collectAsStateWithLifecycle()
     val lazyListState = rememberLazyListState()
 
     when(val state = viewState.value){
-        is MeetingDetailedScreenViewState.DisplayGo -> {
-            MeetingDetailedBody(
-                navController = navController,
-                meeting = state.meeting.collectAsState(state.initial).value,
-                listOfAvatars = state.listAvatars.collectAsState(initial = emptyList()).value,
-                meGo = state.go,
-                lazyListState = lazyListState) {
-                viewModel.obtain(MeetingDetailedScreenEvent.WillNotGo(eventId))
+
+        is MeetingDetailedScreenViewState.Display -> {
+            Log.e("STATE", state.toString())
+            state.meeting.collectAsState(state.initial).value?.let {
+                MeetingDetailedBody(
+                    navController = navController,
+                    meeting = it,
+                    listOfAvatars = state.listAvatars.collectAsState(initial = emptyList()).value,
+                    meGo = state.go,
+                    lazyListState = lazyListState) {
+                    if(state.go) {
+                        viewModel.obtain(MeetingDetailedScreenEvent.WillNotGo(eventId))
+                    }
+                    else {
+                        viewModel.obtain(MeetingDetailedScreenEvent.WillGo(eventId))
+                    }
+                }
             }
         }
-        is MeetingDetailedScreenViewState.DisplayNotGo -> {
-            MeetingDetailedBody(
-                navController = navController,
-                meeting = state.meeting.collectAsState(state.initial).value,
-                listOfAvatars = state.listAvatars.collectAsState(initial = emptyList()).value,
-                meGo = state.go,
-                lazyListState = lazyListState) {
-                viewModel.obtain(MeetingDetailedScreenEvent.WillGo(eventId))
-            }
-        }
-        MeetingDetailedScreenViewState.Init -> {
-            viewModel.obtain(MeetingDetailedScreenEvent.OpenScreen(meetingId = eventId))
-        }
-        else -> {throw  NotImplementedError("Unexpected state")}
+
+        MeetingDetailedScreenViewState.Error -> {Log.e("STATE", state.toString())}
+        MeetingDetailedScreenViewState.Loading -> {Log.e("STATE", state.toString())}
+        else -> {Log.e("STATE", state.toString())}
     }
 
 

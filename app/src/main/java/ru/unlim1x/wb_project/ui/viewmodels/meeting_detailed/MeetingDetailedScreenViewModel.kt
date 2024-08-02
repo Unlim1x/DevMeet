@@ -7,11 +7,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.lim1x.domain.interfaces.usecases.IGetCurrentUserIdUseCase
@@ -30,181 +34,80 @@ class MeetingDetailedScreenViewModel(
     private val getUserAvatarByIdUseCase: IGetUserAvatarByIdUseCase,
     private val meetingId: Int
 ) : MainViewModel<MeetingDetailedScreenEvent, MeetingDetailedScreenViewState>() {
-    private val _viewState: MutableLiveData<MeetingDetailedScreenViewState> =
-        MutableLiveData(MeetingDetailedScreenViewState.Init)
+    private val _viewState: MutableStateFlow<MeetingDetailedScreenViewState> =
+        MutableStateFlow(MeetingDetailedScreenViewState.Loading)
 
-    private lateinit var meetingFlow: MutableStateFlow<MeetingDetailed>
-    private lateinit var meetingExt: MutableStateFlow<MeetingDetailedExt>
-    private lateinit var avatarsURL: Flow<List<String>>
+    private val _meetingFlow: MutableStateFlow<MeetingDetailed?> = MutableStateFlow(null)
+    private val _meetingExt: MutableStateFlow<MeetingDetailedExt?> = MutableStateFlow(null)
+    private val _avatarsURL: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
+
+    private val meetingFlow = _meetingFlow.asStateFlow()
+    private val meetingExt = _meetingExt.asStateFlow()
+    private val avatarsURL = _avatarsURL.asStateFlow()
+
     private var currentUserId: Int = 0
-    private lateinit var meetingInitialValue :MeetingDetailedExt
+    private var meetingInitialValue :MeetingDetailedExt? = null
 
     init {
         viewModelScope.launch {
-            meetingFlow = meetingDetailedInfoByIdUseCase.execute(meetingId)
-            currentUserId = getCurrentUserUseCase.execute()
-            mapForView()
-            avatarsURL = meetingExt.map { it.visitors.map { it.second } }
-            meetingInitialValue = meetingExt.value
-            loadDetails(meetingId)
-            observeMeetingFlow()
-        }
-
-    }
-
-    override fun obtain(event: MeetingDetailedScreenEvent) {
-        when (event) {
-            is MeetingDetailedScreenEvent.OpenScreen -> reduce(
-                event,
-                MeetingDetailedScreenViewState.Init
-            )
-
-            is MeetingDetailedScreenEvent.WillGo -> reduce(
-                event, MeetingDetailedScreenViewState.DisplayNotGo(
-                    meetingExt,
-                    avatarsURL,
-                    false,
-                    meetingInitialValue
-                )
-            )
-
-            is MeetingDetailedScreenEvent.WillNotGo -> reduce(
-                event, MeetingDetailedScreenViewState.DisplayGo(
-                    meetingExt,
-                    avatarsURL,
-                    true,
-                    meetingInitialValue
-                )
-            )
-
-
-        }
-    }
-
-    private fun reduce(
-        event: MeetingDetailedScreenEvent,
-        state: MeetingDetailedScreenViewState.Init
-    ) {
-        when (event) {
-            is MeetingDetailedScreenEvent.OpenScreen -> {
-                //loadDetails(event.meetingId)
+            meetingDetailedInfoByIdUseCase.execute(meetingId).collectLatest {
+                _meetingFlow.value = it
+                currentUserId = getCurrentUserUseCase.execute()
+                _meetingExt.update { updateMeetingExt() }
+                _meetingExt.value?.let {meeting->
+                    _avatarsURL.update { meeting.visitors.map { it.second } } }
+                meetingInitialValue = _meetingExt.value
+                loadDetails()
+                observeMeetingFlow()
+            }
             }
 
-            else -> throw NotImplementedError("Unexpected state")
         }
+
+    private fun updateDisplayGoState(go:Boolean){
+        _viewState.value = (MeetingDetailedScreenViewState.Display(meetingExt,avatarsURL, go, meetingInitialValue))
     }
-
-    private fun loadDetails(meetingId: Int) {
-
-            if (meetingExt.value.visitors.any { it.first == currentUserId }) {
-                _viewState.postValue(
-                    MeetingDetailedScreenViewState.DisplayGo(
-                        meeting = meetingExt,
-                        avatarsURL,
-                        true,
-                        meetingInitialValue
-                    )
-                )
-            } else {
-                _viewState.postValue(
-                    MeetingDetailedScreenViewState.DisplayNotGo(
-                        meeting = meetingExt,
-                        avatarsURL,
-                        false,
-                        meetingInitialValue
-                    )
-                )
-            }
-    }
-
-    private fun reduce(
-        event: MeetingDetailedScreenEvent,
-        state: MeetingDetailedScreenViewState.DisplayGo
-    ) {
-
-        when (event) {
-            is MeetingDetailedScreenEvent.WillNotGo -> {
-                fetchNotGo(event.meetingId)
-            }
-
-            else -> throw NotImplementedError("Unexpected state")
-        }
-    }
-
-    private fun reduce(
-        event: MeetingDetailedScreenEvent,
-        state: MeetingDetailedScreenViewState.DisplayNotGo
-    ) {
-
-        when (event) {
-            is MeetingDetailedScreenEvent.WillGo -> {
-                fetchGo(event.meetingId)
-            }
-
-            else -> throw NotImplementedError("Unexpected state")
-        }
-    }
-
-    override fun viewState(): LiveData<MeetingDetailedScreenViewState> {
-        return _viewState
-    }
-
-    private fun mapForView(){
-        meetingExt = MutableStateFlow(updateMeetingExt())
-
+    private fun loadDetails() {
+        meetingExt.value?.visitors?.any{it.first == currentUserId}?.let { updateDisplayGoState(it) }
     }
 
     private fun observeMeetingFlow(){
         meetingFlow.onEach {
-            meetingExt.update {
-               updateMeetingExt()
+            it?.let {
+                _meetingExt.update {
+                    updateMeetingExt()
+                }
             }
         }.launchIn(viewModelScope)
     }
 
-    private fun updateMeetingExt():MeetingDetailedExt{
+    private fun updateMeetingExt():MeetingDetailedExt?{
         val idAndAvatarList: MutableList<IdAndAvatar> = mutableListOf()
-        meetingFlow.value.visitorsIds.forEach {
-            idAndAvatarList.add(IdAndAvatar(first = it, second = getUserAvatarByIdUseCase.execute(it)))
+        meetingFlow.value?.visitorsIds?.forEach {
+            idAndAvatarList.add(IdAndAvatar(first = it, second = getUserAvatarByIdUseCase.execute(it).orEmpty()))
         }
-        return meetingFlow.value.mapToExt(visitors = idAndAvatarList)
+
+        return meetingFlow.value?.mapToExt(visitors = idAndAvatarList)
     }
 
-    private fun fetchGo(meetingId: Int) {
-        viewModelScope.launch {
-            setUserVisitingUseCase.execute(
-                userId = getCurrentUserUseCase.execute(),
-                isVisiting = true,
-                meetingId = meetingId
-            )
-            avatarsURL = meetingExt.map { it.visitors.map { it.second } }
-            _viewState.postValue(
-                MeetingDetailedScreenViewState.DisplayGo(
-                    meeting = meetingExt,
-                    avatarsURL,
-                    true,
-                    meetingInitialValue
-                )
-            )
+    private fun willGo(value:Boolean){
+        val succeed = setUserVisitingUseCase.execute(meetingId = meetingId, userId = currentUserId, isVisiting = value)
+        if(succeed) {
+            updateDisplayGoState(go =value)
         }
     }
 
-    private fun fetchNotGo(meetingId: Int) {
-        viewModelScope.launch {
-            setUserVisitingUseCase.execute(
-                userId = getCurrentUserUseCase.execute(),
-                isVisiting = false,
-                meetingId = meetingId
-            )
-            avatarsURL = meetingExt.map { it.visitors.map { it.second } }
-            _viewState.postValue(
-                MeetingDetailedScreenViewState.DisplayNotGo(
-                    meeting = meetingExt,
-                    avatarsURL,
-                    false,
-                    meetingInitialValue
-                )
-            )
+
+    override fun obtain(event: MeetingDetailedScreenEvent) {
+        when (event) {
+            is MeetingDetailedScreenEvent.WillGo -> willGo(true)
+
+            is MeetingDetailedScreenEvent.WillNotGo -> willGo(false)
         }
     }
+
+    override fun viewState(): StateFlow<MeetingDetailedScreenViewState> {
+        return _viewState.asStateFlow()
+    }
+
 }
