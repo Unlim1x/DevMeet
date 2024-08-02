@@ -7,11 +7,11 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import ru.lim1x.domain.repository.DataSourceTest
-import ru.lim1x.domain.repository.MeetingRepositoryTest
+import ru.lim1x.domain.repository.MeetingRepositoryStub
 
 //Этот тест не проходит, пока я не разобрался как изменить состояние и пихнуть его во flow
 class GetMeetingDetailedInfoByIdUseCaseTest{
-    private val meetingsRepository = MeetingRepositoryTest(DataSourceTest())
+    private val meetingsRepository = MeetingRepositoryStub(DataSourceTest())
 
 
     @OptIn(ExperimentalCoroutinesApi::class)

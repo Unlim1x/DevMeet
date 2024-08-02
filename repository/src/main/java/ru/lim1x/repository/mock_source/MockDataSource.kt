@@ -71,15 +71,15 @@ internal class MockDataSource {
         community.copy(id = it)
     }
 
-    private val listMeetingsVisitingByUser: MutableList<Meeting> = MutableList(5) {
-        meeting.copy(id = it)
-    }
+    private val listMeetingsIdVisitingByUser: MutableList<Int> = mutableListOf()
 
     private fun visitorsMap() = listCommunities.associateBy({it.id}, {visitorsIds}).toMutableMap().map {entry->
         var list = entry.value
-        if (listMeetingsVisitingByUser.any { it.id == entry.key }){
+        //Log.e("Mock1", entry.toString())
+        if (listMeetingsIdVisitingByUser.any { it == entry.key }){
             list = list.plus(currentUser.id)
         }
+        Log.e("Mock2", list.toString())
         list
     }
 
@@ -100,7 +100,7 @@ internal class MockDataSource {
 
     ))
 
-    private val stateMeeting:Flow<MeetingDetailed> = flowOf(meetingDetailed.asStateFlow().value)
+    private val stateMeeting:MutableStateFlow<MeetingDetailed> = meetingDetailed
 
 
     private fun updateMeetingDetailed(meetingId:Int){
@@ -147,12 +147,12 @@ internal class MockDataSource {
     }
 
     fun getVisitingMeetings(): List<Meeting> {
-        return listMeetingsVisitingByUser
+        return listMeetingsAll.filter { listMeetingsIdVisitingByUser.contains(it.id) }
     }
 
     fun addUserToVisitingList(userId: Int, meetingId: Int): Boolean {
-        listMeetingsVisitingByUser.add(
-            meeting.copy(id = meetingId)
+        listMeetingsIdVisitingByUser.add(
+            meetingId
         )
         updateMeetingDetailed(meetingId)
         return true
@@ -160,7 +160,7 @@ internal class MockDataSource {
 
     fun removeUserFromVisitingList(meetingId: Int): Boolean {
         try {
-            listMeetingsVisitingByUser.removeIf { it.id == meetingId }
+            listMeetingsIdVisitingByUser.removeIf { it == meetingId }
             updateMeetingDetailed(meetingId)
             return true
         } catch (e: Exception) {
@@ -168,7 +168,7 @@ internal class MockDataSource {
         }
     }
 
-    fun getDetailedMeetingInfo(meetingId: Int): Flow<MeetingDetailed> {
+    fun getDetailedMeetingInfo(meetingId: Int): MutableStateFlow<MeetingDetailed> {
         updateMeetingDetailed(meetingId)
         return stateMeeting
     }

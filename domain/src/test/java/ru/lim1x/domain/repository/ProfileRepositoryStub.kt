@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.flowOf
 import ru.lim1x.domain.interfaces.repositories.IProfileRepository
 import ru.lim1x.domain.models.User
 
-class ProfileRepositoryTest(private val dataSource:DataSourceTest) : IProfileRepository {
+class ProfileRepositoryStub(private val dataSource:DataSourceTest) : IProfileRepository {
     override suspend fun loadProfile(userId: Int): Flow<User> {
         return flowOf(dataSource.getCurrentUserInfo(userId))
     }

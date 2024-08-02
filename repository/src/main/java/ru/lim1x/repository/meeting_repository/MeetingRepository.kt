@@ -1,6 +1,7 @@
 package ru.lim1x.repository.meeting_repository
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import ru.lim1x.domain.interfaces.repositories.IMeetingsRepository
 import ru.lim1x.domain.models.Meeting
@@ -24,7 +25,7 @@ internal class MeetingRepository(private val dataSource:MockDataSource) : IMeeti
         return flowOf(dataSource.getFinishedMeetings())
     }
 
-    override suspend fun loadMeetingDetailed(meetingId: Int): Flow<MeetingDetailed> {
+    override suspend fun loadMeetingDetailed(meetingId: Int): MutableStateFlow<MeetingDetailed> {
         return (dataSource.getDetailedMeetingInfo(meetingId=meetingId))
     }
 
@@ -40,7 +41,7 @@ internal class MeetingRepository(private val dataSource:MockDataSource) : IMeeti
         return flowOf(dataSource.getAllMeetings())
     }
 
-    override suspend fun getUserAvatar(userId: Int): String {
+    override fun getUserAvatar(userId: Int): String {
         return dataSource.getVisitorAvatarById(userId)
     }
 }

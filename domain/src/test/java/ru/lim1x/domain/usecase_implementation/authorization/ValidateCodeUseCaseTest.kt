@@ -6,13 +6,13 @@ import kotlinx.coroutines.test.runTest
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import ru.lim1x.domain.repository.AuthorizationRepositoryTest
+import ru.lim1x.domain.repository.AuthorizationRepositoryStub
 import ru.lim1x.domain.repository.DataSourceTest
 
 
 class ValidateCodeUseCaseTest {
 
-    private val authRepository = AuthorizationRepositoryTest(DataSourceTest())
+    private val authRepository = AuthorizationRepositoryStub(DataSourceTest())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test

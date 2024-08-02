@@ -6,11 +6,11 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import ru.lim1x.domain.repository.CommunityRepositoryTest
+import ru.lim1x.domain.repository.CommunityRepositoryStub
 import ru.lim1x.domain.repository.DataSourceTest
 
 class GetCommunityDetailedInfoByIdUseCaseTest{
-    private val communityRepository = CommunityRepositoryTest(dataSource = DataSourceTest())
+    private val communityRepository = CommunityRepositoryStub(dataSource = DataSourceTest())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test

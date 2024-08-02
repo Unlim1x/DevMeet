@@ -6,7 +6,7 @@ import ru.lim1x.domain.interfaces.repositories.IMeetingsRepository
 import ru.lim1x.domain.models.Meeting
 import ru.lim1x.domain.models.MeetingDetailed
 
-internal class MeetingRepositoryTest(private val dataSource:DataSourceTest):IMeetingsRepository {
+internal class MeetingRepositoryStub(private val dataSource:DataSourceTest):IMeetingsRepository {
     override suspend fun loadAllMeetings(): Flow<List<Meeting>> {
         return flowOf(dataSource.getAllMeetings())
     }

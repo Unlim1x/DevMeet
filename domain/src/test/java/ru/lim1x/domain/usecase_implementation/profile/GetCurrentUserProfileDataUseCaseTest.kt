@@ -7,11 +7,11 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import ru.lim1x.domain.repository.DataSourceTest
-import ru.lim1x.domain.repository.ProfileRepositoryTest
+import ru.lim1x.domain.repository.ProfileRepositoryStub
 
 
 class GetCurrentUserProfileDataUseCaseTest{
-    private val profileRepository = ProfileRepositoryTest(dataSource = DataSourceTest())
+    private val profileRepository = ProfileRepositoryStub(dataSource = DataSourceTest())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
