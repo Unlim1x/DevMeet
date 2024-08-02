@@ -26,6 +26,6 @@ val appModule = module {
     viewModel{AuthPhoneInputScreenViewModel(get())}
     viewModel{AuthCodeInputScreenViewModel(get(),get())}
     viewModel{ AuthProfileScreenViewModel(get(),get()) }
-    viewModel{MeetingDetailedScreenViewModel(get(),get(), get())}
+    viewModel{MeetingDetailedScreenViewModel(get(),get(), get(), get(), get())}
     viewModel{CommunityDetailedScreenViewModel(get(),get())}
 }

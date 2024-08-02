@@ -1,12 +1,9 @@
-package ru.lim1x.repository.mock_source
+package ru.lim1x.domain.repository
 
-import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.update
 import ru.lim1x.domain.models.AuthorizationResult
 import ru.lim1x.domain.models.Community
@@ -17,12 +14,10 @@ import ru.lim1x.domain.models.Meeting
 import ru.lim1x.domain.models.MeetingDetailed
 import ru.lim1x.domain.models.TimeAndPlace
 import ru.lim1x.domain.models.User
-import java.lang.Thread.State
 
-internal class MockDataSource {
-
+class DataSourceTest {
     //Надо с флоу еще разобраться, как нормально передать состояние meetingDetailed
-    //Потому что сейчас оно не работает
+    //Потому что сейчас состояние не передается
     private val listOfTags = listOf("Junior", "Python", "Moscow")
     private val visitorsIds = listOf(2, 3, 4, 5)
     private val visitorAvatarUrl =
@@ -50,13 +45,13 @@ internal class MockDataSource {
         id = 0
     )
 
-    private val community=Community(
+    private val community= Community(
         imageUrl = communityAvatarUrl,
         name = "Designa",
         quantityMembers = 10000,
         id = 0
     )
-    private val communityDetailed=CommunityDetailed(
+    private val communityDetailed= CommunityDetailed(
         imageUrl = communityAvatarUrl,
         name = "Designa",
         quantityMembers = 10000,
@@ -71,36 +66,37 @@ internal class MockDataSource {
         community.copy(id = it)
     }
 
-    private val listMeetingsIdVisitingByUser: MutableList<Int> = mutableListOf()
+    private val listMeetingsVisitingByUser: MutableList<Meeting> = MutableList(5) {
+        meeting.copy(id = it)
+    }
 
     private fun visitorsMap() = listCommunities.associateBy({it.id}, {visitorsIds}).toMutableMap().map {entry->
         var list = entry.value
-        //Log.e("Mock1", entry.toString())
-        if (listMeetingsIdVisitingByUser.any { it == entry.key }){
+        if (listMeetingsVisitingByUser.any { it.id == entry.key }){
             list = list.plus(currentUser.id)
         }
-        Log.e("Mock2", list.toString())
         list
     }
 
-    private val meetingDetailed:MutableStateFlow<MeetingDetailed> = MutableStateFlow(
+    private val meetingDetailed: MutableStateFlow<MeetingDetailed> = MutableStateFlow(
         MeetingDetailed(
-        name = "Developer meeting",
-        timeAndPlace = TimeAndPlace(
-            place = "Moscow",
-            date = 13,
-            month = 9,
-            year = 2024
-        ),
-        isFinished = true,
-        tags = listOfTags,
-        id = 0,
-        description = LoremIpsum.Short.text,
-        visitorsIds = visitorsMap()[0]
+            name = "Developer meeting",
+            timeAndPlace = TimeAndPlace(
+                place = "Moscow",
+                date = 13,
+                month = 9,
+                year = 2024
+            ),
+            isFinished = true,
+            tags = listOfTags,
+            id = 0,
+            description = LoremIpsum.Short.text,
+            visitorsIds = visitorsMap()[0]
 
-    ))
+        )
+    )
 
-    private val stateMeeting:MutableStateFlow<MeetingDetailed> = meetingDetailed
+    private val stateMeeting: Flow<MeetingDetailed> = flowOf(meetingDetailed.asStateFlow().value)
 
 
     private fun updateMeetingDetailed(meetingId:Int){
@@ -113,7 +109,7 @@ internal class MockDataSource {
 
 
     private val listMeetingsAll: MutableList<Meeting> = MutableList(15) {
-       meeting.copy(isFinished = it%4==0, id = it)
+        meeting.copy(isFinished = it%4==0, id = it)
 
     }
 
@@ -130,7 +126,7 @@ internal class MockDataSource {
     fun getCommunities():List<Community>{
         return listCommunities
     }
-    fun getCommunityInfo(communityId:Int):CommunityDetailed{
+    fun getCommunityInfo(communityId:Int): CommunityDetailed {
         return communityDetailed.copy(id = communityId)
     }
 
@@ -147,12 +143,12 @@ internal class MockDataSource {
     }
 
     fun getVisitingMeetings(): List<Meeting> {
-        return listMeetingsAll.filter { listMeetingsIdVisitingByUser.contains(it.id) }
+        return listMeetingsVisitingByUser
     }
 
     fun addUserToVisitingList(userId: Int, meetingId: Int): Boolean {
-        listMeetingsIdVisitingByUser.add(
-            meetingId
+        listMeetingsVisitingByUser.add(
+            meeting.copy(id = meetingId)
         )
         updateMeetingDetailed(meetingId)
         return true
@@ -160,7 +156,7 @@ internal class MockDataSource {
 
     fun removeUserFromVisitingList(meetingId: Int): Boolean {
         try {
-            listMeetingsIdVisitingByUser.removeIf { it == meetingId }
+            listMeetingsVisitingByUser.removeIf { it.id == meetingId }
             updateMeetingDetailed(meetingId)
             return true
         } catch (e: Exception) {
@@ -168,7 +164,7 @@ internal class MockDataSource {
         }
     }
 
-    fun getDetailedMeetingInfo(meetingId: Int): MutableStateFlow<MeetingDetailed> {
+    fun getDetailedMeetingInfo(meetingId: Int): Flow<MeetingDetailed> {
         updateMeetingDetailed(meetingId)
         return stateMeeting
     }
@@ -183,7 +179,7 @@ internal class MockDataSource {
         return true
     }
 
-    fun getCurrentUserInfo(userId: Int):User{
+    fun getCurrentUserInfo(userId: Int): User {
         return currentUser
     }
 
@@ -192,7 +188,7 @@ internal class MockDataSource {
     }
 
 
-    fun validateCode(code:String):AuthorizationResult{
+    fun validateCode(code:String): AuthorizationResult {
         return if (listOf("4568","1234","5555").any { code == it })
             AuthorizationResult(true, currentUser.id)
         else

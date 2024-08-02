@@ -40,6 +40,7 @@ import coil.request.ImageRequest
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import ru.unlim1x.wb_project.ui.AppBarMenuItems
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
@@ -57,7 +58,9 @@ private val FIGMA_GAP = 16.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MeetingDetailedScreen(navController: NavController, eventName: String, eventId: Int, viewModel:MeetingDetailedScreenViewModel = koinViewModel()) {
+fun MeetingDetailedScreen(navController: NavController, eventName: String, eventId: Int, viewModel:MeetingDetailedScreenViewModel = koinViewModel(
+    parameters = { parametersOf(eventId)}
+)) {
 
     val viewState = viewModel.viewState().observeAsState()
     val lazyListState = rememberLazyListState()
