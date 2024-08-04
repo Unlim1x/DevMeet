@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -37,7 +38,7 @@ private const val LOTTIE_ANIMATION_URL =
 @Composable
 fun SplashScreen(navController:NavController, viewModel:SplashScreenViewModel = koinViewModel()) {
     Log.e("SPlashScreen", "Recomposition")
-    val viewState = viewModel.viewState().observeAsState()
+    val viewState = viewModel.viewState().collectAsStateWithLifecycle()
     when(val state = viewState.value){
 
         SplashScreenViewState.Display -> {

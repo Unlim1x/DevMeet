@@ -3,7 +3,11 @@ package ru.unlim1x.wb_project.ui.viewmodels.profile_screen
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import ru.lim1x.domain.interfaces.usecases.IGetCurrentUserIdUseCase
 import ru.lim1x.domain.interfaces.usecases.IGetUserProfileDataUseCase
@@ -11,16 +15,22 @@ import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 
 
 class ProfileScreenViewModel(
-    private val getCurrentUserUseCase: IGetCurrentUserIdUseCase,
-    private val getUserProfileDataUseCase: IGetUserProfileDataUseCase
+    getCurrentUserUseCase: IGetCurrentUserIdUseCase,
+    getUserProfileDataUseCase: IGetUserProfileDataUseCase
 ):MainViewModel<ProfileScreenEvent, ProfileScreenViewState>() {
 
-    private val _viewState: MutableLiveData<ProfileScreenViewState> =
-        MutableLiveData(ProfileScreenViewState.Init)
+    private val _viewState: MutableStateFlow<ProfileScreenViewState> =
+        MutableStateFlow(ProfileScreenViewState.Init)
+
+    init {
+        getUserProfileDataUseCase.execute(getCurrentUserUseCase.execute()).onEach {
+            _viewState.value = (ProfileScreenViewState.Display(user =it))
+        }.launchIn(viewModelScope)
+    }
 
     private fun reduce(event: ProfileScreenEvent, state: ProfileScreenViewState.Init){
         when (event){
-            ProfileScreenEvent.OpenScreen-> {showScreen()}
+            ProfileScreenEvent.OpenScreen-> {}
         }
     }
     override fun obtain(event: ProfileScreenEvent) {
@@ -29,17 +39,9 @@ class ProfileScreenViewModel(
         }
     }
 
-    override fun viewState(): LiveData<ProfileScreenViewState> {
-        return this._viewState
+    override fun viewState(): MutableStateFlow<ProfileScreenViewState> {
+        return _viewState
     }
 
-    private fun showScreen(){
-        viewModelScope.launch {
-            val user = getUserProfileDataUseCase.execute(getCurrentUserUseCase.execute())
-            _viewState.postValue(ProfileScreenViewState.Display(user =user.last()
 
-            )
-            )
-        }
-    }
 }

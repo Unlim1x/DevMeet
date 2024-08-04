@@ -3,6 +3,7 @@ package ru.unlim1x.wb_project.ui.viewmodels.auth_profile_screen
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.lim1x.domain.interfaces.usecases.IGetCurrentUserIdUseCase
 import ru.lim1x.domain.interfaces.usecases.ISaveUserProfileNameUseCase
@@ -14,8 +15,8 @@ class AuthProfileScreenViewModel(
     ):MainViewModel<AuthProfileScreenEvent, AuthProfileScreenViewState>() {
 
 
-    private val _viewState: MutableLiveData<AuthProfileScreenViewState> =
-        MutableLiveData(AuthProfileScreenViewState.Display)
+    private val _viewState: MutableStateFlow<AuthProfileScreenViewState> =
+        MutableStateFlow(AuthProfileScreenViewState.Display)
     override fun obtain(event: AuthProfileScreenEvent) {
         when(event){
 
@@ -32,7 +33,7 @@ class AuthProfileScreenViewModel(
                 viewModelScope.launch {
                     val userId = getCurrentUserUseCase.execute()
                     saveUserNameUseCase.execute(userId = userId, event.name, event.surname)
-                    _viewState.postValue(AuthProfileScreenViewState.Saved)
+                    _viewState.value = (AuthProfileScreenViewState.Saved)
                 }
             }
         }
@@ -40,7 +41,7 @@ class AuthProfileScreenViewModel(
     }
 
 
-    override fun viewState(): LiveData<AuthProfileScreenViewState> {
+    override fun viewState(): MutableStateFlow<AuthProfileScreenViewState> {
        return _viewState
     }
 }

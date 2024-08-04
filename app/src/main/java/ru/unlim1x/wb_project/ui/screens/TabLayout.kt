@@ -93,7 +93,7 @@ fun PageMeetingsAll(navController: NavController, listMeetings: List<Meeting>) {
                 tags = event.tags
             ) {
                 if (!event.isFinished)
-                    navController.navigate(NavGraphNodes.MeetingRoot.MeetingDetailed.route + "/${event.id}/${event.name}")
+                    navController.navigate(NavGraphNodes.MeetingRoot.MeetingDetailed.route + "/${event.id}")
             }
             Spacer(modifier = Modifier.size(12.dp))
         }
@@ -115,7 +115,7 @@ fun PageMeetingsActive(navController: NavController, listMeetings: List<Meeting>
                 tags = event.tags
             ) {
                 if (!event.isFinished)
-                    navController.navigate(NavGraphNodes.MeetingRoot.MeetingDetailed.route + "/${event.id}/${event.name}")
+                    navController.navigate(NavGraphNodes.MeetingRoot.MeetingDetailed.route + "/${event.id}")
             }
             Spacer(modifier = Modifier.size(12.dp))
         }
@@ -136,7 +136,7 @@ fun PageMeetingsPlanned(navController: NavController, listMeetings: List<Meeting
                 isOver = event.isFinished,
                 tags = event.tags
             ) {
-                navController.navigate(NavGraphNodes.MoreRoot.MeetingDetailed.route + "/${event.id}/${event.name}")
+                navController.navigate(NavGraphNodes.MoreRoot.MeetingDetailed.route + "/${event.id}")
             }
             Spacer(modifier = Modifier.size(12.dp))
         }

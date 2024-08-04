@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.koinViewModel
@@ -36,7 +37,7 @@ private val FIGMA_GAP_SMALL = 2.dp
 fun CommunityDetailedScreen(navController: NavController, communityName: String, communityId: Int,
                             viewModel: CommunityDetailedScreenViewModel = koinViewModel()) {
 
-    val viewState = viewModel.viewState().observeAsState()
+    val viewState = viewModel.viewState().collectAsStateWithLifecycle()
 
     Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
@@ -98,7 +99,7 @@ private fun CommunityDetailedBody(modifier: Modifier=Modifier,
                 timeAndPlace = event.timeAndPlace.dateAndPlaceString,
                 tags = event.tags
             ) {
-                navController.navigate(NavGraphNodes.CommunityRoot.CommunityDetailed.MeetingDetailed.route + "/${event.id}/${event.name}")
+                navController.navigate(NavGraphNodes.CommunityRoot.CommunityDetailed.MeetingDetailed.route + "/${event.id}")
             }
         }
 

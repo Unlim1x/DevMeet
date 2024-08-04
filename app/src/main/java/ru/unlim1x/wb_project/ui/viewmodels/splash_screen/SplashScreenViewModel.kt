@@ -14,8 +14,8 @@ import kotlinx.coroutines.launch
 import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 
 class SplashScreenViewModel():MainViewModel<SplashScreenEvent, SplashScreenViewState>() {
-    private val _viewState: MutableLiveData<SplashScreenViewState> =
-        MutableLiveData(SplashScreenViewState.Init)
+    private val _viewState: MutableStateFlow<SplashScreenViewState> =
+        MutableStateFlow(SplashScreenViewState.Init)
 
     init{
         Log.e("Created", "CREATED VM")
@@ -37,19 +37,19 @@ class SplashScreenViewModel():MainViewModel<SplashScreenEvent, SplashScreenViewS
     private fun showScreen(){
         Log.e("SSVM", "Showscreen")
         viewModelScope.launch(Dispatchers.Default) {
-            _viewState.postValue(SplashScreenViewState.Display)
+            _viewState.value = (SplashScreenViewState.Display)
             Log.e("SSVM", "_viewstate= ${_viewState.value}")
-            //Грузим что-то тяжелое
+            //Грузим что-то тяжелое.
             //Проверяем авторизацию
             val authorized = false
             delay(3000)
-            _viewState.postValue(SplashScreenViewState.Finished(isAuthorized = authorized))
+            _viewState.value = (SplashScreenViewState.Finished(isAuthorized = authorized))
 
 
         }
     }
 
-    override fun viewState(): LiveData<SplashScreenViewState> {
+    override fun viewState(): MutableStateFlow<SplashScreenViewState> {
         return _viewState
     }
 }

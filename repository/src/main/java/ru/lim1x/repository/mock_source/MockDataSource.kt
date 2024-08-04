@@ -33,7 +33,7 @@ internal class MockDataSource {
         phone = "",
         id = 1,
         avatarURL = visitorAvatarUrl,
-        hasAvatar = false
+        hasAvatar = true
     )
 
     private val meeting = Meeting(

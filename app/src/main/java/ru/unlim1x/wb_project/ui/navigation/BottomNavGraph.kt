@@ -39,18 +39,16 @@ fun BottomNavGraph(navController: NavHostController, bottomPadding: Dp) {
                 }
             }
             composable(
-                route = NavGraphNodes.MeetingRoot.MeetingDetailed.route + "/{id}/{name}",
+                route = NavGraphNodes.MeetingRoot.MeetingDetailed.route + "/{id}",
                 arguments = listOf(
-                    navArgument("name") { type = NavType.StringType },
                     navArgument("id") { type = NavType.IntType })
             ) { backStackEntry ->
-                val eventName = backStackEntry.arguments?.getString("name")
+
                 val eventId = backStackEntry.arguments?.getInt("id")
-                if (eventName != null && eventId != null) {
+                if (eventId != null) {
                     Box(modifier = Modifier.padding(bottom = bottomPadding)) {
                         MeetingDetailedScreen(
                             navController = navController,
-                            eventName = eventName,
                             eventId = eventId
                         )
                     }
@@ -94,18 +92,15 @@ fun BottomNavGraph(navController: NavHostController, bottomPadding: Dp) {
             }
 
             composable(
-                route = NavGraphNodes.CommunityRoot.CommunityDetailed.MeetingDetailed.route + "/{id}/{name}",
+                route = NavGraphNodes.CommunityRoot.CommunityDetailed.MeetingDetailed.route + "/{id}",
                 arguments = listOf(
-                    navArgument("name") { type = NavType.StringType },
                     navArgument("id") { type = NavType.IntType })
             ) { backStackEntry ->
-                val eventName = backStackEntry.arguments?.getString("name")
                 val eventId = backStackEntry.arguments?.getInt("id")
-                if (eventName != null && eventId != null) {
+                if (eventId != null) {
                     Box(modifier = Modifier.padding(bottom = bottomPadding)) {
                         MeetingDetailedScreen(
                             navController = navController,
-                            eventName = eventName,
                             eventId = eventId
                         )
                     }
@@ -145,18 +140,15 @@ fun BottomNavGraph(navController: NavHostController, bottomPadding: Dp) {
                 }
             }
             composable(
-                route = NavGraphNodes.MoreRoot.MeetingDetailed.route + "/{id}/{name}",
+                route = NavGraphNodes.MoreRoot.MeetingDetailed.route + "/{id}",
                 arguments = listOf(
-                    navArgument("name") { type = NavType.StringType },
                     navArgument("id") { type = NavType.IntType })
             ) { backStackEntry ->
-                val eventName = backStackEntry.arguments?.getString("name")
                 val eventId = backStackEntry.arguments?.getInt("id")
-                if (eventName != null && eventId != null) {
+                if (eventId != null) {
                     Box(modifier = Modifier.padding(bottom = bottomPadding)) {
                         MeetingDetailedScreen(
                             navController = navController,
-                            eventName = eventName,
                             eventId = eventId
                         )
                     }

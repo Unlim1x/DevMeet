@@ -4,8 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
+import ru.lim1x.domain.interfaces.usecases.IGetCurrentUserIdUseCase
 import ru.lim1x.domain.interfaces.usecases.IGetFinishedMeetingsUseCase
 import ru.lim1x.domain.interfaces.usecases.IGetPlannedMeetingsUseCase
 import ru.lim1x.domain.models.TimeAndPlace
@@ -13,20 +18,33 @@ import ru.lim1x.domain.models.Meeting
 import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 
 class MyMeetingScreenViewModel(
-    private val getPlannedMeetingsUseCase: IGetPlannedMeetingsUseCase,
-    private val getFinishedMeetingsUseCase: IGetFinishedMeetingsUseCase
+    getPlannedMeetingsUseCase: IGetPlannedMeetingsUseCase,
+    getFinishedMeetingsUseCase: IGetFinishedMeetingsUseCase,
+    getCurrentUserIdUseCase: IGetCurrentUserIdUseCase
 ) : MainViewModel<MyMeetingScreenEvent, MyMeetingScreenViewState>() {
 
-    private val _viewState: MutableLiveData<MyMeetingScreenViewState> =
-        MutableLiveData(MyMeetingScreenViewState.Loading)
+    private val _viewState: MutableStateFlow<MyMeetingScreenViewState> =
+        MutableStateFlow(MyMeetingScreenViewState.Loading)
 
-    private lateinit var plannedMeetingsFlow: Flow<List<Meeting>>
-    private lateinit var finishedMeetingsFlow: Flow<List<Meeting>>
+    private val _plannedMeetingsFlow: MutableStateFlow<List<Meeting>> = MutableStateFlow(emptyList())
+    private val _finishedMeetingsFlow: MutableStateFlow<List<Meeting>> = MutableStateFlow(emptyList())
 
+    init{
+
+        getPlannedMeetingsUseCase.execute(getCurrentUserIdUseCase.execute()).zip(getFinishedMeetingsUseCase.execute()){
+            plannedList, finishedList->
+            _plannedMeetingsFlow.update { plannedList }
+            _finishedMeetingsFlow.update { finishedList }
+            _viewState.update { MyMeetingScreenViewState.Display(
+                _plannedMeetingsFlow,
+                _finishedMeetingsFlow
+            ) }
+        }.launchIn(viewModelScope)
+
+    }
     private fun reduce(event: MyMeetingScreenEvent, state: MyMeetingScreenViewState.Loading) {
         when (event) {
             is MyMeetingScreenEvent.OpenScreen -> {
-                showScreen()
             }
         }
     }
@@ -40,23 +58,8 @@ class MyMeetingScreenViewModel(
         }
     }
 
-    override fun viewState(): LiveData<MyMeetingScreenViewState> {
-        return this._viewState
+    override fun viewState(): MutableStateFlow<MyMeetingScreenViewState> {
+        return _viewState
     }
 
-    fun showScreen() {
-        viewModelScope.launch {
-            //todo: потом передать параметр id встречи, сейчас моки возвращают конкретные списки
-            plannedMeetingsFlow = getPlannedMeetingsUseCase.execute(0)
-            finishedMeetingsFlow = getFinishedMeetingsUseCase.execute()
-
-            _viewState.postValue(
-                MyMeetingScreenViewState.Display(
-                    plannedMeetings = plannedMeetingsFlow,
-                    finishedMeetings = finishedMeetingsFlow
-                )
-            )
-        }
-
-    }
 }

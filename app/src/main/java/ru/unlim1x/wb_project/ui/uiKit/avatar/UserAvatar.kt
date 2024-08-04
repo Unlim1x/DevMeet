@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -167,19 +168,18 @@ fun UserAvatar(
     url: String,
     onClick: () -> Unit
 ) {
-    val boxSize = size
-    val imageUserSize = ((76f / 200f) * boxSize.value).dp
-    val imagePlusSize = ((20f / 100f) * boxSize.value).dp
+    val imagePlusSize = ((20f / 100f) * size.value).dp
     when (state) {
         UserAvatarState.Default -> {
             Box(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .size(boxSize)
+                    .size(size)
                     .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
                 contentAlignment = Alignment.Center
             ) {
-                AsyncImage(model = url, contentDescription = stringResource(R.string.user_avatar))
+                AsyncImage(model = url, contentDescription = stringResource(R.string.user_avatar),
+                    contentScale = ContentScale.Crop)
             }
         }
 
@@ -193,11 +193,12 @@ fun UserAvatar(
                             view.playSoundEffect(SoundEffectConstants.CLICK)
                             onClick()
                         }
-                        .size(boxSize)
+                        .size(size)
                         .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
                     contentAlignment = Alignment.Center
                 ) {
-                    AsyncImage( modifier = Modifier.size(boxSize),model = url, contentDescription = stringResource(R.string.user_avatar))
+                    AsyncImage( modifier = Modifier.size(size),model = url, contentDescription = stringResource(R.string.user_avatar),
+                        contentScale = ContentScale.Crop)
                 }
                 CompositionLocalProvider(
                     LocalRippleTheme provides NoRippleTheme,

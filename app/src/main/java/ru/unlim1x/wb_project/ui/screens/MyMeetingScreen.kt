@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.koinViewModel
@@ -31,7 +32,7 @@ import ru.unlim1x.wb_project.ui.viewmodels.my_meetings.MyMeetingScreenViewState
 fun MyMeetingScreen(navController: NavController, viewModel: MyMeetingScreenViewModel = koinViewModel()) {
 
 
-    val viewState = viewModel.viewState().observeAsState()
+    val viewState = viewModel.viewState().collectAsStateWithLifecycle()
     Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
             TopBar(header = stringResource(id = R.string.my_meetings),
@@ -55,9 +56,7 @@ fun MyMeetingScreen(navController: NavController, viewModel: MyMeetingScreenView
 
 
     }
-    LaunchedEffect(key1 = viewState) {
-        viewModel.obtain(MyMeetingScreenEvent.OpenScreen)
-    }
+
 }
 
 @OptIn(ExperimentalFoundationApi::class)

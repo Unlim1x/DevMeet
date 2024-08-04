@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
@@ -48,7 +49,7 @@ private val MAIN_TEXT_HORIZONTAL_PADDING =
 @Composable
 fun AuthPhoneInputScreen(navController: NavController, viewModel: AuthPhoneInputScreenViewModel = koinViewModel()) {
 
-    val viewState = viewModel.viewState().observeAsState()
+    val viewState = viewModel.viewState().collectAsStateWithLifecycle()
 
     Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {

@@ -3,6 +3,7 @@ package ru.unlim1x.wb_project.ui.viewmodels.community_detailed_screen
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -19,8 +20,8 @@ class CommunityDetailedScreenViewModel(
     private val communityDetailedInfoByIdUseCase: IGetCommunityDetailedInfoByIdUseCase,
     private val meetingsByCommunityIdUseCase: IGetMeetingsByCommunityIdUseCase
 ):MainViewModel<CommunityDetailedScreenEvent, CommunityDetailedScreenViewState>() {
-    private val _viewState: MutableLiveData<CommunityDetailedScreenViewState> =
-        MutableLiveData(CommunityDetailedScreenViewState.Init)
+    private val _viewState: MutableStateFlow<CommunityDetailedScreenViewState> =
+        MutableStateFlow(CommunityDetailedScreenViewState.Init)
 
     private lateinit var communityInitial: CommunityDetailed
 
@@ -40,7 +41,7 @@ class CommunityDetailedScreenViewModel(
     }
 
 
-    override fun viewState(): LiveData<CommunityDetailedScreenViewState> {
+    override fun viewState(): MutableStateFlow<CommunityDetailedScreenViewState> {
         return _viewState
     }
 
@@ -49,7 +50,7 @@ class CommunityDetailedScreenViewModel(
            val community = communityDetailedInfoByIdUseCase.execute(id)
             val meetingsList = meetingsByCommunityIdUseCase.execute(id)
             communityInitial = community.first()!!
-        _viewState.postValue(CommunityDetailedScreenViewState.Display(community = community.filterNotNull(), listOfMeetings = meetingsList, initial = communityInitial))
+        _viewState.value = (CommunityDetailedScreenViewState.Display(community = community.filterNotNull(), listOfMeetings = meetingsList, initial = communityInitial))
         }
     }
 

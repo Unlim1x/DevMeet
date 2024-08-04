@@ -1,5 +1,6 @@
 package ru.unlim1x.wb_project.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +30,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
 import ru.unlim1x.wb_project.R
@@ -47,7 +50,7 @@ private const val COLUMN_HORIZONTAL_PADDING = 16
 @Composable
 fun MoreScreen(navController: NavController, viewModel: MoreScreenViewModel = koinViewModel()) {
 
-    val viewState = viewModel.viewState().observeAsState()
+    val viewState by viewModel.viewState().collectAsStateWithLifecycle()
     Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
             TopBar(header = stringResource(id = R.string.more))
@@ -55,24 +58,25 @@ fun MoreScreen(navController: NavController, viewModel: MoreScreenViewModel = ko
         }) {
         val modifier = Modifier.padding(top = it.calculateTopPadding())
 
-        when (val state = viewState.value) {
+        when (viewState) {
             is MoreScreenViewState.Display -> {
+                Log.e("MoreScreen", "Display")
                 MoreScreenBody(
                     navController = navController,
                     modifier = modifier,
-                    user = state.user,
-                    containerList = state.containerList
+                    user = (viewState as MoreScreenViewState.Display).user,
+                    containerList = (viewState as MoreScreenViewState.Display).containerList
                 )
             }
 
             MoreScreenViewState.Init -> {
-                viewModel.obtain(MoreScreenEvent.OpenScreen)
+                Log.e("MoreScreen", "Init")
+                //viewModel.obtain(MoreScreenEvent.OpenScreen)
             }
 
-            null -> throw NotImplementedError("Unexpected state")
         }
     }
-    LaunchedEffect(key1 = viewState) {
+    LaunchedEffect(key1 = Unit) {
         viewModel.obtain(MoreScreenEvent.OpenScreen)
     }
 }
@@ -199,6 +203,7 @@ fun MoreContainer(user: User, modifier: Modifier = Modifier, onClick: () -> Unit
         verticalAlignment = Alignment.CenterVertically) {
 
             MoreContainerWrapper {
+                Log.e("", "User has avatar?= ${user.hasAvatar}")
                 if (user.hasAvatar) {
                     UserAvatar(url = user.avatarURL) {}
                 } else {

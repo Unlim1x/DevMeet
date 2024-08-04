@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.lim1x.domain.interfaces.usecases.ISendCodeToPhoneUseCase
 import ru.unlim1x.wb_project.ui.uiKit.custominputview.model.Country
@@ -19,8 +20,8 @@ class AuthPhoneInputScreenViewModel(private val sendCodeUseCase:ISendCodeToPhone
     private var countryCode: String = Country.Russia.phoneCode
     private var phoneNumber = ""
 
-    private val _viewState: MutableLiveData<AuthPhoneInputScreenViewState> =
-        MutableLiveData(AuthPhoneInputScreenViewState.Display)
+    private val _viewState: MutableStateFlow<AuthPhoneInputScreenViewState> =
+        MutableStateFlow(AuthPhoneInputScreenViewState.Display)
     override fun obtain(event: AuthPhoneInputScreenEvent) {
         when(event){
 
@@ -38,7 +39,7 @@ class AuthPhoneInputScreenViewModel(private val sendCodeUseCase:ISendCodeToPhone
 
                 viewModelScope.launch {
                     sendCodeUseCase.execute(phoneNumber)
-                    _viewState.postValue(AuthPhoneInputScreenViewState.Sent(countryCode, phoneNumber))
+                    _viewState.value = (AuthPhoneInputScreenViewState.Sent(countryCode, phoneNumber))
                 }
             }
         }
@@ -46,7 +47,7 @@ class AuthPhoneInputScreenViewModel(private val sendCodeUseCase:ISendCodeToPhone
     }
 
 
-    override fun viewState(): LiveData<AuthPhoneInputScreenViewState> {
+    override fun viewState(): MutableStateFlow<AuthPhoneInputScreenViewState> {
        return _viewState
     }
 }

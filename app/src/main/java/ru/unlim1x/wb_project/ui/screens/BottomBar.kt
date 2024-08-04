@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -38,7 +39,7 @@ import ru.unlim1x.wb_project.ui.viewmodels.bottom_bar.BottomBarViewState
 @Composable
 fun BottomBar(navController: NavHostController, viewModel: BottomBarViewModel = koinViewModel()) {
 
-    val viewState = viewModel.viewState().observeAsState()
+    val viewState = viewModel.viewState().collectAsStateWithLifecycle()
     val view = LocalView.current
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination

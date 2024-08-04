@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.koinViewModel
@@ -41,7 +42,7 @@ import ru.unlim1x.wb_project.ui.viewmodels.profile_screen.ProfileScreenViewState
 fun ProfileScreen(navController: NavController, viewModel:ProfileScreenViewModel = koinViewModel()) {
 
     var userAvatarState by remember { mutableStateOf(UserAvatarState.Default as UserAvatarState) }
-    val viewState = viewModel.viewState().observeAsState()
+    val viewState = viewModel.viewState().collectAsStateWithLifecycle()
 
     Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
@@ -70,9 +71,6 @@ fun ProfileScreen(navController: NavController, viewModel:ProfileScreenViewModel
 
     }
 
-    LaunchedEffect(key1 = viewState) {
-        viewModel.obtain(ProfileScreenEvent.OpenScreen)
-    }
 }
 
 @Composable
@@ -83,7 +81,10 @@ private fun ProfileBody(modifier: Modifier, avatarState:UserAvatarState, user: U
     ) {
         item {
             Spacer(modifier = Modifier.size(50.dp))
-            UserAvatar(size = 200.dp, state = avatarState) {}
+            when(user.hasAvatar){
+                true-> {UserAvatar(size = 200.dp, state = avatarState, url = user.avatarURL) {}}
+                false->{UserAvatar(size = 200.dp, state = avatarState) {}}
+            }
         }
         item {
             Text(

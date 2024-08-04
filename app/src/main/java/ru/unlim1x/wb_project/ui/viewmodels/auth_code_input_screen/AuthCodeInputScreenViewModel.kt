@@ -3,6 +3,8 @@ package ru.unlim1x.wb_project.ui.viewmodels.auth_code_input_screen
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.lim1x.domain.interfaces.usecases.ISaveNumberUseCase
 import ru.lim1x.domain.interfaces.usecases.IValidateCodeUseCase
@@ -13,8 +15,8 @@ class AuthCodeInputScreenViewModel(private val validateCodeUseCase:IValidateCode
     private val savePhoneUseCase:ISaveNumberUseCase):MainViewModel<AuthCodeInputScreenEvent, AuthCodeInputScreenViewState>() {
 
 
-    private val _viewState: MutableLiveData<AuthCodeInputScreenViewState> =
-        MutableLiveData(AuthCodeInputScreenViewState.Display)
+    private val _viewState: MutableStateFlow<AuthCodeInputScreenViewState> =
+        MutableStateFlow(AuthCodeInputScreenViewState.Display)
 
     override fun obtain(event: AuthCodeInputScreenEvent) {
         when(event){
@@ -33,7 +35,7 @@ class AuthCodeInputScreenViewModel(private val validateCodeUseCase:IValidateCode
                 viewModelScope.launch {
                     if(validateCodeUseCase.execute(event.code).value?.isSuccessful == true) {
                         savePhoneUseCase.execute(event.phone)
-                        _viewState.postValue(AuthCodeInputScreenViewState.Valid)
+                        _viewState.value = (AuthCodeInputScreenViewState.Valid)
                     }
                     //todo: обработать неверный код,
                     //todo: обработать сохранение id пользователя
@@ -47,7 +49,7 @@ class AuthCodeInputScreenViewModel(private val validateCodeUseCase:IValidateCode
 
 
 
-    override fun viewState(): LiveData<AuthCodeInputScreenViewState> {
+    override fun viewState(): StateFlow<AuthCodeInputScreenViewState> {
        return _viewState
     }
 }

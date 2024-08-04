@@ -16,6 +16,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -59,9 +60,7 @@ private val FIGMA_GAP = 16.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MeetingDetailedScreen(navController: NavController, eventName: String, eventId: Int, viewModel:MeetingDetailedScreenViewModel = koinViewModel(
-    parameters = { parametersOf(eventId)}
-)) {
+fun MeetingDetailedScreen(navController: NavController,  eventId: Int, viewModel:MeetingDetailedScreenViewModel = koinViewModel()) {
 
     val viewState = viewModel.viewState().collectAsStateWithLifecycle()
     val lazyListState = rememberLazyListState()
@@ -90,6 +89,10 @@ fun MeetingDetailedScreen(navController: NavController, eventName: String, event
         MeetingDetailedScreenViewState.Error -> {Log.e("STATE", state.toString())}
         MeetingDetailedScreenViewState.Loading -> {Log.e("STATE", state.toString())}
         else -> {Log.e("STATE", state.toString())}
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.obtain(MeetingDetailedScreenEvent.LoadScreen(meetingId = eventId))
     }
 
 
@@ -240,7 +243,6 @@ fun ShowImageFullScreen(dismissRequest: () -> Unit) {
 fun ShowEventDetailed() {
     MeetingDetailedScreen(
         navController = rememberNavController(),
-        eventName = "Some event",
         eventId = 1
     )
 }

@@ -1,11 +1,13 @@
 package ru.unlim1x.wb_project.ui.navigation
 
+import androidx.annotation.DrawableRes
 import ru.unlim1x.wb_project.R
 
 
 sealed class NavGraphNodes(
     open val route: String,
     val label: String,
+    @DrawableRes
     val iconId: Int
 ) {
 

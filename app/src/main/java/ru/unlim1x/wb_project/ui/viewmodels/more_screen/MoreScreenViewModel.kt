@@ -1,9 +1,19 @@
 package ru.unlim1x.wb_project.ui.viewmodels.more_screen
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.lim1x.domain.interfaces.usecases.IGetCurrentUserIdUseCase
 import ru.lim1x.domain.interfaces.usecases.IGetUserProfileDataUseCase
@@ -17,8 +27,21 @@ class MoreScreenViewModel(
     private val getCurrentUserUseCase: IGetCurrentUserIdUseCase
 ) : MainViewModel<MoreScreenEvent, MoreScreenViewState>() {
 
-    private val _viewState: MutableLiveData<MoreScreenViewState> =
-        MutableLiveData(MoreScreenViewState.Init)
+    private val _viewState: MutableStateFlow<MoreScreenViewState> =
+        MutableStateFlow(MoreScreenViewState.Init)
+
+    init{
+        val listOfContainers = Containers.listOfContainers
+        getUserProfileDataUseCase.execute(getCurrentUserUseCase.execute()).onEach{
+            _viewState.value=
+                (
+                        MoreScreenViewState.Display(
+                            user = it,
+                            containerList = listOfContainers
+                        )
+                        )
+        }.launchIn(viewModelScope)
+    }
 
     override fun obtain(event: MoreScreenEvent) {
         when (event) {
@@ -29,26 +52,12 @@ class MoreScreenViewModel(
     }
 
     private fun reduce(event: MoreScreenEvent, state: MoreScreenViewState.Init) {
-        showScreen()
+
     }
 
-    override fun viewState(): LiveData<MoreScreenViewState> {
-        return _viewState
+    override fun viewState(): StateFlow<MoreScreenViewState> {
+        return _viewState.asStateFlow()
     }
 
-    private fun showScreen() {
-        viewModelScope.launch {
-            val user = getUserProfileDataUseCase.execute(getCurrentUserUseCase.execute())
 
-            val listOfContainers = Containers.listOfContainers
-
-
-            _viewState.postValue(
-                MoreScreenViewState.Display(
-                    user = user.last(),
-                    containerList = listOfContainers
-                )
-            )
-        }
-    }
 }
