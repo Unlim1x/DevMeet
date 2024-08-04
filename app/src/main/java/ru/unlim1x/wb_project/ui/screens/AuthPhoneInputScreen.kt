@@ -8,17 +8,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,8 +33,8 @@ import ru.unlim1x.wb_project.ui.navigation.AuthNavGraphNodes
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.buttons.PrimaryButton
 import ru.unlim1x.wb_project.ui.uiKit.custominputview.PhoneInput
-import ru.unlim1x.wb_project.ui.viewmodels.auth_phone_input_screen.AuthPhoneInputScreenViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.auth_phone_input_screen.AuthPhoneInputScreenEvent
+import ru.unlim1x.wb_project.ui.viewmodels.auth_phone_input_screen.AuthPhoneInputScreenViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.auth_phone_input_screen.AuthPhoneInputScreenViewState
 
 private val FIGMA_MAIN_TEXT_HORIZONTAL_PADDING = 40.dp
@@ -47,7 +45,10 @@ private val MAIN_TEXT_HORIZONTAL_PADDING =
     FIGMA_MAIN_TEXT_HORIZONTAL_PADDING - COLUMN_HORIZONTAL_PADDING
 
 @Composable
-fun AuthPhoneInputScreen(navController: NavController, viewModel: AuthPhoneInputScreenViewModel = koinViewModel()) {
+fun AuthPhoneInputScreen(
+    navController: NavController,
+    viewModel: AuthPhoneInputScreenViewModel = koinViewModel()
+) {
 
     val viewState = viewModel.viewState().collectAsStateWithLifecycle()
 
@@ -56,10 +57,10 @@ fun AuthPhoneInputScreen(navController: NavController, viewModel: AuthPhoneInput
         }) {
         val modifier = Modifier.padding(top = it.calculateTopPadding())
 
-        when (val state = viewState.value){
+        when (val state = viewState.value) {
             is AuthPhoneInputScreenViewState.Display -> {
-                PhoneInputBody(modifier = modifier) {countryCode, phoneNumber->
-                    viewModel.obtain(AuthPhoneInputScreenEvent.SendCode(countryCode,phoneNumber))
+                PhoneInputBody(modifier = modifier) { countryCode, phoneNumber ->
+                    viewModel.obtain(AuthPhoneInputScreenEvent.SendCode(countryCode, phoneNumber))
                 }
             }
 
@@ -68,7 +69,8 @@ fun AuthPhoneInputScreen(navController: NavController, viewModel: AuthPhoneInput
                     navController.navigate(route = AuthNavGraphNodes.CodeNode.route + "/${state.countryCode}/${state.phone}")
                 }
             }
-            else-> throw NotImplementedError("Unexpected state")
+
+            else -> throw NotImplementedError("Unexpected state")
         }
 
     }
@@ -76,8 +78,10 @@ fun AuthPhoneInputScreen(navController: NavController, viewModel: AuthPhoneInput
 }
 
 @Composable
-private fun PhoneInputBody(modifier: Modifier = Modifier,
-                           onButtonClick:(countyCode:String, phoneNumber:String)->Unit){
+private fun PhoneInputBody(
+    modifier: Modifier = Modifier,
+    onButtonClick: (countyCode: String, phoneNumber: String) -> Unit
+) {
     var buttonState by remember { mutableStateOf(false) }
     var codeCountry by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
@@ -139,6 +143,7 @@ private fun PhoneInputBody(modifier: Modifier = Modifier,
 
     }
 }
+
 fun validatePhoneNumber(phoneNumber: String): Boolean {
     return phoneNumber.length == 10
 }

@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -33,10 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
+import ru.lim1x.domain.models.User
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.screens.model.MoreContainerData
-import ru.lim1x.domain.models.User
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatar.UserAvatar
 import ru.unlim1x.wb_project.ui.viewmodels.more_screen.MoreScreenEvent
@@ -113,8 +112,8 @@ private fun MoreScreenBody(
                 lastContainer -> 8.dp
                 else -> 0.dp
             }
-            when(index) {
-                containerWithDivider ->{
+            when (index) {
+                containerWithDivider -> {
                     HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp))
                 }
             }
@@ -202,14 +201,14 @@ fun MoreContainer(user: User, modifier: Modifier = Modifier, onClick: () -> Unit
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically) {
 
-            MoreContainerWrapper {
-                Log.e("", "User has avatar?= ${user.hasAvatar}")
-                if (user.hasAvatar) {
-                    UserAvatar(url = user.avatarURL) {}
-                } else {
-                    UserAvatar {}
-                }
+        MoreContainerWrapper {
+            Log.e("", "User has avatar?= ${user.hasAvatar}")
+            if (user.hasAvatar) {
+                UserAvatar(url = user.avatarURL) {}
+            } else {
+                UserAvatar {}
             }
+        }
         Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.icon_right_arrow),
             contentDescription = user.name,

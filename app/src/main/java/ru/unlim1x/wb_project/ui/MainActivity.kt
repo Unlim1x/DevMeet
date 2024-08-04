@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import ru.unlim1x.wb_project.ui.navigation.MainNavGraph
-import ru.unlim1x.wb_project.ui.navigation.MainScreen
 import ru.unlim1x.wb_project.ui.navigation.NavigationScreen
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import java.util.Locale

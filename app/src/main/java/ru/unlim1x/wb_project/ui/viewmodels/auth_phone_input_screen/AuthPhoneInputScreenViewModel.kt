@@ -1,17 +1,15 @@
 package ru.unlim1x.wb_project.ui.viewmodels.auth_phone_input_screen
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.lim1x.domain.interfaces.usecases.ISendCodeToPhoneUseCase
 import ru.unlim1x.wb_project.ui.uiKit.custominputview.model.Country
 import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 
-class AuthPhoneInputScreenViewModel(private val sendCodeUseCase:ISendCodeToPhoneUseCase):MainViewModel<AuthPhoneInputScreenEvent, AuthPhoneInputScreenViewState>() {
+class AuthPhoneInputScreenViewModel(private val sendCodeUseCase: ISendCodeToPhoneUseCase) :
+    MainViewModel<AuthPhoneInputScreenEvent, AuthPhoneInputScreenViewState>() {
 
     init {
         Log.e("AUTH", "AUTH VIEW MODEL CREATED")
@@ -22,24 +20,26 @@ class AuthPhoneInputScreenViewModel(private val sendCodeUseCase:ISendCodeToPhone
 
     private val _viewState: MutableStateFlow<AuthPhoneInputScreenViewState> =
         MutableStateFlow(AuthPhoneInputScreenViewState.Display)
-    override fun obtain(event: AuthPhoneInputScreenEvent) {
-        when(event){
 
-            is AuthPhoneInputScreenEvent.SendCode->{
+    override fun obtain(event: AuthPhoneInputScreenEvent) {
+        when (event) {
+
+            is AuthPhoneInputScreenEvent.SendCode -> {
                 reduce(event, AuthPhoneInputScreenViewState.Display)
             }
         }
     }
 
-    fun reduce(event: AuthPhoneInputScreenEvent, state: AuthPhoneInputScreenViewState.Display){
-        when (event){
-            is AuthPhoneInputScreenEvent.SendCode->{
+    fun reduce(event: AuthPhoneInputScreenEvent, state: AuthPhoneInputScreenViewState.Display) {
+        when (event) {
+            is AuthPhoneInputScreenEvent.SendCode -> {
                 countryCode = event.countryCode
                 phoneNumber = event.phoneNumber
 
                 viewModelScope.launch {
                     sendCodeUseCase.execute(phoneNumber)
-                    _viewState.value = (AuthPhoneInputScreenViewState.Sent(countryCode, phoneNumber))
+                    _viewState.value =
+                        (AuthPhoneInputScreenViewState.Sent(countryCode, phoneNumber))
                 }
             }
         }
@@ -48,6 +48,6 @@ class AuthPhoneInputScreenViewModel(private val sendCodeUseCase:ISendCodeToPhone
 
 
     override fun viewState(): MutableStateFlow<AuthPhoneInputScreenViewState> {
-       return _viewState
+        return _viewState
     }
 }

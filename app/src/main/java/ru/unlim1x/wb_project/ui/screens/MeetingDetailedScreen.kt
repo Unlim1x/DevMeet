@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -42,15 +41,13 @@ import coil.request.ImageRequest
 import net.engawapg.lib.zoomable.rememberZoomState
 import net.engawapg.lib.zoomable.zoomable
 import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
-import ru.unlim1x.wb_project.ui.AppBarMenuItems
+import ru.lim1x.domain.models.MeetingDetailedExt
 import ru.unlim1x.wb_project.R
+import ru.unlim1x.wb_project.ui.AppBarMenuItems
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatarline.AvatarLine
 import ru.unlim1x.wb_project.ui.uiKit.buttons.PrimaryButton
 import ru.unlim1x.wb_project.ui.uiKit.buttons.SecondaryButton
-import ru.lim1x.domain.models.Meeting
-import ru.lim1x.domain.models.MeetingDetailedExt
 import ru.unlim1x.wb_project.ui.viewmodels.meeting_detailed.MeetingDetailedScreenEvent
 import ru.unlim1x.wb_project.ui.viewmodels.meeting_detailed.MeetingDetailedScreenViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.meeting_detailed.MeetingDetailedScreenViewState
@@ -60,12 +57,16 @@ private val FIGMA_GAP = 16.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MeetingDetailedScreen(navController: NavController,  eventId: Int, viewModel:MeetingDetailedScreenViewModel = koinViewModel()) {
+fun MeetingDetailedScreen(
+    navController: NavController,
+    eventId: Int,
+    viewModel: MeetingDetailedScreenViewModel = koinViewModel()
+) {
 
     val viewState = viewModel.viewState().collectAsStateWithLifecycle()
     val lazyListState = rememberLazyListState()
 
-    when(val state = viewState.value){
+    when (val state = viewState.value) {
 
         is MeetingDetailedScreenViewState.Display -> {
             Log.e("STATE", state.toString())
@@ -75,26 +76,33 @@ fun MeetingDetailedScreen(navController: NavController,  eventId: Int, viewModel
                     meeting = it,
                     listOfAvatars = state.listAvatars.collectAsState(initial = emptyList()).value,
                     meGo = state.go,
-                    lazyListState = lazyListState) {
-                    if(state.go) {
+                    lazyListState = lazyListState
+                ) {
+                    if (state.go) {
                         viewModel.obtain(MeetingDetailedScreenEvent.WillNotGo(eventId))
-                    }
-                    else {
+                    } else {
                         viewModel.obtain(MeetingDetailedScreenEvent.WillGo(eventId))
                     }
                 }
             }
         }
 
-        MeetingDetailedScreenViewState.Error -> {Log.e("STATE", state.toString())}
-        MeetingDetailedScreenViewState.Loading -> {Log.e("STATE", state.toString())}
-        else -> {Log.e("STATE", state.toString())}
+        MeetingDetailedScreenViewState.Error -> {
+            Log.e("STATE", state.toString())
+        }
+
+        MeetingDetailedScreenViewState.Loading -> {
+            Log.e("STATE", state.toString())
+        }
+
+        else -> {
+            Log.e("STATE", state.toString())
+        }
     }
 
     LaunchedEffect(key1 = Unit) {
         viewModel.obtain(MeetingDetailedScreenEvent.LoadScreen(meetingId = eventId))
     }
-
 
 
 }
@@ -104,19 +112,22 @@ private fun MeetingDetailedBody(
     navController: NavController,
     lazyListState: LazyListState,
     meeting: MeetingDetailedExt,
-    listOfAvatars:List<String>,
-    meGo:Boolean,
-    onButtonClick:()->Unit){
+    listOfAvatars: List<String>,
+    meGo: Boolean,
+    onButtonClick: () -> Unit
+) {
 
     var showDialog by remember {
         mutableStateOf(false)
     }
     Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
-            TopBar(header = meeting.name,
+            TopBar(
+                header = meeting.name,
                 backIconIsVisible = true,
-                backIconAction = {navController.navigateUp()},
-                actionMenuItem = if (meGo) AppBarMenuItems.GoCheck else null)
+                backIconAction = { navController.navigateUp() },
+                actionMenuItem = if (meGo) AppBarMenuItems.GoCheck else null
+            )
 
         }) {
 
@@ -130,7 +141,8 @@ private fun MeetingDetailedBody(
 
         LazyColumn(
             modifier = modifier.padding(horizontal = FIGMA_HORIZONTAL_PADDING),
-            state = lazyListState) {
+            state = lazyListState
+        ) {
 
             item { Spacer(modifier = Modifier.size(FIGMA_GAP)) }
 

@@ -79,7 +79,7 @@ fun UserAvatar(
                 ) {
                     Image(
                         imageVector = ImageVector.vectorResource(id = R.drawable.icon_plus),
-                        contentDescription =stringResource(R.string.user_avatar),
+                        contentDescription = stringResource(R.string.user_avatar),
                         modifier = Modifier
                             .size(imagePlusSize)
                             .clickable {
@@ -178,8 +178,10 @@ fun UserAvatar(
                     .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
                 contentAlignment = Alignment.Center
             ) {
-                AsyncImage(model = url, contentDescription = stringResource(R.string.user_avatar),
-                    contentScale = ContentScale.Crop)
+                AsyncImage(
+                    model = url, contentDescription = stringResource(R.string.user_avatar),
+                    contentScale = ContentScale.Crop
+                )
             }
         }
 
@@ -197,8 +199,12 @@ fun UserAvatar(
                         .background(DevMeetTheme.colorScheme.neutralSecondaryBackground),
                     contentAlignment = Alignment.Center
                 ) {
-                    AsyncImage( modifier = Modifier.size(size),model = url, contentDescription = stringResource(R.string.user_avatar),
-                        contentScale = ContentScale.Crop)
+                    AsyncImage(
+                        modifier = Modifier.size(size),
+                        model = url,
+                        contentDescription = stringResource(R.string.user_avatar),
+                        contentScale = ContentScale.Crop
+                    )
                 }
                 CompositionLocalProvider(
                     LocalRippleTheme provides NoRippleTheme,

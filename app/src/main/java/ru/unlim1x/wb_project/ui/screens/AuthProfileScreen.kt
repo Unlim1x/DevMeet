@@ -12,13 +12,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,7 +44,10 @@ private val BUTTON_PADDING = 48.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuthProfileScreen(navController: NavController, viewModel:AuthProfileScreenViewModel = koinViewModel()) {
+fun AuthProfileScreen(
+    navController: NavController,
+    viewModel: AuthProfileScreenViewModel = koinViewModel()
+) {
 
 
     val viewState = viewModel.viewState().collectAsStateWithLifecycle()
@@ -55,28 +56,30 @@ fun AuthProfileScreen(navController: NavController, viewModel:AuthProfileScreenV
         topBar = {
             TopBar(header = stringResource(id = R.string.profile),
                 backIconIsVisible = true,
-                backIconAction = {navController.navigateUp()})
+                backIconAction = { navController.navigateUp() })
 
         }) {
-            val modifier = Modifier.padding(top = it.calculateTopPadding())
+        val modifier = Modifier.padding(top = it.calculateTopPadding())
 
-            when (val state = viewState.value){
-                AuthProfileScreenViewState.Display -> {
-                    AuthProfileBody {name,surname->
-                        viewModel.obtain(AuthProfileScreenEvent.Save(name, surname))
-                    }
+        when (val state = viewState.value) {
+            AuthProfileScreenViewState.Display -> {
+                AuthProfileBody { name, surname ->
+                    viewModel.obtain(AuthProfileScreenEvent.Save(name, surname))
                 }
-                AuthProfileScreenViewState.Saved -> {
-                    LaunchedEffect(key1 = viewState) {
-                        navController.navigate(route = AuthNavGraphNodes.MainGraphNode.route) {
-                            popUpTo(route = AuthNavGraphNodes.PhoneNode.route) {
-                                inclusive = true
-                            }
+            }
+
+            AuthProfileScreenViewState.Saved -> {
+                LaunchedEffect(key1 = viewState) {
+                    navController.navigate(route = AuthNavGraphNodes.MainGraphNode.route) {
+                        popUpTo(route = AuthNavGraphNodes.PhoneNode.route) {
+                            inclusive = true
                         }
                     }
                 }
-                else->throw NotImplementedError("Unexpected state")
             }
+
+            else -> throw NotImplementedError("Unexpected state")
+        }
 
 
     }
@@ -84,7 +87,10 @@ fun AuthProfileScreen(navController: NavController, viewModel:AuthProfileScreenV
 }
 
 @Composable
-private fun AuthProfileBody(modifier: Modifier = Modifier, onButtonClick:(name:String, surname:String)->Unit){
+private fun AuthProfileBody(
+    modifier: Modifier = Modifier,
+    onButtonClick: (name: String, surname: String) -> Unit
+) {
     var buttonState by remember { mutableStateOf(false) }
 
     var name by remember {

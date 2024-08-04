@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun MainScreen(){
-    val navHostController : NavHostController = rememberNavController()
+fun MainScreen() {
+    val navHostController: NavHostController = rememberNavController()
     MainNavGraph(navHostController)
 }

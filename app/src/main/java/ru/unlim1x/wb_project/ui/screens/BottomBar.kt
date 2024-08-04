@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,16 +48,22 @@ fun BottomBar(navController: NavHostController, viewModel: BottomBarViewModel = 
             elevation = 10.dp,
             modifier = Modifier.height(64.dp)
         ) {
-            when(val state = viewState.value){
+            when (val state = viewState.value) {
                 is BottomBarViewState.Display -> {
                     state.roots.forEachIndexed { _, screen ->
                         val selected = currentDestination?.hierarchy?.any {
                             it.route == screen.route
                         } == true
                         BottomNavigationItem(
-                            icon = {Icon(node = screen, selected = selected, overengineering = state.overengineering)},
+                            icon = {
+                                Icon(
+                                    node = screen,
+                                    selected = selected,
+                                    overengineering = state.overengineering
+                                )
+                            },
                             selected = selected,
-                            label = {Label(screen.label)},
+                            label = { Label(screen.label) },
                             alwaysShowLabel = false,
                             onClick = {
                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -73,8 +78,12 @@ fun BottomBar(navController: NavHostController, viewModel: BottomBarViewModel = 
                         )
                     }
                 }
-                BottomBarViewState.Init -> {viewModel.obtain(BottomBarEvent.LoadBottomBar)}
-                else-> throw NotImplementedError("Unexpected state")
+
+                BottomBarViewState.Init -> {
+                    viewModel.obtain(BottomBarEvent.LoadBottomBar)
+                }
+
+                else -> throw NotImplementedError("Unexpected state")
             }
         }
     }
@@ -82,7 +91,7 @@ fun BottomBar(navController: NavHostController, viewModel: BottomBarViewModel = 
 
 
 @Composable
-private fun Label(text:String){
+private fun Label(text: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text, style = DevMeetTheme.typography.bodyText1)
         Canvas(modifier = Modifier.padding(top = 4.dp)) {
@@ -96,7 +105,7 @@ private fun Label(text:String){
 }
 
 @Composable
-private fun Icon(node:NavGraphNodes,selected:Boolean, overengineering: Int){
+private fun Icon(node: NavGraphNodes, selected: Boolean, overengineering: Int) {
     if (!selected)
         CompositionLocalProvider(LocalRippleTheme provides PrimaryColorRippleTheme) {
             Icon(

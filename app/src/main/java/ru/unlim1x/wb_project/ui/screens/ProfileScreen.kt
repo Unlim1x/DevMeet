@@ -11,9 +11,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -26,30 +24,34 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.koinViewModel
-import ru.unlim1x.wb_project.ui.AppBarMenuItems
-import ru.unlim1x.wb_project.R
 import ru.lim1x.domain.models.User
+import ru.unlim1x.wb_project.R
+import ru.unlim1x.wb_project.ui.AppBarMenuItems
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatar.UserAvatar
 import ru.unlim1x.wb_project.ui.uiKit.avatar.state.UserAvatarState
 import ru.unlim1x.wb_project.ui.uiKit.buttons.SecondaryButton
-import ru.unlim1x.wb_project.ui.viewmodels.profile_screen.ProfileScreenEvent
 import ru.unlim1x.wb_project.ui.viewmodels.profile_screen.ProfileScreenViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.profile_screen.ProfileScreenViewState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController, viewModel:ProfileScreenViewModel = koinViewModel()) {
+fun ProfileScreen(
+    navController: NavController,
+    viewModel: ProfileScreenViewModel = koinViewModel()
+) {
 
     var userAvatarState by remember { mutableStateOf(UserAvatarState.Default as UserAvatarState) }
     val viewState = viewModel.viewState().collectAsStateWithLifecycle()
 
     Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
-            TopBar(header = stringResource(id = R.string.profile),
+            TopBar(
+                header = stringResource(id = R.string.profile),
                 backIconIsVisible = true,
-                backIconAction = {navController.navigateUp()},
-                actionMenuItem = AppBarMenuItems.Edit){
+                backIconAction = { navController.navigateUp() },
+                actionMenuItem = AppBarMenuItems.Edit
+            ) {
 
                 userAvatarState = if (userAvatarState == UserAvatarState.Default)
                     UserAvatarState.Edit
@@ -58,12 +60,13 @@ fun ProfileScreen(navController: NavController, viewModel:ProfileScreenViewModel
             }
 
         }) {
-            val modifier = Modifier.padding(top = it.calculateTopPadding())
+        val modifier = Modifier.padding(top = it.calculateTopPadding())
 
-        when(val state = viewState.value){
+        when (val state = viewState.value) {
             is ProfileScreenViewState.Display -> {
                 ProfileBody(modifier = modifier, avatarState = userAvatarState, user = state.user)
             }
+
             ProfileScreenViewState.Init -> {}
             else -> throw NotImplementedError("Unexpected state")
         }
@@ -74,16 +77,21 @@ fun ProfileScreen(navController: NavController, viewModel:ProfileScreenViewModel
 }
 
 @Composable
-private fun ProfileBody(modifier: Modifier, avatarState:UserAvatarState, user: User){
+private fun ProfileBody(modifier: Modifier, avatarState: UserAvatarState, user: User) {
     LazyColumn(
         modifier = modifier
             .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             Spacer(modifier = Modifier.size(50.dp))
-            when(user.hasAvatar){
-                true-> {UserAvatar(size = 200.dp, state = avatarState, url = user.avatarURL) {}}
-                false->{UserAvatar(size = 200.dp, state = avatarState) {}}
+            when (user.hasAvatar) {
+                true -> {
+                    UserAvatar(size = 200.dp, state = avatarState, url = user.avatarURL) {}
+                }
+
+                false -> {
+                    UserAvatar(size = 200.dp, state = avatarState) {}
+                }
             }
         }
         item {

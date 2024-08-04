@@ -7,17 +7,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -31,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.navigation.AuthNavGraphNodes
@@ -52,28 +48,43 @@ private val MAIN_TEXT_HORIZONTAL_PADDING =
 
 
 @Composable
-fun AuthCodeInputScreen(navController: NavController, phone: String, code: String, viewModel:AuthCodeInputScreenViewModel = koinViewModel()) {
+fun AuthCodeInputScreen(
+    navController: NavController,
+    phone: String,
+    code: String,
+    viewModel: AuthCodeInputScreenViewModel = koinViewModel()
+) {
 
-  val viewState = viewModel.viewState().collectAsStateWithLifecycle()
+    val viewState = viewModel.viewState().collectAsStateWithLifecycle()
 
     Scaffold(containerColor = DevMeetTheme.colorScheme.neutralWhite,
         topBar = {
             TopBar(backIconIsVisible = true,
-                backIconAction = {navController.popBackStack()}
+                backIconAction = { navController.popBackStack() }
             )
         }) {
         val modifier = Modifier.padding(top = it.calculateTopPadding())
 
-        when (viewState.value){
+        when (viewState.value) {
             AuthCodeInputScreenViewState.Display -> {
-                CodeInputBody(modifier = modifier,code = code, phone = phone, actionDone = {pinCode->
-                    if (validateCode(pinCode)) {
-                        viewModel.obtain(AuthCodeInputScreenEvent.Validate(phone = phone,pinCode))
-                    }
-                }) {
+                CodeInputBody(
+                    modifier = modifier,
+                    code = code,
+                    phone = phone,
+                    actionDone = { pinCode ->
+                        if (validateCode(pinCode)) {
+                            viewModel.obtain(
+                                AuthCodeInputScreenEvent.Validate(
+                                    phone = phone,
+                                    pinCode
+                                )
+                            )
+                        }
+                    }) {
                     viewModel.obtain(AuthCodeInputScreenEvent.Resend)
                 }
             }
+
             AuthCodeInputScreenViewState.Error -> {}
             AuthCodeInputScreenViewState.Valid -> {
                 LaunchedEffect(key1 = viewState) {
@@ -82,7 +93,8 @@ fun AuthCodeInputScreen(navController: NavController, phone: String, code: Strin
                     }
                 }
             }
-            else->throw NotImplementedError("Unexpected state")
+
+            else -> throw NotImplementedError("Unexpected state")
         }
 
 
@@ -91,8 +103,10 @@ fun AuthCodeInputScreen(navController: NavController, phone: String, code: Strin
 }
 
 @Composable
-private fun CodeInputBody(modifier: Modifier = Modifier, code : String, phone: String,
-                          actionDone:(pinCode:String)->Unit, onButtonClick:()->Unit){
+private fun CodeInputBody(
+    modifier: Modifier = Modifier, code: String, phone: String,
+    actionDone: (pinCode: String) -> Unit, onButtonClick: () -> Unit
+) {
 
     val phoneNumberText = transformPhoneNumber(code, phone)
     var buttonState by remember { mutableStateOf(true) }

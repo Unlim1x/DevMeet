@@ -1,6 +1,6 @@
 package ru.unlim1x.wb_project.ui.navigation
 
-enum class MainNavGraphNodes{
+enum class MainNavGraphNodes {
     SplashScreen,
     AuthScreen,
     MainScreen;

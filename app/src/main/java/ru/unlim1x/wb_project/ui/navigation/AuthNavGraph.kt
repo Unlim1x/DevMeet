@@ -5,14 +5,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ru.unlim1x.wb_project.ui.screens.AuthCodeInputScreen
 import ru.unlim1x.wb_project.ui.screens.AuthPhoneInputScreen
 import ru.unlim1x.wb_project.ui.screens.AuthProfileScreen
 
 @Composable
-fun AuthNavGraph(navController:NavHostController) {
+fun AuthNavGraph(navController: NavHostController) {
 
     NavHost(navController = navController, startDestination = AuthNavGraphNodes.PhoneNode.route) {
 
@@ -34,7 +33,7 @@ fun AuthNavGraph(navController:NavHostController) {
             val phone = backStackEntry.arguments?.getString("number")
             val code = backStackEntry.arguments?.getString("code")
 
-            if (phone?.isEmpty() == false  && code?.isEmpty() == false) {
+            if (phone?.isEmpty() == false && code?.isEmpty() == false) {
                 AuthCodeInputScreen(
                     navController = navController,
                     phone = phone,

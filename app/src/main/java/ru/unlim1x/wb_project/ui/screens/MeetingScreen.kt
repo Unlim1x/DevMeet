@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,12 +15,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.koinViewModel
+import ru.lim1x.domain.models.Meeting
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
-import ru.lim1x.domain.models.Meeting
 import ru.unlim1x.wb_project.ui.uiKit.searchfield.SearchField
 import ru.unlim1x.wb_project.ui.uiKit.tabrow.model.TabData
-import ru.unlim1x.wb_project.ui.viewmodels.meeting_screen.MeetingScreenEvent
 import ru.unlim1x.wb_project.ui.viewmodels.meeting_screen.MeetingScreenViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.meeting_screen.MeetingScreenViewState
 

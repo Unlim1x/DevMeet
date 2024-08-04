@@ -42,7 +42,10 @@ import ru.unlim1x.wb_project.ui.uiKit.custominputview.model.PhoneNumberTransform
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PhoneInput(modifier: Modifier = Modifier, onValueChanged: (countryCode:String,phone: String) -> Unit) {
+fun PhoneInput(
+    modifier: Modifier = Modifier,
+    onValueChanged: (countryCode: String, phone: String) -> Unit
+) {
     val FIGMA_HORIZONTAL_PADDING = 8.dp
     var selectedCountry by remember { mutableStateOf(Country.Russia) }
     var phone by remember {
@@ -118,8 +121,10 @@ fun PhoneInput(modifier: Modifier = Modifier, onValueChanged: (countryCode:Strin
                 .background(DevMeetTheme.colorScheme.neutralSecondaryBackground)
                 .fillMaxWidth(),
             value = phone,
-            onValueChange = { phone = it.take(10)
-                            onValueChanged(selectedCountry.phoneCode, phone)},
+            onValueChange = {
+                phone = it.take(10)
+                onValueChanged(selectedCountry.phoneCode, phone)
+            },
             textStyle = DevMeetTheme.typography.bodyText1,
             decorationBox = {
                 Row(
@@ -129,7 +134,7 @@ fun PhoneInput(modifier: Modifier = Modifier, onValueChanged: (countryCode:Strin
                         .padding(8.dp)
                         .background(DevMeetTheme.colorScheme.neutralSecondaryBackground)
                 ) {
-                    Box{
+                    Box {
                         if (phone.isEmpty())
                             Text(
                                 text = "999 999-99-99",
@@ -166,5 +171,5 @@ fun printToLog(string: String) {
 @Composable
 @Preview
 fun ShowPhoneInput() {
-    PhoneInput() { _, _ ->  }
+    PhoneInput() { _, _ -> }
 }

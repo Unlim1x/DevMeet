@@ -1,11 +1,6 @@
 package ru.unlim1x.wb_project.ui.viewmodels.splash_screen
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -13,28 +8,30 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 
-class SplashScreenViewModel():MainViewModel<SplashScreenEvent, SplashScreenViewState>() {
+class SplashScreenViewModel() : MainViewModel<SplashScreenEvent, SplashScreenViewState>() {
     private val _viewState: MutableStateFlow<SplashScreenViewState> =
         MutableStateFlow(SplashScreenViewState.Init)
 
-    init{
+    init {
         Log.e("Created", "CREATED VM")
     }
+
     override fun obtain(event: SplashScreenEvent) {
         Log.e("SSVM", "Obtained")
-        when(event){
+        when (event) {
 
-            SplashScreenEvent.OpenApp->{
+            SplashScreenEvent.OpenApp -> {
                 reduce(event, SplashScreenViewState.Init)
             }
         }
     }
 
-    private fun reduce(event: SplashScreenEvent, state: SplashScreenViewState.Init){
+    private fun reduce(event: SplashScreenEvent, state: SplashScreenViewState.Init) {
         Log.e("SSVM", "Reduces")
         showScreen()
     }
-    private fun showScreen(){
+
+    private fun showScreen() {
         Log.e("SSVM", "Showscreen")
         viewModelScope.launch(Dispatchers.Default) {
             _viewState.value = (SplashScreenViewState.Display)

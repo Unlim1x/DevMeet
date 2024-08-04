@@ -13,7 +13,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -23,21 +22,25 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.koin.androidx.compose.koinViewModel
+import ru.lim1x.domain.models.Community
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.cards.CommunityCard
 import ru.unlim1x.wb_project.ui.uiKit.cards.QuantityMembers
-import ru.lim1x.domain.models.Community
 import ru.unlim1x.wb_project.ui.uiKit.searchfield.SearchField
 import ru.unlim1x.wb_project.ui.viewmodels.community_screen.CommunityScreenEvent
 import ru.unlim1x.wb_project.ui.viewmodels.community_screen.CommunityScreenViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.community_screen.CommunityScreenViewState
 
 private val FIGMA_HORIZONTAL_PADDING = 16.dp
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun CommunityScreen(navController: NavController, viewModel:CommunityScreenViewModel = koinViewModel()) {
+fun CommunityScreen(
+    navController: NavController,
+    viewModel: CommunityScreenViewModel = koinViewModel()
+) {
 
 
     val viewState = viewModel.viewState().collectAsStateWithLifecycle()
@@ -48,13 +51,14 @@ fun CommunityScreen(navController: NavController, viewModel:CommunityScreenViewM
 
         val modifier = Modifier.padding(top = it.calculateTopPadding())
 
-        when(val state = viewState.value){
+        when (val state = viewState.value) {
             is CommunityScreenViewState.Display -> {
                 CommunityLoadedScreen(
                     modifier = modifier, navController = navController,
                     communityList = state.communities.collectAsState(initial = emptyList()).value
                 )
             }
+
             CommunityScreenViewState.Loading -> {}
             else -> throw NotImplementedError("Unexpected state")
         }
@@ -67,7 +71,11 @@ fun CommunityScreen(navController: NavController, viewModel:CommunityScreenViewM
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun CommunityLoadedScreen(modifier:Modifier,navController: NavController,communityList: List<Community>){
+private fun CommunityLoadedScreen(
+    modifier: Modifier,
+    navController: NavController,
+    communityList: List<Community>
+) {
     Column(modifier = modifier.padding(horizontal = FIGMA_HORIZONTAL_PADDING)) {
         SearchField(state = rememberTextFieldState()) {}
         Spacer(modifier = Modifier.size(8.dp))

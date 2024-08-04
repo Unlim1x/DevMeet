@@ -25,10 +25,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
+import ru.lim1x.domain.models.Meeting
 import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.cards.EventCard
-import ru.lim1x.domain.models.Meeting
 import ru.unlim1x.wb_project.ui.uiKit.tabrow.model.TabData
 import java.security.InvalidParameterException
 

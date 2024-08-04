@@ -1,7 +1,6 @@
 package ru.unlim1x.wb_project.ui.screens.model
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.IntegerRes
 import androidx.annotation.StringRes
 
 data class MoreContainerData(

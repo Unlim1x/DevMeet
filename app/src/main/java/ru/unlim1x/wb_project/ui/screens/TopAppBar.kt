@@ -21,6 +21,7 @@ import ru.unlim1x.wb_project.ui.AppBarMenuItems
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 
 private const val ANIMATION_DURATION = 300
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
@@ -43,12 +44,12 @@ fun TopBar(
         },
         navigationIcon = {
             if (backIconIsVisible) {
-                when(animate){
+                when (animate) {
                     true -> {
                         AnimatedBackArrow(visible = topBarAnimation) {
                             backIconAction?.invoke()
-                            }
                         }
+                    }
 
                     false -> {
                         StaticBackArrow {
@@ -60,11 +61,11 @@ fun TopBar(
         },
         actions = {
 
-                if (actionMenuItem != null) {
-                    AnimatedAction(item = actionMenuItem, visible = topBarAnimation) {
-                        actionMenu?.invoke()
-                    }
+            if (actionMenuItem != null) {
+                AnimatedAction(item = actionMenuItem, visible = topBarAnimation) {
+                    actionMenu?.invoke()
                 }
+            }
 
 
         }
@@ -77,7 +78,7 @@ fun TopBar(
 }
 
 @Composable
-private fun TopAppBarTitle(header:String){
+private fun TopAppBarTitle(header: String) {
     Text(
         header,
         maxLines = 1,
@@ -104,8 +105,9 @@ private fun AnimatedBackArrow(visible: Boolean, action: () -> Unit) {
         }
     }
 }
+
 @Composable
-private fun StaticBackArrow(action: () -> Unit){
+private fun StaticBackArrow(action: () -> Unit) {
     IconButton(onClick = { action() }) {
         AppBarMenuItems.BackArrow.icon?.let {
             Icon(

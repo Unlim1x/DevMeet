@@ -1,39 +1,42 @@
 package ru.unlim1x.wb_project.ui.viewmodels.auth_code_input_screen
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ru.lim1x.domain.interfaces.usecases.ISaveNumberUseCase
 import ru.lim1x.domain.interfaces.usecases.IValidateCodeUseCase
-import ru.unlim1x.wb_project.ui.uiKit.custominputview.model.Country
 import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 
-class AuthCodeInputScreenViewModel(private val validateCodeUseCase:IValidateCodeUseCase,
-    private val savePhoneUseCase:ISaveNumberUseCase):MainViewModel<AuthCodeInputScreenEvent, AuthCodeInputScreenViewState>() {
+class AuthCodeInputScreenViewModel(
+    private val validateCodeUseCase: IValidateCodeUseCase,
+    private val savePhoneUseCase: ISaveNumberUseCase
+) : MainViewModel<AuthCodeInputScreenEvent, AuthCodeInputScreenViewState>() {
 
 
     private val _viewState: MutableStateFlow<AuthCodeInputScreenViewState> =
         MutableStateFlow(AuthCodeInputScreenViewState.Display)
 
     override fun obtain(event: AuthCodeInputScreenEvent) {
-        when(event){
-            is AuthCodeInputScreenEvent.Validate->{
+        when (event) {
+            is AuthCodeInputScreenEvent.Validate -> {
                 reduce(event, AuthCodeInputScreenViewState.Display)
             }
-            is AuthCodeInputScreenEvent.Resend->{
+
+            is AuthCodeInputScreenEvent.Resend -> {
                 reduce(event, AuthCodeInputScreenViewState.Display)
             }
         }
     }
 
-    private fun reduce(event: AuthCodeInputScreenEvent, state: AuthCodeInputScreenViewState.Display){
-        when(event){
-            is AuthCodeInputScreenEvent.Validate->{
+    private fun reduce(
+        event: AuthCodeInputScreenEvent,
+        state: AuthCodeInputScreenViewState.Display
+    ) {
+        when (event) {
+            is AuthCodeInputScreenEvent.Validate -> {
                 viewModelScope.launch {
-                    if(validateCodeUseCase.execute(event.code).value?.isSuccessful == true) {
+                    if (validateCodeUseCase.execute(event.code).value?.isSuccessful == true) {
                         savePhoneUseCase.execute(event.phone)
                         _viewState.value = (AuthCodeInputScreenViewState.Valid)
                     }
@@ -41,15 +44,15 @@ class AuthCodeInputScreenViewModel(private val validateCodeUseCase:IValidateCode
                     //todo: обработать сохранение id пользователя
                 }
             }
-            AuthCodeInputScreenEvent.Resend->{
+
+            AuthCodeInputScreenEvent.Resend -> {
                 //TODO: юзкейс повторной отправки кода
             }
         }
     }
 
 
-
     override fun viewState(): StateFlow<AuthCodeInputScreenViewState> {
-       return _viewState
+        return _viewState
     }
 }

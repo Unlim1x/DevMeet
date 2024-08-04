@@ -1,21 +1,11 @@
 package ru.unlim1x.wb_project.ui.viewmodels.meeting_detailed
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.lim1x.domain.interfaces.usecases.IGetCurrentUserIdUseCase
@@ -45,18 +35,24 @@ class MeetingDetailedScreenViewModel(
     private val avatarsURL = _avatarsURL.asStateFlow()
 
     private var currentUserId: Int = -1
-    private var meetingId:Int = -1
-    private var meetingInitialValue :MeetingDetailedExt? = null
+    private var meetingId: Int = -1
+    private var meetingInitialValue: MeetingDetailedExt? = null
 
     init {
         viewModelScope.launch {
             observeMeetingFlow()
-            }
         }
-
-    private fun updateDisplayGoState(go:Boolean){
-        _viewState.value = (MeetingDetailedScreenViewState.Display(meetingExt,avatarsURL, go, meetingInitialValue))
     }
+
+    private fun updateDisplayGoState(go: Boolean) {
+        _viewState.value = (MeetingDetailedScreenViewState.Display(
+            meetingExt,
+            avatarsURL,
+            go,
+            meetingInitialValue
+        ))
+    }
+
     private fun loadDetails() {
         meetingDetailedInfoByIdUseCase.execute(meetingId).onEach {
             if (meetingId == it?.id) {
@@ -75,9 +71,9 @@ class MeetingDetailedScreenViewModel(
 
     }
 
-    private fun observeMeetingFlow(){
+    private fun observeMeetingFlow() {
         meetingFlow.onEach {
-            if(meetingId==it?.id) {
+            if (meetingId == it?.id) {
                 it.let {
                     _meetingExt.update {
                         updateMeetingExt()
@@ -87,23 +83,32 @@ class MeetingDetailedScreenViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private fun updateMeetingExt():MeetingDetailedExt?{
+    private fun updateMeetingExt(): MeetingDetailedExt? {
         val idAndAvatarList: MutableList<IdAndAvatar> = mutableListOf()
         meetingFlow.value?.visitorsIds?.forEach {
-            idAndAvatarList.add(IdAndAvatar(first = it, second = getUserAvatarByIdUseCase.execute(it).orEmpty()))
+            idAndAvatarList.add(
+                IdAndAvatar(
+                    first = it,
+                    second = getUserAvatarByIdUseCase.execute(it).orEmpty()
+                )
+            )
         }
 
         return meetingFlow.value?.mapToExt(visitors = idAndAvatarList)
     }
 
-    private fun willGo(value:Boolean){
-        val succeed = setUserVisitingUseCase.execute(meetingId = meetingId, userId = currentUserId, isVisiting = value)
-        if(succeed) {
-            updateDisplayGoState(go =value)
+    private fun willGo(value: Boolean) {
+        val succeed = setUserVisitingUseCase.execute(
+            meetingId = meetingId,
+            userId = currentUserId,
+            isVisiting = value
+        )
+        if (succeed) {
+            updateDisplayGoState(go = value)
         }
     }
 
-    private fun reduce(event: MeetingDetailedScreenEvent.LoadScreen){
+    private fun reduce(event: MeetingDetailedScreenEvent.LoadScreen) {
         meetingId = event.meetingId
         loadDetails()
     }
