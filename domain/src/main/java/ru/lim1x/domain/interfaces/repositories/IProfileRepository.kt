@@ -17,4 +17,6 @@ interface IProfileRepository {
     fun saveNumber(phoneNumber:String):Boolean
 
     fun userId():Int
+
+    fun saveUserPhoto(stirngUri:String)
 }

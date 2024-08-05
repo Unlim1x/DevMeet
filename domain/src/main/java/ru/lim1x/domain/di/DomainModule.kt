@@ -15,6 +15,7 @@ import ru.lim1x.domain.interfaces.usecases.IGetUserProfileDataUseCase
 import ru.lim1x.domain.interfaces.usecases.ISaveNumberUseCase
 import ru.lim1x.domain.interfaces.usecases.ISaveUserProfileNameUseCase
 import ru.lim1x.domain.interfaces.usecases.ISendCodeToPhoneUseCase
+import ru.lim1x.domain.interfaces.usecases.ISetUserPhotoExperimentalUseCase
 import ru.lim1x.domain.interfaces.usecases.ISetUserVisitingMeetingValueUseCase
 import ru.lim1x.domain.interfaces.usecases.IValidateCodeUseCase
 import ru.lim1x.domain.usecase_implementation.authorization.SendCodeToPhoneUseCase
@@ -33,6 +34,7 @@ import ru.lim1x.domain.usecase_implementation.profile.GetUserAvatarByIdUseCase
 import ru.lim1x.domain.usecase_implementation.profile.GetUserProfileDataUseCase
 import ru.lim1x.domain.usecase_implementation.profile.SaveNumberUseCase
 import ru.lim1x.domain.usecase_implementation.profile.SaveUserProfileNameUseCase
+import ru.lim1x.domain.usecase_implementation.profile.SetUserPhotoExperimentalUseCase
 
 val domainModule = module{
     single<IGetActiveMeetingsUseCase>{GetActiveMeetingsUseCase(get())}
@@ -51,4 +53,5 @@ val domainModule = module{
     single<IValidateCodeUseCase>{ValidateCodeUseCase(get())}
     single<IGetCommunitiesUseCase>{GetCommunitiesUseCase(get())}
     single<IGetUserAvatarByIdUseCase>{GetUserAvatarByIdUseCase(get())}
+    single<ISetUserPhotoExperimentalUseCase>{ SetUserPhotoExperimentalUseCase(get()) }
 }

@@ -24,17 +24,20 @@ internal class MockDataSource {
 
     private val listOfTags = listOf("Junior", "Python", "Moscow")
     private val visitorsIds = listOf(2, 3, 4, 5)
-    private val visitorAvatarUrl =
+    private val visitorAvatarUrl = "https://i3.wp.com/masterpiecer-images.s3.yandex.net/1a3ad00a7daf11eeb413da477c0f1ee2:upscaled?ssl=1"
+    private val userAvatarUrl =
         "https://10wallpaper.com/wallpaper/1280x1024/2012/Ann_Sophie_2020_Fashion_Model_Celebrity_Photo_1280x1024.jpg"
     private val communityAvatarUrl = "https://sun9-15.userapi.com/impg/oSoxeolE-9kQoZ7fclxO_sgWttivq1I_QjLUnQ/YgvDRmvyiNA.jpg?size=604x508&quality=96&sign=cd296b6740a7786c23aff88057a1fa4f&type=album"
 
-    private var currentUser: User = User(
+    private val currentUser: User = User(
         name = "",
         phone = "",
         id = 1,
-        avatarURL = visitorAvatarUrl,
+        avatarURL = userAvatarUrl,
         hasAvatar = true
     )
+
+    private var currentUserFlow: MutableStateFlow<User> = MutableStateFlow(currentUser)
 
     private val meeting = Meeting(
         name = "Developer meeting",
@@ -74,11 +77,9 @@ internal class MockDataSource {
 
     private fun visitorsMap() = listCommunities.associateBy({it.id}, {visitorsIds}).toMutableMap().map {entry->
         var list = entry.value
-        //Log.e("Mock1", entry.toString())
         if (listMeetingsIdVisitingByUser.any { it == entry.key }){
             list = list.plus(currentUser.id)
         }
-        Log.e("Mock2", list.toString())
         list
     }
 
@@ -173,20 +174,22 @@ internal class MockDataSource {
     }
 
     fun saveUserName(username: String, userSurname: String): Boolean {
-        currentUser = currentUser.copy(name = username, surname = userSurname)
+        currentUserFlow.update{it.copy(name = username, surname = userSurname)}
         return true
     }
 
     fun registerUserPhone(phoneNumber: String): Boolean {
-        currentUser = currentUser.copy(phone = phoneNumber)
+        currentUserFlow.update{it.copy(phone = phoneNumber)}
         return true
     }
 
-    fun getCurrentUserInfo(userId: Int):User{
-        return currentUser
+    fun getCurrentUserInfo(userId: Int):StateFlow<User>{
+        return currentUserFlow
     }
 
     fun getVisitorAvatarById(id:Int):String{
+        if(id == 1)
+            return userAvatarUrl
         return visitorAvatarUrl
     }
 
@@ -196,6 +199,10 @@ internal class MockDataSource {
             AuthorizationResult(true, currentUser.id)
         else
             AuthorizationResult(false, -1)
+    }
+
+    fun updateUserPhoto(uriString:String){
+        currentUserFlow.update{it.copy(avatarURL = uriString)}
     }
 
     fun userId() = currentUser.id

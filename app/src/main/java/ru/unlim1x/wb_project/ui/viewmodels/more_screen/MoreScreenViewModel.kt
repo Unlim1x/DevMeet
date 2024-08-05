@@ -15,7 +15,7 @@ class MoreScreenViewModel(
     private val getCurrentUserUseCase: IGetCurrentUserIdUseCase
 ) : MainViewModel<MoreScreenEvent, MoreScreenViewState>() {
 
-    private val _viewState: MutableStateFlow<MoreScreenViewState> =
+    override val _viewState: MutableStateFlow<MoreScreenViewState> =
         MutableStateFlow(MoreScreenViewState.Init)
 
     init {

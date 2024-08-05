@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 
 class SplashScreenViewModel() : MainViewModel<SplashScreenEvent, SplashScreenViewState>() {
-    private val _viewState: MutableStateFlow<SplashScreenViewState> =
+    override val _viewState: MutableStateFlow<SplashScreenViewState> =
         MutableStateFlow(SplashScreenViewState.Init)
 
     init {

@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,7 +14,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
@@ -32,7 +35,7 @@ import ru.unlim1x.wb_project.ui.uiKit.cards.EventCard
 import ru.unlim1x.wb_project.ui.uiKit.tabrow.model.TabData
 import java.security.InvalidParameterException
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 @Throws(InvalidParameterException::class)
 fun TabLayout(
@@ -43,7 +46,7 @@ fun TabLayout(
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { tabDataList.size })
     Column(modifier = modifier) {
-        ScrollableTabRow(selectedTabIndex = pagerState.currentPage,
+        PrimaryScrollableTabRow(selectedTabIndex = pagerState.currentPage,
             modifier = Modifier.fillMaxWidth(),
             edgePadding = 0.dp,
             containerColor = DevMeetTheme.colorScheme.neutralWhite,
@@ -64,7 +67,6 @@ fun TabLayout(
                     onClick = {
                         scope.launch {
                             pagerState.animateScrollToPage(index)
-                            Log.e("TAB", "${pagerState.currentPage}")
                         }
                     })
             }
@@ -82,6 +84,7 @@ fun TabLayout(
 fun PageMeetingsAll(navController: NavController, listMeetings: List<Meeting>) {
     LazyColumn(
         modifier = Modifier
+            .fillMaxHeight()
             .background(color = DevMeetTheme.colorScheme.neutralWhite)
             .padding(top = 4.dp)
     ) {
@@ -104,6 +107,7 @@ fun PageMeetingsAll(navController: NavController, listMeetings: List<Meeting>) {
 fun PageMeetingsActive(navController: NavController, listMeetings: List<Meeting>) {
     LazyColumn(
         modifier = Modifier
+            .fillMaxHeight()
             .background(color = DevMeetTheme.colorScheme.neutralWhite)
             .padding(top = 4.dp)
     ) {
@@ -126,6 +130,7 @@ fun PageMeetingsActive(navController: NavController, listMeetings: List<Meeting>
 fun PageMeetingsPlanned(navController: NavController, listMeetings: List<Meeting>) {
     LazyColumn(
         modifier = Modifier
+            .fillMaxHeight()
             .background(color = DevMeetTheme.colorScheme.neutralWhite)
             .padding(top = 4.dp)
     ) {
@@ -147,6 +152,7 @@ fun PageMeetingsPlanned(navController: NavController, listMeetings: List<Meeting
 fun PageMeetingsPassed(navController: NavController, listMeetings: List<Meeting>) {
     LazyColumn(
         modifier = Modifier
+            .fillMaxHeight()
             .background(color = DevMeetTheme.colorScheme.neutralWhite)
             .padding(top = 4.dp)
     ) {

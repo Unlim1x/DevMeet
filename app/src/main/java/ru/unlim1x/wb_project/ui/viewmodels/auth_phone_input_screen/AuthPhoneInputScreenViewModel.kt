@@ -18,7 +18,7 @@ class AuthPhoneInputScreenViewModel(private val sendCodeUseCase: ISendCodeToPhon
     private var countryCode: String = Country.Russia.phoneCode
     private var phoneNumber = ""
 
-    private val _viewState: MutableStateFlow<AuthPhoneInputScreenViewState> =
+    override val _viewState: MutableStateFlow<AuthPhoneInputScreenViewState> =
         MutableStateFlow(AuthPhoneInputScreenViewState.Display)
 
     override fun obtain(event: AuthPhoneInputScreenEvent) {

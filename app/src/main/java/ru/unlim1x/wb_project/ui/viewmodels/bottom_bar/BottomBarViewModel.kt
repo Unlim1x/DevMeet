@@ -8,7 +8,7 @@ import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 
 class BottomBarViewModel() : MainViewModel<BottomBarEvent, BottomBarViewState>() {
 
-    private val _viewState: MutableStateFlow<BottomBarViewState> =
+    override val _viewState: MutableStateFlow<BottomBarViewState> =
         MutableStateFlow(BottomBarViewState.Init)
 
     init {

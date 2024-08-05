@@ -68,8 +68,13 @@ fun BottomBar(navController: NavHostController, viewModel: BottomBarViewModel = 
                             onClick = {
                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                 navController.navigate(screen.route) {
-                                    popUpTo(navController.graph.findStartDestination().id)
+                                    popUpTo(navController.graph.findStartDestination().id){
+                                        saveState = true
+                                    }
                                     launchSingleTop = true
+                                    if(currentDestination?.parent?.route != screen.route) {
+                                        restoreState = true
+                                    }
                                 }
                             },
 

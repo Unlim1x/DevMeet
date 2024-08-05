@@ -8,6 +8,7 @@ import ru.unlim1x.wb_project.ui.viewmodels.auth_profile_screen.AuthProfileScreen
 import ru.unlim1x.wb_project.ui.viewmodels.bottom_bar.BottomBarViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.community_detailed_screen.CommunityDetailedScreenViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.community_screen.CommunityScreenViewModel
+import ru.unlim1x.wb_project.ui.viewmodels.image_picker.ImagePickerViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.meeting_detailed.MeetingDetailedScreenViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.meeting_screen.MeetingScreenViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.more_screen.MoreScreenViewModel
@@ -19,7 +20,7 @@ val appModule = module {
     viewModel { MeetingScreenViewModel(get(), get()) }
     viewModel { MyMeetingScreenViewModel(get(), get(), get()) }
     viewModel { CommunityScreenViewModel(get()) }
-    viewModel { ProfileScreenViewModel(get(), get()) }
+    viewModel { ProfileScreenViewModel(get(), get(), get()) }
     viewModel { MoreScreenViewModel(get(), get()) }
     viewModel { SplashScreenViewModel() }
     viewModel { BottomBarViewModel() }
@@ -28,4 +29,5 @@ val appModule = module {
     viewModel { AuthProfileScreenViewModel(get(), get()) }
     viewModel { MeetingDetailedScreenViewModel(get(), get(), get(), get()) }
     viewModel { CommunityDetailedScreenViewModel(get(), get()) }
+    viewModel {ImagePickerViewModel(get())}
 }

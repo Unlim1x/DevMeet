@@ -1,8 +1,13 @@
 package ru.unlim1x.wb_project.ui.viewmodels.my_meetings
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
 import ru.lim1x.domain.interfaces.usecases.IGetCurrentUserIdUseCase
@@ -17,7 +22,7 @@ class MyMeetingScreenViewModel(
     getCurrentUserIdUseCase: IGetCurrentUserIdUseCase
 ) : MainViewModel<MyMeetingScreenEvent, MyMeetingScreenViewState>() {
 
-    private val _viewState: MutableStateFlow<MyMeetingScreenViewState> =
+    override val _viewState: MutableStateFlow<MyMeetingScreenViewState> =
         MutableStateFlow(MyMeetingScreenViewState.Loading)
 
     private val _plannedMeetingsFlow: MutableStateFlow<List<Meeting>> =
@@ -27,17 +32,14 @@ class MyMeetingScreenViewModel(
 
     init {
 
-        getPlannedMeetingsUseCase.execute(getCurrentUserIdUseCase.execute())
-            .zip(getFinishedMeetingsUseCase.execute()) { plannedList, finishedList ->
-                _plannedMeetingsFlow.update { plannedList }
-                _finishedMeetingsFlow.update { finishedList }
-                _viewState.update {
-                    MyMeetingScreenViewState.Display(
-                        _plannedMeetingsFlow,
-                        _finishedMeetingsFlow
-                    )
-                }
-            }.launchIn(viewModelScope)
+        getPlannedMeetingsUseCase.execute(getCurrentUserIdUseCase.execute()).combine(getFinishedMeetingsUseCase.execute()){
+            plannedList,finishedList->
+            Pair(plannedList, finishedList)
+        }.onEach{pair->
+            _plannedMeetingsFlow.update { pair.first }
+            _finishedMeetingsFlow.update { pair.second}
+            _viewState.update { MyMeetingScreenViewState.Display(_plannedMeetingsFlow.asStateFlow(), _finishedMeetingsFlow.asStateFlow()) }
+        }.launchIn(viewModelScope)
 
     }
 

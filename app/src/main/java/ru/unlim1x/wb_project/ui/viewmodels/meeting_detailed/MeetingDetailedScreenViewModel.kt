@@ -23,7 +23,7 @@ class MeetingDetailedScreenViewModel(
     private val getCurrentUserUseCase: IGetCurrentUserIdUseCase,
     private val getUserAvatarByIdUseCase: IGetUserAvatarByIdUseCase
 ) : MainViewModel<MeetingDetailedScreenEvent, MeetingDetailedScreenViewState>() {
-    private val _viewState: MutableStateFlow<MeetingDetailedScreenViewState> =
+    override val _viewState: MutableStateFlow<MeetingDetailedScreenViewState> =
         MutableStateFlow(MeetingDetailedScreenViewState.Loading)
 
     private val _meetingFlow: MutableStateFlow<MeetingDetailed?> = MutableStateFlow(null)

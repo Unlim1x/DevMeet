@@ -1,5 +1,6 @@
 package ru.unlim1x.wb_project.ui.uiKit.avatarline
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -86,7 +87,8 @@ fun ZIndexElement(zIndex: Float, url: String) {
             contentScale = ContentScale.FillBounds,
             modifier = Modifier
                 .fillMaxSize()
-                .clip(RoundedCornerShape(10.dp)),
+                .clip(RoundedCornerShape(10.dp))
+                .border(color = DevMeetTheme.colorScheme.neutralWeak, width = 2.dp, shape = RoundedCornerShape(10.dp)),
             placeholder = painterResource(id = R.drawable.community_avatar),
             error = painterResource(id = R.drawable.community_avatar)
         )

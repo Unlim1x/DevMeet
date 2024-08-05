@@ -1,5 +1,7 @@
 package ru.lim1x.repository.profile_repository
 
+import android.net.Uri
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,7 +12,7 @@ import ru.lim1x.domain.models.User
 
 internal class ProfileRepository(private val dataSource:MockDataSource) :IProfileRepository{
     override fun loadProfile(userId: Int): StateFlow<User> {
-        return MutableStateFlow(dataSource.getCurrentUserInfo(userId))
+        return dataSource.getCurrentUserInfo(userId)
     }
 
 
@@ -24,5 +26,10 @@ internal class ProfileRepository(private val dataSource:MockDataSource) :IProfil
 
     override fun userId(): Int {
         return dataSource.userId()
+    }
+
+    override fun saveUserPhoto(stirngUri: String) {
+        Log.e("", "ПРОБРАСЫВАЕПТСЯ!!!!!")
+        dataSource.updateUserPhoto(uriString = stirngUri)
     }
 }

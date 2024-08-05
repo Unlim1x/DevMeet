@@ -14,7 +14,7 @@ class CommunityDetailedScreenViewModel(
     private val communityDetailedInfoByIdUseCase: IGetCommunityDetailedInfoByIdUseCase,
     private val meetingsByCommunityIdUseCase: IGetMeetingsByCommunityIdUseCase
 ) : MainViewModel<CommunityDetailedScreenEvent, CommunityDetailedScreenViewState>() {
-    private val _viewState: MutableStateFlow<CommunityDetailedScreenViewState> =
+    override val _viewState: MutableStateFlow<CommunityDetailedScreenViewState> =
         MutableStateFlow(CommunityDetailedScreenViewState.Init)
 
     private lateinit var communityInitial: CommunityDetailed

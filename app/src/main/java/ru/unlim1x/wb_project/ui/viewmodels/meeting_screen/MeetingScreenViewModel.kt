@@ -2,7 +2,10 @@ package ru.unlim1x.wb_project.ui.viewmodels.meeting_screen
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.combineLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
 import ru.lim1x.domain.interfaces.usecases.IGetActiveMeetingsUseCase
@@ -15,7 +18,7 @@ class MeetingScreenViewModel(
     getActiveMeetingsUseCase: IGetActiveMeetingsUseCase
 ) : MainViewModel<MeetingScreenEvent, MeetingScreenViewState>() {
 
-    private val _viewState: MutableStateFlow<MeetingScreenViewState> =
+    override val _viewState: MutableStateFlow<MeetingScreenViewState> =
         MutableStateFlow(MeetingScreenViewState.Loading)
 
     private val _meetingsAllFlow: MutableStateFlow<List<Meeting>> = MutableStateFlow(emptyList())
@@ -24,9 +27,11 @@ class MeetingScreenViewModel(
     init {
 
         getAllMeetingsUseCase.execute()
-            .zip(getActiveMeetingsUseCase.execute()) { listAll, listActive ->
-                _meetingsAllFlow.update { listAll }
-                _meetingsActiveFlow.update { listActive }
+            .combine(getActiveMeetingsUseCase.execute()) { listAll, listActive ->
+                Pair(listAll,listActive)
+            }.onEach { pair->
+                _meetingsAllFlow.update { pair.first }
+                _meetingsActiveFlow.update { pair.second }
                 _viewState.update {
                     MeetingScreenViewState.Display(
                         allMeetings = _meetingsAllFlow,

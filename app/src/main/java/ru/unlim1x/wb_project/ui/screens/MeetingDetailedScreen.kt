@@ -69,7 +69,6 @@ fun MeetingDetailedScreen(
     when (val state = viewState.value) {
 
         is MeetingDetailedScreenViewState.Display -> {
-            Log.e("STATE", state.toString())
             state.meeting.collectAsState(state.initial).value?.let {
                 MeetingDetailedBody(
                     navController = navController,
@@ -88,16 +87,14 @@ fun MeetingDetailedScreen(
         }
 
         MeetingDetailedScreenViewState.Error -> {
-            Log.e("STATE", state.toString())
+
         }
 
         MeetingDetailedScreenViewState.Loading -> {
-            Log.e("STATE", state.toString())
-        }
 
-        else -> {
-            Log.e("STATE", state.toString())
         }
+        else ->{}
+
     }
 
     LaunchedEffect(key1 = Unit) {

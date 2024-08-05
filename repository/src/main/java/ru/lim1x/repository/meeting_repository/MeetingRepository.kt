@@ -54,11 +54,15 @@ internal class MeetingRepository(
     }
 
     override fun removeUserFromVisitingList(meetingId: Int, userId: Int): Boolean {
-        return dataSource.removeUserFromVisitingList(meetingId)
+        val done = dataSource.removeUserFromVisitingList(meetingId)
+        plannedMeetingsStateFlow.update { dataSource.getVisitingMeetings() }
+        return done
     }
 
     override fun addUserToVisitingList(meetingId: Int, userId: Int): Boolean {
-        return dataSource.addUserToVisitingList(userId = userId, meetingId = meetingId)
+        val done =  dataSource.addUserToVisitingList(userId = userId, meetingId = meetingId)
+        plannedMeetingsStateFlow.update { dataSource.getVisitingMeetings() }
+        return done
     }
 
     //todo: переписать, пока просто заглушка

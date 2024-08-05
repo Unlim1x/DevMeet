@@ -13,7 +13,7 @@ class AuthProfileScreenViewModel(
 ) : MainViewModel<AuthProfileScreenEvent, AuthProfileScreenViewState>() {
 
 
-    private val _viewState: MutableStateFlow<AuthProfileScreenViewState> =
+    override val _viewState: MutableStateFlow<AuthProfileScreenViewState> =
         MutableStateFlow(AuthProfileScreenViewState.Display)
 
     override fun obtain(event: AuthProfileScreenEvent) {

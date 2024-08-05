@@ -14,7 +14,7 @@ class AuthCodeInputScreenViewModel(
 ) : MainViewModel<AuthCodeInputScreenEvent, AuthCodeInputScreenViewState>() {
 
 
-    private val _viewState: MutableStateFlow<AuthCodeInputScreenViewState> =
+    override val _viewState: MutableStateFlow<AuthCodeInputScreenViewState> =
         MutableStateFlow(AuthCodeInputScreenViewState.Display)
 
     override fun obtain(event: AuthCodeInputScreenEvent) {

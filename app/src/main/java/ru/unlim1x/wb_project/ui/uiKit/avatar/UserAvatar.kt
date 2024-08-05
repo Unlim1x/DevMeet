@@ -165,7 +165,7 @@ fun UserAvatar(
 fun UserAvatar(
     size: Dp = 100.dp,
     state: UserAvatarState = UserAvatarState.Default,
-    url: String,
+    url: Any?,
     onClick: () -> Unit
 ) {
     val imagePlusSize = ((20f / 100f) * size.value).dp

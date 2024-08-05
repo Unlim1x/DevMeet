@@ -11,7 +11,7 @@ class CommunityScreenViewModel(
     private val getCommunitiesUseCase: IGetCommunitiesUseCase
 ) : MainViewModel<CommunityScreenEvent, CommunityScreenViewState>() {
 
-    private val _viewState: MutableStateFlow<CommunityScreenViewState> =
+    override val _viewState: MutableStateFlow<CommunityScreenViewState> =
         MutableStateFlow(CommunityScreenViewState.Loading)
 
     private fun reduce(event: CommunityScreenEvent, state: CommunityScreenViewState.Loading) {

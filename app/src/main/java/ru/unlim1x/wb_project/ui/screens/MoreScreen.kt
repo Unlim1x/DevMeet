@@ -69,8 +69,7 @@ fun MoreScreen(navController: NavController, viewModel: MoreScreenViewModel = ko
             }
 
             MoreScreenViewState.Init -> {
-                Log.e("MoreScreen", "Init")
-                //viewModel.obtain(MoreScreenEvent.OpenScreen)
+
             }
 
         }
@@ -202,7 +201,6 @@ fun MoreContainer(user: User, modifier: Modifier = Modifier, onClick: () -> Unit
         verticalAlignment = Alignment.CenterVertically) {
 
         MoreContainerWrapper {
-            Log.e("", "User has avatar?= ${user.hasAvatar}")
             if (user.hasAvatar) {
                 UserAvatar(url = user.avatarURL) {}
             } else {
