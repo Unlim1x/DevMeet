@@ -52,7 +52,7 @@ import ru.unlim1x.wb_project.ui.uiKit.buttons.GhostButton
 import ru.unlim1x.wb_project.ui.uiKit.buttons.PrimaryButton
 import ru.unlim1x.wb_project.ui.uiKit.buttons.SecondaryButton
 import ru.unlim1x.wb_project.ui.uiKit.cards.CommunityCard
-import ru.unlim1x.wb_project.ui.uiKit.cards.EventCard
+import ru.unlim1x.wb_project.ui.uiKit.cards.MeetingCard
 import ru.unlim1x.wb_project.ui.uiKit.cards.QuantityMembers
 import ru.unlim1x.wb_project.ui.uiKit.chips.Chip
 import ru.unlim1x.wb_project.ui.uiKit.custominputview.PassCodeInput
@@ -157,18 +157,18 @@ fun AvatarRowGroup() {
 fun EventsGroup() {
     val timeAndPlace = TimeAndPlace(place = "Москва", date = 13, month = 9, year = 2024)
     val listOfTags = listOf("Junior", "Python", "Moscow")
-    EventCard(
+    MeetingCard(
         heading = "Developer Meeting",
         timeAndPlace = timeAndPlace.dateAndPlaceString,
         tags = listOfTags
     ) {}
-    EventCard(
+    MeetingCard(
         heading = "Developer Meeting",
         timeAndPlace = timeAndPlace.dateAndPlaceString,
         tags = listOfTags,
         isOver = true
     ) {}
-    EventCard(
+    MeetingCard(
         heading = "Developer Meeting",
         timeAndPlace = timeAndPlace.dateAndPlaceString,
         tags = listOfTags

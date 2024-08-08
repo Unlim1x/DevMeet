@@ -28,9 +28,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -42,6 +44,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatar.UserAvatar
@@ -53,7 +56,7 @@ import ru.unlim1x.wb_project.ui.viewmodels.image_picker.ImagePickerViewState
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-internal fun ImagePicker(viewModel:ImagePickerViewModel = koinViewModel(),onDismiss:()->Unit,onImageClick:(uri: Uri)->Unit){
+internal fun ImagePicker(viewModel:ImagePickerViewModel = koinViewModel(),onHideCallback:()->Unit,onDismiss:()->Unit,onImageClick:(uri: Uri)->Unit){
     val sheetState = rememberModalBottomSheetState()
     val viewState by viewModel.viewState().collectAsState()
     val context = LocalContext.current
@@ -70,7 +73,7 @@ internal fun ImagePicker(viewModel:ImagePickerViewModel = koinViewModel(),onDism
             Log.d("ExampleScreen","PERMISSION DENIED")
         }
     }
-
+    val scope = rememberCoroutineScope()
     ModalBottomSheet(onDismissRequest = { onDismiss() }, sheetState = sheetState,
         containerColor = DevMeetTheme.colorScheme.brandBackground) {
             when (viewState){
@@ -79,6 +82,10 @@ internal fun ImagePicker(viewModel:ImagePickerViewModel = koinViewModel(),onDism
                     BottomSheetBody((viewState as ImagePickerViewState.Display).listOfImagesUris){
                         it.path?.let { it1 -> Log.e("BottomSheet", it1) }
                         onImageClick(it)
+
+                        scope.launch {
+                            sheetState.hide()
+                        }.invokeOnCompletion { onHideCallback() }
                     }
                 }
                 ImagePickerViewState.DisplayEmpty -> {
@@ -132,7 +139,7 @@ private fun ImageInBottomSheetBody(imageUri:Uri, onImageClick:(uri:Uri)->Unit){
     //AsyncImage(model = imageUri, contentDescription = )
     Box(modifier = Modifier
         .clickable { onImageClick(imageUri) }
-        .size((LocalConfiguration.current.screenWidthDp/3).dp)
+        .size((LocalConfiguration.current.screenWidthDp / 3).dp)
         .padding(2.dp)) {
         AsyncImage(model = imageUri, contentDescription = "", contentScale = ContentScale.Crop)
     }
@@ -141,7 +148,7 @@ private fun ImageInBottomSheetBody(imageUri:Uri, onImageClick:(uri:Uri)->Unit){
 @Composable
 @Preview
 private fun ShowImagePicker(){
-    ImagePicker(onDismiss = ::doNothing){
+    ImagePicker(onDismiss = ::doNothing, onHideCallback = ::doNothing){
 
     }
 }

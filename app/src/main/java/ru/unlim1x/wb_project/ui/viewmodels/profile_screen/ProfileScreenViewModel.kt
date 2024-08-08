@@ -16,7 +16,7 @@ import ru.unlim1x.wb_project.ui.viewmodels.MainViewModel
 class ProfileScreenViewModel(
     getCurrentUserUseCase: IGetCurrentUserIdUseCase,
     getUserProfileDataUseCase: IGetUserProfileDataUseCase,
-    val setUserPhotoExperimentalUseCase: ISetUserPhotoExperimentalUseCase
+    private val setUserPhotoExperimentalUseCase: ISetUserPhotoExperimentalUseCase
 ) : MainViewModel<ProfileScreenEvent, ProfileScreenViewState>() {
 
     override val _viewState: MutableStateFlow<ProfileScreenViewState> =

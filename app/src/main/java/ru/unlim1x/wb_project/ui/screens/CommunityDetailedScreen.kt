@@ -22,7 +22,7 @@ import ru.lim1x.domain.models.Meeting
 import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
-import ru.unlim1x.wb_project.ui.uiKit.cards.EventCard
+import ru.unlim1x.wb_project.ui.uiKit.cards.MeetingCard
 import ru.unlim1x.wb_project.ui.viewmodels.community_detailed_screen.CommunityDetailedScreenEvent
 import ru.unlim1x.wb_project.ui.viewmodels.community_detailed_screen.CommunityDetailedScreenViewModel
 import ru.unlim1x.wb_project.ui.viewmodels.community_detailed_screen.CommunityDetailedScreenViewState
@@ -99,7 +99,7 @@ private fun CommunityDetailedBody(
         item { Spacer(modifier = Modifier.size(FIGMA_GAP_SMALL)) }
 
         items(listMeetings) { event ->
-            EventCard(
+            MeetingCard(
                 heading = event.name,
                 timeAndPlace = event.timeAndPlace.dateAndPlaceString,
                 tags = event.tags

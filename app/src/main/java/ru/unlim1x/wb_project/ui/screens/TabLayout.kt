@@ -1,6 +1,10 @@
 package ru.unlim1x.wb_project.ui.screens
 
-import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -11,17 +15,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.PrimaryScrollableTabRow
-import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -31,7 +40,8 @@ import kotlinx.coroutines.launch
 import ru.lim1x.domain.models.Meeting
 import ru.unlim1x.wb_project.ui.navigation.NavGraphNodes
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
-import ru.unlim1x.wb_project.ui.uiKit.cards.EventCard
+import ru.unlim1x.wb_project.ui.uiKit.cards.loading_cards.LoadingMeetingCardExperimental
+import ru.unlim1x.wb_project.ui.uiKit.cards.MeetingCard
 import ru.unlim1x.wb_project.ui.uiKit.tabrow.model.TabData
 import java.security.InvalidParameterException
 
@@ -80,27 +90,39 @@ fun TabLayout(
 
 }
 
+@OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun PageMeetingsAll(navController: NavController, listMeetings: List<Meeting>) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxHeight()
-            .background(color = DevMeetTheme.colorScheme.neutralWhite)
-            .padding(top = 4.dp)
+    var animate by remember {
+        mutableStateOf(false)
+    }
+    AnimatedVisibility(visible = animate,
+        enter = fadeIn(animationSpec = tween(500))
     ) {
-        itemsIndexed(listMeetings) { index, event ->
-            EventCard(
-                heading = event.name,
-                timeAndPlace = event.timeAndPlace.dateAndPlaceString,
-                isOver = event.isFinished,
-                tags = event.tags
-            ) {
-                if (!event.isFinished)
-                    navController.navigate(NavGraphNodes.MeetingRoot.MeetingDetailed.route + "/${event.id}")
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxHeight()
+                .background(color = DevMeetTheme.colorScheme.neutralWhite)
+                .padding(top = 4.dp)
+        ) {
+            itemsIndexed(listMeetings) { index, event ->
+                MeetingCard(
+                    heading = event.name,
+                    timeAndPlace = event.timeAndPlace.dateAndPlaceString,
+                    isOver = event.isFinished,
+                    tags = event.tags
+                ) {
+                    if (!event.isFinished)
+                        navController.navigate(NavGraphNodes.MeetingRoot.MeetingDetailed.route + "/${event.id}")
+                }
+                Spacer(modifier = Modifier.size(12.dp))
             }
-            Spacer(modifier = Modifier.size(12.dp))
         }
     }
+    LaunchedEffect(key1 = Unit) {
+        animate = true
+    }
+
 }
 
 @Composable
@@ -112,7 +134,7 @@ fun PageMeetingsActive(navController: NavController, listMeetings: List<Meeting>
             .padding(top = 4.dp)
     ) {
         itemsIndexed(listMeetings) { index, event ->
-            EventCard(
+            MeetingCard(
                 heading = event.name,
                 timeAndPlace = event.timeAndPlace.dateAndPlaceString,
                 isOver = event.isFinished,
@@ -135,7 +157,7 @@ fun PageMeetingsPlanned(navController: NavController, listMeetings: List<Meeting
             .padding(top = 4.dp)
     ) {
         itemsIndexed(listMeetings) { index, event ->
-            EventCard(
+            MeetingCard(
                 heading = event.name,
                 timeAndPlace = event.timeAndPlace.dateAndPlaceString,
                 isOver = event.isFinished,
@@ -157,7 +179,7 @@ fun PageMeetingsPassed(navController: NavController, listMeetings: List<Meeting>
             .padding(top = 4.dp)
     ) {
         itemsIndexed(listMeetings) { index, event ->
-            EventCard(
+            MeetingCard(
                 heading = event.name,
                 timeAndPlace = event.timeAndPlace.dateAndPlaceString,
                 isOver = event.isFinished,
@@ -168,4 +190,22 @@ fun PageMeetingsPassed(navController: NavController, listMeetings: List<Meeting>
             Spacer(modifier = Modifier.size(12.dp))
         }
     }
+}
+
+@Composable
+fun PageMeetingsLoading(){
+
+        LazyColumn(
+            userScrollEnabled = false,
+            modifier = Modifier
+                .fillMaxHeight()
+                .background(color = DevMeetTheme.colorScheme.neutralWhite)
+                .padding(top = 4.dp)
+        ) {
+            items(MutableList(20) {}) { _ ->
+                LoadingMeetingCardExperimental()
+                Spacer(modifier = Modifier.size(12.dp))
+            }
+        }
+
 }

@@ -29,12 +29,12 @@ import ru.unlim1x.wb_project.ui.uiKit.avatar.MeetingAvatar
 import ru.unlim1x.wb_project.ui.uiKit.chips.Chip
 
 @Composable
-fun EventCard(
+fun MeetingCard(modifier: Modifier=Modifier,
     heading: String, timeAndPlace: String, isOver: Boolean = false, tags: List<String>? = null,
     onClick: () -> Unit
 ) {
     val view = LocalView.current
-    Column(modifier = Modifier
+    Column(modifier = modifier
         .clickable {
             view.playSoundEffect(SoundEffectConstants.CLICK)
             onClick()
@@ -78,7 +78,7 @@ fun CardBody(
         LazyRow {
             tags?.let { list ->
                 items(list) { tag ->
-                    Chip(text = tag, modifier = Modifier.padding(0.dp, 0.dp, 4.dp, 0.dp))
+                    Chip(text = tag, modifier = Modifier.padding(end=4.dp))
                 }
             }
         }
@@ -93,7 +93,7 @@ fun ShowEventCard() {
 
     val timePlace = TimeAndPlace()
     val tags = listOf("Junior", "Python", "Moscow")
-    EventCard(
+    MeetingCard(
         heading = "Developer meeting",
         timeAndPlace = timePlace.dateAndPlaceString,
         tags = tags

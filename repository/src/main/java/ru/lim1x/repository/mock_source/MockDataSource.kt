@@ -189,7 +189,7 @@ internal class MockDataSource {
 
     fun getVisitorAvatarById(id:Int):String{
         if(id == 1)
-            return userAvatarUrl
+            return currentUserFlow.value.avatarURL
         return visitorAvatarUrl
     }
 

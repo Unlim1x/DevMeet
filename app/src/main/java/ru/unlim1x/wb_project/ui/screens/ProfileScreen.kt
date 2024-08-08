@@ -146,9 +146,10 @@ private fun ProfileBody(modifier: Modifier, avatarState: UserAvatarState, user: 
 
     when (openBottomSheet){
         true->{
-            ImagePicker(onDismiss = {openBottomSheet = false}) {
+            ImagePicker(onDismiss = {openBottomSheet = false}, onHideCallback = {openBottomSheet = false}) {
                 Log.e("", "ВЫЗОВ!!!!!")
                 imageUpdate(it)
+                //openBottomSheet = false
             }
         }
         else->{

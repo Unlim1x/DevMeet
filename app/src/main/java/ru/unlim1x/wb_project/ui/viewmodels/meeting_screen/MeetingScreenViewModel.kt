@@ -1,6 +1,7 @@
 package ru.unlim1x.wb_project.ui.viewmodels.meeting_screen
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.combineLatest
@@ -32,6 +33,7 @@ class MeetingScreenViewModel(
             }.onEach { pair->
                 _meetingsAllFlow.update { pair.first }
                 _meetingsActiveFlow.update { pair.second }
+                delay(4000)
                 _viewState.update {
                     MeetingScreenViewState.Display(
                         allMeetings = _meetingsAllFlow,
