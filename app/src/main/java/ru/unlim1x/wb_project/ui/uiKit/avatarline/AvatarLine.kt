@@ -84,7 +84,7 @@ private fun ZIndexElement(zIndex: Float, url: String) {
                 .crossfade(true)
                 .build(),
             contentDescription = "User avatar",
-            contentScale = ContentScale.FillBounds,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(10.dp))
