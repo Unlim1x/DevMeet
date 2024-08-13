@@ -36,7 +36,7 @@ import ru.unlim1x.wb_project.ui.uiKit.theme.myColorScheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SearchField(
+internal fun SearchField(
     state: TextFieldState,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -94,6 +94,6 @@ fun SearchField(
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
-fun SerachLinePreview() {
+private fun SerachLinePreview() {
     SearchField(rememberTextFieldState()) {}
 }

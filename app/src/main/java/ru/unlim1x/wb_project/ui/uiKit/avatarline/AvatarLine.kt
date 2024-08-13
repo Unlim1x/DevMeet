@@ -31,7 +31,7 @@ import ru.unlim1x.wb_project.R
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 
 @Composable
-fun AvatarLine(listAvatars: List<String>) {
+internal fun AvatarLine(listAvatars: List<String>) {
     var zIndexCounter by rememberSaveable {
         mutableIntStateOf(listAvatars.size)
     }
@@ -72,7 +72,7 @@ fun AvatarLine(listAvatars: List<String>) {
 
 
 @Composable
-fun ZIndexElement(zIndex: Float, url: String) {
+private fun ZIndexElement(zIndex: Float, url: String) {
     Box(
         modifier = Modifier
             .zIndex(zIndex)
@@ -88,7 +88,11 @@ fun ZIndexElement(zIndex: Float, url: String) {
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(10.dp))
-                .border(color = DevMeetTheme.colorScheme.neutralWeak, width = 2.dp, shape = RoundedCornerShape(10.dp)),
+                .border(
+                    color = DevMeetTheme.colorScheme.neutralWeak,
+                    width = 2.dp,
+                    shape = RoundedCornerShape(10.dp)
+                ),
             placeholder = painterResource(id = R.drawable.community_avatar),
             error = painterResource(id = R.drawable.community_avatar)
         )
@@ -98,7 +102,7 @@ fun ZIndexElement(zIndex: Float, url: String) {
 
 @Preview
 @Composable
-fun showAvatarLine() {
+private fun showAvatarLine() {
     AvatarLine(listOf("", "", "", "", "", "", ""))
 
 }

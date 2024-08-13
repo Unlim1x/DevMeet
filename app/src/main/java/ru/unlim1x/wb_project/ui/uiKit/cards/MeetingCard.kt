@@ -29,7 +29,8 @@ import ru.unlim1x.wb_project.ui.uiKit.avatar.MeetingAvatar
 import ru.unlim1x.wb_project.ui.uiKit.chips.Chip
 
 @Composable
-fun MeetingCard(modifier: Modifier=Modifier,
+internal fun MeetingCard(
+    modifier: Modifier = Modifier,
     heading: String, timeAndPlace: String, isOver: Boolean = false, tags: List<String>? = null,
     onClick: () -> Unit
 ) {
@@ -56,7 +57,7 @@ fun MeetingCard(modifier: Modifier=Modifier,
 }
 
 @Composable
-fun CardBody(
+internal fun CardBody(
     heading: String,
     meta: String,
     meta2: String = stringResource(id = R.string.is_over),
@@ -89,7 +90,7 @@ fun CardBody(
 
 @Composable
 @Preview
-fun ShowEventCard() {
+private fun ShowEventCard() {
 
     val timePlace = TimeAndPlace()
     val tags = listOf("Junior", "Python", "Moscow")

@@ -22,7 +22,7 @@ import ru.unlim1x.wb_project.ui.uiKit.buttons.state.ButtonStateColor
 
 
 @Composable
-fun PrimaryButton(
+internal fun PrimaryButton(
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(30.dp),
     buttonText: String = "Button",
@@ -72,7 +72,7 @@ fun PrimaryButton(
 
 @Preview
 @Composable
-fun PrimaryButtonPreview() {
+private fun PrimaryButtonPreview() {
 
     PrimaryButton {}
 }

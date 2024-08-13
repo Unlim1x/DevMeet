@@ -29,7 +29,7 @@ import ru.unlim1x.wb_project.ui.uiKit.avatar.state.UserAvatarState
 import ru.unlim1x.wb_project.ui.uiKit.theme.NoRippleTheme
 
 @Composable
-fun UserAvatar(
+internal fun UserAvatar(
     size: Dp = 100.dp,
     state: UserAvatarState = UserAvatarState.Default,
     onClick: () -> Unit
@@ -95,7 +95,7 @@ fun UserAvatar(
 }
 
 @Composable
-fun UserAvatar(
+internal fun UserAvatar(
     size: Dp = 100.dp,
     state: UserAvatarState = UserAvatarState.Default,
     bitmap: ImageBitmap,
@@ -162,7 +162,7 @@ fun UserAvatar(
 }
 
 @Composable
-fun UserAvatar(
+internal fun UserAvatar(
     size: Dp = 100.dp,
     state: UserAvatarState = UserAvatarState.Default,
     url: Any?,

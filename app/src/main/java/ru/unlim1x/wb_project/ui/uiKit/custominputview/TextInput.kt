@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 
 @Composable
-fun TextInput(
+internal fun TextInput(
     modifier: Modifier = Modifier,
     maxLines: Int = 1,
     hint: String,

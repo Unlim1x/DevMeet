@@ -13,7 +13,7 @@ import ru.unlim1x.wb_project.ui.uiKit.theme.MyTypography
 import ru.unlim1x.wb_project.ui.uiKit.theme.myColorScheme
 
 @Composable
-fun TitleBlock(
+internal fun TitleBlock(
     heading: String, description: String, modifier: Modifier = Modifier,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,

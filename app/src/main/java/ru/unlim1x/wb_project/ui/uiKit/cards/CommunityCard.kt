@@ -21,7 +21,7 @@ import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import ru.unlim1x.wb_project.ui.uiKit.avatar.CommunityAvatar
 
 @Composable
-fun CommunityCard(
+internal fun CommunityCard(
     heading: String, quantity: String, tags: List<String>? = null,
     onClick: () -> Unit
 ) {
@@ -49,7 +49,7 @@ fun CommunityCard(
 
 @Preview
 @Composable
-fun ShowCommunityCard() {
+private fun ShowCommunityCard() {
     val number = 53
     CommunityCard(
         heading = "Designa",

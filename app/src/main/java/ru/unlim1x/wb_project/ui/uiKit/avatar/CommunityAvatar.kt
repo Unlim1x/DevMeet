@@ -9,7 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import ru.unlim1x.wb_project.R
 
 @Composable
-fun CommunityAvatar(
+internal fun CommunityAvatar(
     modifier: Modifier = Modifier,
     painter: Painter = painterResource(id = R.drawable.community_avatar),
     contentDescription: String = "Community avatar"
@@ -19,6 +19,6 @@ fun CommunityAvatar(
 
 @Preview
 @Composable
-fun ShowCommunityAvatar() {
+private fun ShowCommunityAvatar() {
     CommunityAvatar()
 }

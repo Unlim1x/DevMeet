@@ -1,6 +1,6 @@
 package ru.unlim1x.wb_project.ui.uiKit.avatar.state
 
-sealed interface UserAvatarState {
+internal sealed interface UserAvatarState {
     data object Default : UserAvatarState
     data object Edit : UserAvatarState
 }

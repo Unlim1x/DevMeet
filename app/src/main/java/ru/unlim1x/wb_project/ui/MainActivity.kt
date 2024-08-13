@@ -7,18 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.core.content.ContextCompat
-import android.Manifest
-import ru.unlim1x.wb_project.ui.navigation.NavigationScreen
+import ru.unlim1x.wb_project.ui.navigation.compose_screen_wrapper.NavigationScreen
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 import java.util.Locale
-import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
 
 
-class MainActivity : ComponentActivity() {
+internal class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val config = resources.configuration

@@ -5,7 +5,7 @@ import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 
-class PhoneNumberTransformation : VisualTransformation {
+internal class PhoneNumberTransformation : VisualTransformation {
 
     override fun filter(text: AnnotatedString): TransformedText {
 

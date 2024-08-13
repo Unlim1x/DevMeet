@@ -27,7 +27,7 @@ import ru.unlim1x.wb_project.ui.uiKit.buttons.state.ButtonStateColor
 import ru.unlim1x.wb_project.ui.uiKit.theme.PrimaryColorRippleTheme
 
 @Composable
-fun GhostButton(
+internal fun GhostButton(
     modifier: Modifier = Modifier,
     shape: Shape = ButtonDefaults.textShape,
     buttonText: String = "Button",
@@ -88,7 +88,7 @@ fun GhostButton(
 
 @Preview
 @Composable
-fun GhostButtonPreview() {
+private fun GhostButtonPreview() {
 
     GhostButton {}
 }

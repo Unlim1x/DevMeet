@@ -15,7 +15,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun animatedTransitionBrush(): Brush {
+internal fun animatedTransitionBrush(): Brush {
     val TRANSITION_LABEL = "ANIMATED_TRANSITION+${LocalView.current}"
     val gradientColors = listOf(
         Color.Gray.copy(alpha = 0.3f),
@@ -45,6 +45,6 @@ fun animatedTransitionBrush(): Brush {
 
 @Composable
 @Preview
-fun ShowLoadingExperimentalMeetingCard() {
+private fun ShowLoadingExperimentalMeetingCard() {
     LoadingMeetingCardExperimental()
 }

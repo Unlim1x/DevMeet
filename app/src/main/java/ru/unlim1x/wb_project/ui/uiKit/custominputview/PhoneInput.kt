@@ -42,7 +42,7 @@ import ru.unlim1x.wb_project.ui.uiKit.custominputview.model.PhoneNumberTransform
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PhoneInput(
+internal fun PhoneInput(
     modifier: Modifier = Modifier,
     onValueChanged: (countryCode: String, phone: String) -> Unit
 ) {
@@ -171,5 +171,5 @@ fun printToLog(string: String) {
 @Composable
 @Preview
 fun ShowPhoneInput() {
-    PhoneInput() { _, _ -> }
+    PhoneInput { _, _ -> }
 }

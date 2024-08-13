@@ -2,19 +2,19 @@ package ru.unlim1x.wb_project.modules
 
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import ru.unlim1x.wb_project.ui.viewmodels.auth_code_input_screen.AuthCodeInputScreenViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.auth_phone_input_screen.AuthPhoneInputScreenViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.auth_profile_screen.AuthProfileScreenViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.bottom_bar.BottomBarViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.community_detailed_screen.CommunityDetailedScreenViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.community_screen.CommunityScreenViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.image_picker.ImagePickerViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.meeting_detailed.MeetingDetailedScreenViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.meeting_screen.MeetingScreenViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.more_screen.MoreScreenViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.my_meetings.MyMeetingScreenViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.profile_screen.ProfileScreenViewModel
-import ru.unlim1x.wb_project.ui.viewmodels.splash_screen.SplashScreenViewModel
+import ru.unlim1x.wb_project.ui.screens.auth_code_input_screen.AuthCodeInputScreenViewModel
+import ru.unlim1x.wb_project.ui.screens.auth_phone_input_screen.AuthPhoneInputScreenViewModel
+import ru.unlim1x.wb_project.ui.screens.auth_profile_screen.AuthProfileScreenViewModel
+import ru.unlim1x.wb_project.ui.screens.bottom_bar.BottomBarViewModel
+import ru.unlim1x.wb_project.ui.screens.community_detailed_screen.CommunityDetailedScreenViewModel
+import ru.unlim1x.wb_project.ui.screens.community_screen.CommunityScreenViewModel
+import ru.unlim1x.wb_project.ui.screens.image_picker.ImagePickerViewModel
+import ru.unlim1x.wb_project.ui.screens.meeting_detailed.MeetingDetailedScreenViewModel
+import ru.unlim1x.wb_project.ui.screens.meeting_screen.MeetingScreenViewModel
+import ru.unlim1x.wb_project.ui.screens.more_screen.MoreScreenViewModel
+import ru.unlim1x.wb_project.ui.screens.my_meetings.MyMeetingScreenViewModel
+import ru.unlim1x.wb_project.ui.screens.profile_screen.ProfileScreenViewModel
+import ru.unlim1x.wb_project.ui.screens.splash_screen.SplashScreenViewModel
 
 val appModule = module {
     viewModel { MeetingScreenViewModel(get(), get()) }

@@ -72,7 +72,7 @@ internal fun LoadingCommunityCardExperimental(modifier: Modifier = Modifier){
 
 @Composable
 @Preview
-fun ShowLoadingExperimentalCommunityCard(){
+private fun ShowLoadingExperimentalCommunityCard() {
     LoadingCommunityCardExperimental()
     //LoadingMeetingCardBody(Color.White)
 }
