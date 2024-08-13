@@ -1,19 +1,22 @@
 package ru.lim1x.domain.interfaces.repositories
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.annotations.ApiStatus.Experimental
 import ru.lim1x.domain.models.User
 
 interface IProfileRepository {
-    suspend fun loadProfile(userId: Int): Flow<User>
-    suspend fun saveUserName(userId:Int,userName:String, userSurname:String = ""):Boolean
+    fun loadProfile(userId: Int): StateFlow<User>
+    fun saveUserName(userId:Int,userName:String, userSurname:String = ""):Boolean
 
 
     @Experimental
     /**
      * Вероятно будет убрано или заменено, когда будет понятно, как сохраняется номер на сервере
      */
-    suspend fun saveNumber(phoneNumber:String):Boolean
+    fun saveNumber(phoneNumber:String):Boolean
 
-    suspend fun userId():Int
+    fun userId():Int
+
+    fun saveUserPhoto(stirngUri:String)
 }

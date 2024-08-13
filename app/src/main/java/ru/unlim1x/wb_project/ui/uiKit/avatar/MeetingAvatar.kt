@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import ru.unlim1x.wb_project.R
 
 @Composable
-fun MeetingAvatar(
+internal fun MeetingAvatar(
     modifier: Modifier = Modifier,
     painter: Painter = painterResource(id = R.drawable.event_avatar),
     contentDescription: String = "Meeting avatar"
@@ -29,6 +29,6 @@ fun MeetingAvatar(
 
 @Preview
 @Composable
-fun ShowMeetingAvatar() {
+private fun ShowMeetingAvatar() {
     MeetingAvatar()
 }

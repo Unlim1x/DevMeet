@@ -1,15 +1,22 @@
 package ru.lim1x.repository.authorization_repository
 
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.update
 import ru.lim1x.domain.interfaces.repositories.IAuthorizationRepository
 import ru.lim1x.domain.models.AuthorizationResult
 import ru.lim1x.repository.mock_source.MockDataSource
 
 internal class AuthorizationRepository(private val dataSource: MockDataSource) :IAuthorizationRepository{
-    override suspend fun sendCode(phoneNumber: String) {
+
+    private val codeValidationStateFlow:MutableStateFlow<AuthorizationResult?> = MutableStateFlow(null)
+    override fun sendCode(phoneNumber: String) {
 
     }
 
-    override suspend fun validateCode(code: String): AuthorizationResult {
-        return dataSource.validateCode(code)
+    override fun validateCode(code: String): StateFlow<AuthorizationResult?> {
+        codeValidationStateFlow.update { dataSource.validateCode(code) }
+        return codeValidationStateFlow
     }
 }

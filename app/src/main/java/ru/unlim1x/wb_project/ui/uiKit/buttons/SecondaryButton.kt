@@ -33,7 +33,7 @@ import ru.unlim1x.wb_project.ui.uiKit.buttons.state.ButtonStateColor
 import ru.unlim1x.wb_project.ui.uiKit.theme.PrimaryColorRippleTheme
 
 @Composable
-fun SecondaryButton(
+internal fun SecondaryButton(
     modifier: Modifier = Modifier,
     shape: Shape = ButtonDefaults.outlinedShape,
     buttonText: String = "Button",
@@ -102,7 +102,7 @@ fun SecondaryButton(
 
 @Preview
 @Composable
-fun SecondaryButtonPreview() {
+private fun SecondaryButtonPreview() {
     Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
         SecondaryButton {}
         SecondaryButton(buttonIconId = R.drawable.insta, buttonText = "") {}

@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 
 @Composable
-fun PassCodeInput(modifier: Modifier = Modifier, actionDone: (code: String) -> Unit) {
+internal fun PassCodeInput(modifier: Modifier = Modifier, actionDone: (code: String) -> Unit) {
     var pin by remember {
         mutableStateOf("")
     }
@@ -68,7 +68,7 @@ fun PassCodeInput(modifier: Modifier = Modifier, actionDone: (code: String) -> U
 }
 
 @Composable
-fun NumberOrCircle(code: String, index: Int) {
+private fun NumberOrCircle(code: String, index: Int) {
     if (code.isEmpty() || code.length - 1 < index) {
         Canvas(modifier = Modifier.size(24.dp)) {
             drawCircle(DevMeetTheme.colorScheme.neutralLine)
@@ -83,7 +83,7 @@ fun NumberOrCircle(code: String, index: Int) {
 
 @Preview
 @Composable
-fun showItPass() {
-    PassCodeInput() {}
+private fun showItPass() {
+    PassCodeInput {}
 }
 

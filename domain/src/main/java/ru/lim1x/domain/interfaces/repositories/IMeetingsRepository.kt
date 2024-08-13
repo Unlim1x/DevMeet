@@ -2,22 +2,23 @@ package ru.lim1x.domain.interfaces.repositories
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import ru.lim1x.domain.models.Meeting
 import ru.lim1x.domain.models.MeetingDetailed
 
 interface IMeetingsRepository {
-    suspend fun loadAllMeetings(): Flow<List<Meeting>>
-    suspend fun loadActiveMeetings(): Flow<List<Meeting>>
-    suspend fun loadPlannedMeetings(): Flow<List<Meeting>>
-    suspend fun loadFinishedMeetings(): Flow<List<Meeting>>
+    fun loadAllMeetings(): StateFlow<List<Meeting>>
+    fun loadActiveMeetings(): StateFlow<List<Meeting>>
+    fun loadPlannedMeetings(userId:Int): StateFlow<List<Meeting>>
+    fun loadFinishedMeetings(): StateFlow<List<Meeting>>
 
-    suspend fun loadMeetingsByCommunityId(communityId:Int): Flow<List<Meeting>>
+    fun loadMeetingsByCommunityId(communityId:Int): StateFlow<List<Meeting>>
 
-    suspend fun loadMeetingDetailed(meetingId:Int): MutableStateFlow<MeetingDetailed>
+    fun loadMeetingDetailed(meetingId:Int): StateFlow<MeetingDetailed?>
 
-    suspend fun removeUserFromVisitingList(meetingId: Int, userId:Int):Boolean
+    fun removeUserFromVisitingList(meetingId: Int, userId:Int):Boolean
 
-    suspend fun addUserToVisitingList(meetingId: Int, userId:Int):Boolean
+    fun addUserToVisitingList(meetingId: Int, userId:Int):Boolean
 
-    fun getUserAvatar(userId:Int):String
+    fun getUserAvatar(userId:Int):String?
 }

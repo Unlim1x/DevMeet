@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import ru.unlim1x.wb_project.ui.theme.DevMeetTheme
 
 @Composable
-fun Chip(text: String, modifier: Modifier = Modifier) {
+internal fun Chip(text: String, modifier: Modifier = Modifier) {
     Box(
 
         modifier = modifier
@@ -41,6 +41,6 @@ fun Chip(text: String, modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun ShowChip() {
+private fun ShowChip() {
     Chip(text = "Default")
 }

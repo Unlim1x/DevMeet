@@ -8,7 +8,7 @@ import ru.lim1x.domain.di.domainModule
 import ru.lim1x.repository.di.repositoryModule
 import ru.unlim1x.wb_project.modules.appModule
 
-class App:Application() {
+class App : Application() {
     override fun onCreate() {
         super.onCreate()
         startKoin {

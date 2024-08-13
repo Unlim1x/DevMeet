@@ -1,8 +1,9 @@
 package ru.lim1x.domain.interfaces.usecases
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import ru.lim1x.domain.models.Community
 
 interface IGetCommunitiesUseCase {
-    suspend fun execute(): Flow<List<Community>>
+    fun execute(): StateFlow<List<Community>>
 }

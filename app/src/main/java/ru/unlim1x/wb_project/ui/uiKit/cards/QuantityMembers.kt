@@ -3,7 +3,7 @@ package ru.unlim1x.wb_project.ui.uiKit.cards
 import android.content.Context
 import ru.unlim1x.wb_project.R
 
-class QuantityMembers(var numberOfMembers: Long, var context: Context) {
+internal class QuantityMembers(var numberOfMembers: Long, var context: Context) {
 
     val quantityString get() = quantityToString()
 
@@ -21,7 +21,6 @@ class QuantityMembers(var numberOfMembers: Long, var context: Context) {
         if (temp.length > 4)
             temp = temp.replaceRange(temp.length - 3, temp.length - 3, " ")
 
-        //Log.i("PLURALS", "NUMBER: $numberOfMembers, WORD: ${context.resources.getQuantityString(R.plurals.people,(numberOfMembers).toInt(),(numberOfMembers).toInt())}")
 
         return "$temp  —  ${
             context.resources.getQuantityString(
