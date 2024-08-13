@@ -25,7 +25,10 @@ import ru.unlim1x.wb_project.ui.uiKit.tab_layout.TabLayout
 import ru.unlim1x.wb_project.ui.uiKit.tab_layout.model.TabData
 import ru.unlim1x.wb_project.ui.uiKit.topbar.TopBar
 
-
+@Deprecated(
+    message = "This composable function is deprecated since new design was announced." +
+            "Be careful, in next patches it will be removed.", level = DeprecationLevel.WARNING
+)
 @Composable
 internal fun MeetingScreen(
     navController: NavController,

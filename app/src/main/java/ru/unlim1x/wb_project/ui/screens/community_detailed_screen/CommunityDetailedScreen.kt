@@ -29,6 +29,10 @@ private val FIGMA_HORIZONTAL_PADDING = 16.dp
 private val FIGMA_GAP_BIG = 20.dp
 private val FIGMA_GAP_SMALL = 2.dp
 
+@Deprecated(
+    message = "This composable function is deprecated since new design was announced." +
+            "Be careful, in next patches it will be removed.", level = DeprecationLevel.WARNING
+)
 @Composable
 internal fun CommunityDetailedScreen(
     navController: NavController, communityName: String, communityId: Int,

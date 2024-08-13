@@ -52,6 +52,10 @@ import ru.unlim1x.wb_project.ui.uiKit.topbar.TopBar
 private val FIGMA_HORIZONTAL_PADDING = 16.dp
 private val FIGMA_GAP = 16.dp
 
+@Deprecated(
+    message = "This composable function is deprecated since new design was announced." +
+            "Be careful, in next patches it will be removed.", level = DeprecationLevel.WARNING
+)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MeetingDetailedScreen(
