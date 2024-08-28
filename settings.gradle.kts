@@ -25,3 +25,4 @@ rootProject.name = "wb_project"
 include(":app")
 include(":domain")
 include(":repository")
+include(":ui")

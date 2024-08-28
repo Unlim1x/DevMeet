@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.koin)
     implementation(libs.androidx.runtime.livedata)
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
+    implementation(project(":ui"))
     implementation(project(":domain"))
     implementation(project(":repository"))
 }

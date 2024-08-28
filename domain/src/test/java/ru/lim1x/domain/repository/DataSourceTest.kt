@@ -1,9 +1,7 @@
 package ru.lim1x.domain.repository
 
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import ru.lim1x.domain.models.AuthorizationResult
 import ru.lim1x.domain.models.Community
@@ -16,21 +14,25 @@ import ru.lim1x.domain.models.TimeAndPlace
 import ru.lim1x.domain.models.User
 
 class DataSourceTest {
-    //Надо с флоу еще разобраться, как нормально передать состояние meetingDetailed
-    //Потому что сейчас состояние не передается
+
+
     private val listOfTags = listOf("Junior", "Python", "Moscow")
     private val visitorsIds = listOf(2, 3, 4, 5)
     private val visitorAvatarUrl =
+        "https://i3.wp.com/masterpiecer-images.s3.yandex.net/1a3ad00a7daf11eeb413da477c0f1ee2:upscaled?ssl=1"
+    private val userAvatarUrl =
         "https://10wallpaper.com/wallpaper/1280x1024/2012/Ann_Sophie_2020_Fashion_Model_Celebrity_Photo_1280x1024.jpg"
     private val communityAvatarUrl = "https://sun9-15.userapi.com/impg/oSoxeolE-9kQoZ7fclxO_sgWttivq1I_QjLUnQ/YgvDRmvyiNA.jpg?size=604x508&quality=96&sign=cd296b6740a7786c23aff88057a1fa4f&type=album"
 
-    private var currentUser: User = User(
+    private val currentUser: User = User(
         name = "",
         phone = "",
         id = 1,
-        avatarURL = visitorAvatarUrl,
-        hasAvatar = false
+        avatarURL = userAvatarUrl,
+        hasAvatar = true
     )
+
+    private var currentUserFlow: MutableStateFlow<User> = MutableStateFlow(currentUser)
 
     private val meeting = Meeting(
         name = "Developer meeting",
@@ -45,13 +47,13 @@ class DataSourceTest {
         id = 0
     )
 
-    private val community= Community(
+    private val community = Community(
         imageUrl = communityAvatarUrl,
         name = "Designa",
         quantityMembers = 10000,
         id = 0
     )
-    private val communityDetailed= CommunityDetailed(
+    private val communityDetailed = CommunityDetailed(
         imageUrl = communityAvatarUrl,
         name = "Designa",
         quantityMembers = 10000,
@@ -66,13 +68,11 @@ class DataSourceTest {
         community.copy(id = it)
     }
 
-    private val listMeetingsVisitingByUser: MutableList<Meeting> = MutableList(5) {
-        meeting.copy(id = it)
-    }
+    private val listMeetingsIdVisitingByUser: MutableList<Int> = mutableListOf()
 
     private fun visitorsMap() = listCommunities.associateBy({it.id}, {visitorsIds}).toMutableMap().map {entry->
         var list = entry.value
-        if (listMeetingsVisitingByUser.any { it.id == entry.key }){
+        if (listMeetingsIdVisitingByUser.any { it == entry.key }) {
             list = list.plus(currentUser.id)
         }
         list
@@ -96,7 +96,7 @@ class DataSourceTest {
         )
     )
 
-    private val stateMeeting: Flow<MeetingDetailed> = flowOf(meetingDetailed.asStateFlow().value)
+    private val stateMeeting: MutableStateFlow<MeetingDetailed> = meetingDetailed
 
 
     private fun updateMeetingDetailed(meetingId:Int){
@@ -126,7 +126,8 @@ class DataSourceTest {
     fun getCommunities():List<Community>{
         return listCommunities
     }
-    fun getCommunityInfo(communityId:Int): CommunityDetailed {
+
+    fun getCommunityInfo(communityId: Int): CommunityDetailed {
         return communityDetailed.copy(id = communityId)
     }
 
@@ -143,12 +144,12 @@ class DataSourceTest {
     }
 
     fun getVisitingMeetings(): List<Meeting> {
-        return listMeetingsVisitingByUser
+        return listMeetingsAll.filter { listMeetingsIdVisitingByUser.contains(it.id) }
     }
 
     fun addUserToVisitingList(userId: Int, meetingId: Int): Boolean {
-        listMeetingsVisitingByUser.add(
-            meeting.copy(id = meetingId)
+        listMeetingsIdVisitingByUser.add(
+            meetingId
         )
         updateMeetingDetailed(meetingId)
         return true
@@ -156,7 +157,7 @@ class DataSourceTest {
 
     fun removeUserFromVisitingList(meetingId: Int): Boolean {
         try {
-            listMeetingsVisitingByUser.removeIf { it.id == meetingId }
+            listMeetingsIdVisitingByUser.removeIf { it == meetingId }
             updateMeetingDetailed(meetingId)
             return true
         } catch (e: Exception) {
@@ -164,35 +165,41 @@ class DataSourceTest {
         }
     }
 
-    fun getDetailedMeetingInfo(meetingId: Int): Flow<MeetingDetailed> {
+    fun getDetailedMeetingInfo(meetingId: Int): MutableStateFlow<MeetingDetailed> {
         updateMeetingDetailed(meetingId)
         return stateMeeting
     }
 
     fun saveUserName(username: String, userSurname: String): Boolean {
-        currentUser = currentUser.copy(name = username, surname = userSurname)
+        currentUserFlow.update { it.copy(name = username, surname = userSurname) }
         return true
     }
 
     fun registerUserPhone(phoneNumber: String): Boolean {
-        currentUser = currentUser.copy(phone = phoneNumber)
+        currentUserFlow.update { it.copy(phone = phoneNumber) }
         return true
     }
 
-    fun getCurrentUserInfo(userId: Int): User {
-        return currentUser
+    fun getCurrentUserInfo(userId: Int): StateFlow<User> {
+        return currentUserFlow
     }
 
     fun getVisitorAvatarById(id:Int):String{
+        if (id == 1)
+            return currentUserFlow.value.avatarURL
         return visitorAvatarUrl
     }
 
 
-    fun validateCode(code:String): AuthorizationResult {
+    fun validateCode(code: String): AuthorizationResult {
         return if (listOf("4568","1234","5555").any { code == it })
             AuthorizationResult(true, currentUser.id)
         else
             AuthorizationResult(false, -1)
+    }
+
+    fun updateUserPhoto(uriString: String) {
+        currentUserFlow.update { it.copy(avatarURL = uriString) }
     }
 
     fun userId() = currentUser.id

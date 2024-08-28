@@ -6,7 +6,7 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import ru.lim1x.domain.di.domainModule
 import ru.lim1x.repository.di.repositoryModule
-import ru.unlim1x.wb_project.modules.appModule
+import ru.unlim1x.di.uiModule
 
 class App : Application() {
     override fun onCreate() {
@@ -14,7 +14,7 @@ class App : Application() {
         startKoin {
             androidContext(this@App)
             androidLogger()
-            modules(appModule, domainModule, repositoryModule)
+            modules(uiModule, domainModule, repositoryModule)
         }
     }
 }

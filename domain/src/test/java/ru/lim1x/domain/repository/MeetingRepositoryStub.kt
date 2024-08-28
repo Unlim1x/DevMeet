@@ -1,45 +1,67 @@
 package ru.lim1x.domain.repository
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import ru.lim1x.domain.interfaces.repositories.IMeetingsRepository
 import ru.lim1x.domain.models.Meeting
 import ru.lim1x.domain.models.MeetingDetailed
 
 internal class MeetingRepositoryStub(private val dataSource:DataSourceTest):IMeetingsRepository {
-    override suspend fun loadAllMeetings(): Flow<List<Meeting>> {
-        return flowOf(dataSource.getAllMeetings())
+    private val allMeetingsStateFlow: MutableStateFlow<List<Meeting>> =
+        MutableStateFlow(emptyList())
+    private val activeMeetingsStateFlow: MutableStateFlow<List<Meeting>> =
+        MutableStateFlow(emptyList())
+    private val plannedMeetingsStateFlow: MutableStateFlow<List<Meeting>> =
+        MutableStateFlow(emptyList())
+    private val passedMeetingsStateFlow: MutableStateFlow<List<Meeting>> =
+        MutableStateFlow(emptyList())
+    private val meetingsByCommunity: MutableStateFlow<List<Meeting>> = MutableStateFlow(emptyList())
+
+    override fun loadAllMeetings(): StateFlow<List<Meeting>> {
+        allMeetingsStateFlow.update { dataSource.getAllMeetings() }
+        return allMeetingsStateFlow
     }
 
-    override suspend fun loadActiveMeetings(): Flow<List<Meeting>> {
-        return flowOf(dataSource.getActiveMeetings())
+    override fun loadActiveMeetings(): StateFlow<List<Meeting>> {
+        activeMeetingsStateFlow.update { dataSource.getActiveMeetings() }
+        return activeMeetingsStateFlow
     }
 
-    override suspend fun loadPlannedMeetings(): Flow<List<Meeting>> {
-        return flowOf(dataSource.getVisitingMeetings())
+    override fun loadPlannedMeetings(userId: Int): StateFlow<List<Meeting>> {
+        plannedMeetingsStateFlow.update { dataSource.getVisitingMeetings() }
+        return plannedMeetingsStateFlow
     }
 
-    override suspend fun loadFinishedMeetings(): Flow<List<Meeting>> {
-        return flowOf(dataSource.getFinishedMeetings())
+    override fun loadFinishedMeetings(): StateFlow<List<Meeting>> {
+        passedMeetingsStateFlow.update { dataSource.getFinishedMeetings() }
+        return passedMeetingsStateFlow
     }
 
-    override suspend fun loadMeetingDetailed(meetingId: Int): Flow<MeetingDetailed> {
-        return (dataSource.getDetailedMeetingInfo(meetingId=meetingId))
+    //todo: потом переписать, сейчас датасорс выполняет функцию сервиса и репозиторий - просто прокладка
+    override fun loadMeetingDetailed(meetingId: Int): StateFlow<MeetingDetailed> {
+        return dataSource.getDetailedMeetingInfo(meetingId = meetingId)
     }
 
-    override suspend fun removeUserFromVisitingList(meetingId: Int, userId: Int): Boolean {
-        return dataSource.removeUserFromVisitingList(meetingId)
+    override fun removeUserFromVisitingList(meetingId: Int, userId: Int): Boolean {
+        val done = dataSource.removeUserFromVisitingList(meetingId)
+        plannedMeetingsStateFlow.update { dataSource.getVisitingMeetings() }
+        return done
     }
 
-    override suspend fun addUserToVisitingList(meetingId: Int, userId: Int): Boolean {
-        return dataSource.addUserToVisitingList(userId = userId, meetingId = meetingId)
+    override fun addUserToVisitingList(meetingId: Int, userId: Int): Boolean {
+        val done = dataSource.addUserToVisitingList(userId = userId, meetingId = meetingId)
+        plannedMeetingsStateFlow.update { dataSource.getVisitingMeetings() }
+        return done
     }
 
-    override suspend fun loadMeetingsByCommunityId(communityId: Int): Flow<List<Meeting>> {
-        return flowOf(dataSource.getAllMeetings())
+    //todo: переписать, пока просто заглушка
+    override fun loadMeetingsByCommunityId(communityId: Int): StateFlow<List<Meeting>> {
+        meetingsByCommunity.update { dataSource.getAllMeetings() }
+        return meetingsByCommunity
     }
 
-    override suspend fun getUserAvatar(userId: Int): String {
+    override fun getUserAvatar(userId: Int): String {
         return dataSource.getVisitorAvatarById(userId)
     }
 }

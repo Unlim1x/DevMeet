@@ -37,8 +37,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.koin.core)
     implementation(project(":domain"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC")
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
 
 tasks.withType<Test> {

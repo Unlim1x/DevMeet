@@ -12,7 +12,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.koin.core)
     testImplementation(libs.junit.jupiter)
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0-RC")
+    testImplementation(libs.kotlinx.coroutines.test)
    // testCompileOnly("io.insert-koin:koin-test:3.6.0-wasm-alpha2")
    // testCompileOnly("io.insert-koin:koin-test-junit5:3.6.0-wasm-alpha2")
 }

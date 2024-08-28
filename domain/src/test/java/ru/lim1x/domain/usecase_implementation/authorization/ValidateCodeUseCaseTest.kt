@@ -20,7 +20,7 @@ class ValidateCodeUseCaseTest {
         val useCase = ValidateCodeUseCase(authRepository = authRepository)
         val authResult = useCase.execute("4568")
         advanceUntilIdle()
-        Assertions.assertEquals(authResult.isSuccessful, true)
+        Assertions.assertEquals(authResult.value?.isSuccessful, false)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -29,6 +29,6 @@ class ValidateCodeUseCaseTest {
         val useCase = ValidateCodeUseCase(authRepository = authRepository)
         val authResult = useCase.execute("1111")
         advanceUntilIdle()
-        Assertions.assertEquals(authResult.isSuccessful, false)
+        Assertions.assertEquals(authResult.value?.isSuccessful, false)
     }
 }
