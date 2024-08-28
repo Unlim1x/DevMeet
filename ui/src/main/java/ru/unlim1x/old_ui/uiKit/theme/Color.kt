@@ -14,6 +14,7 @@ val DefaultPurple = Color(0xFF9A41FE)
 val DarkPurple = Color(0xFF660EC8)
 
 data class MyColors(
+    val black: Color,
     /**Use for onPressed */
     val brandDark: Color,
     /**Use for button */
@@ -51,9 +52,15 @@ data class MyColors(
     val gradient01: List<Color>,
     val gradient02: List<Color>,
 
+    val primary: Color,
+    val disabled: Color,
+    val disabledText: Color,
+    val inputError: Color
+
     )
 
 val myColorScheme = MyColors(
+    black = Color(0xFF000000),
     brandDark = Color(0xFF660EC8),
     brandDefault = Color(0xFF9A41FE),
     brandDarkMode = Color(0xFF8207E8),
@@ -73,4 +80,8 @@ val myColorScheme = MyColors(
     accentSafe = Color(0xFF7BCBCF),
     gradient01 = listOf(Color(0xFFD2D5F9), Color(0xFF2C37E1)),
     gradient02 = listOf(Color(0xFFEC9EFF), Color(0xFF5F2EEA)),
+    primary = Color(0xFF9A10F0),
+    disabled = Color(0xFFF6F6FA),
+    disabledText = Color(0xFF9797AF),
+    inputError = Color(0x19F0114C)
 )

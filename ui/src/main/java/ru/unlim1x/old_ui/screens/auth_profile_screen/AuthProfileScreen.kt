@@ -129,7 +129,8 @@ private fun AuthProfileBody(
             Spacer(modifier = Modifier.size(TEXT_PADDING))
         }
         item {
-            TextInput(
+
+        TextInput(
                 hint = stringResource(R.string.surname_optionally),
                 onTextChanged = { surname = it }) {
                 surname = it

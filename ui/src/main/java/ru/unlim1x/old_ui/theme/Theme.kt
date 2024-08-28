@@ -11,7 +11,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import ru.unlim1x.old_ui.uiKit.theme.MyTypography
+import ru.unlim1x.old_ui.uiKit.theme.MyTypographyInter
+import ru.unlim1x.old_ui.uiKit.theme.MyTypographySF
 import ru.unlim1x.old_ui.uiKit.theme.Pink40
 import ru.unlim1x.old_ui.uiKit.theme.Pink80
 import ru.unlim1x.old_ui.uiKit.theme.PurpleGrey40
@@ -64,5 +65,11 @@ fun DevMeetTheme(
 
 object DevMeetTheme {
     val colorScheme get() = myColorScheme
-    val typography get() = MyTypography
+
+    @Deprecated(
+        "Deprecated since new design was introduced",
+        replaceWith = ReplaceWith("DevMeetTheme.newTypography")
+    )
+    val typography get() = MyTypographySF
+    val newTypography get() = MyTypographyInter
 }

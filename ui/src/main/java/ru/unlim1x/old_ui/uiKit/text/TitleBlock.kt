@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.unlim1x.old_ui.uiKit.theme.MyTypography
+import ru.unlim1x.old_ui.theme.DevMeetTheme
 import ru.unlim1x.old_ui.uiKit.theme.myColorScheme
 
 @Composable
@@ -23,8 +23,12 @@ internal fun TitleBlock(
         verticalArrangement = verticalArrangement,
         horizontalAlignment = horizontalAlignment
     ) {
-        Text(text = heading, style = MyTypography.subheading1)
-        Text(text = description, color = myColorScheme.neutralWeak, style = MyTypography.bodyText2)
+        Text(text = heading, style = DevMeetTheme.typography.subheading1)
+        Text(
+            text = description,
+            color = myColorScheme.neutralWeak,
+            style = DevMeetTheme.typography.bodyText2
+        )
     }
 }
 

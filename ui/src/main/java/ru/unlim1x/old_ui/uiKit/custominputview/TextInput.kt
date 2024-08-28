@@ -25,6 +25,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.unlim1x.old_ui.theme.DevMeetTheme
 
+@Deprecated(
+    "Deprecated since new design was introduce",
+    replaceWith = ReplaceWith(
+        expression = "InputField(" +
+                "hint = hint," +
+                " onTextChanged = onTextChanged," +
+                " onActionNext= onActionNext," +
+                "modifier= modifier," +
+                "maxLines = maxLines)", imports = ["ru.unlim1x.ui.kit.input.InputField"]
+    )
+)
 @Composable
 internal fun TextInput(
     modifier: Modifier = Modifier,

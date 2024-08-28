@@ -59,7 +59,6 @@ import ru.unlim1x.old_ui.uiKit.custominputview.PhoneInput
 import ru.unlim1x.old_ui.uiKit.custominputview.printToLog
 import ru.unlim1x.old_ui.uiKit.searchfield.SearchField
 import ru.unlim1x.old_ui.uiKit.text.TitleBlock
-import ru.unlim1x.old_ui.uiKit.theme.MyTypography
 import ru.unlim1x.old_ui.uiKit.topbar.TopBar
 import ru.unlim1x.ui.R
 
@@ -265,7 +264,7 @@ fun TypographyGroup() {
             description = stringResource(id = R.string.heading1_description)
         )
         Spacer(modifier = Modifier.width(20.dp))
-        Text(text = textSample, style = MyTypography.heading1)
+        Text(text = textSample, style = DevMeetTheme.typography.heading1)
     }
 
     Row(
@@ -278,7 +277,7 @@ fun TypographyGroup() {
             description = stringResource(id = R.string.heading2_description)
         )
         Spacer(modifier = Modifier.width(20.dp))
-        Text(text = textSample, style = MyTypography.heading2)
+        Text(text = textSample, style = DevMeetTheme.typography.heading2)
     }
 
     Row(
@@ -291,7 +290,7 @@ fun TypographyGroup() {
             description = stringResource(id = R.string.subheading1_description)
         )
         Spacer(modifier = Modifier.width(20.dp))
-        Text(text = textSample, style = MyTypography.subheading1)
+        Text(text = textSample, style = DevMeetTheme.typography.subheading1)
     }
 
     Row(
@@ -304,7 +303,7 @@ fun TypographyGroup() {
             description = stringResource(id = R.string.subheading2_description)
         )
         Spacer(modifier = Modifier.width(20.dp))
-        Text(text = textSample, style = MyTypography.subheading2)
+        Text(text = textSample, style = DevMeetTheme.typography.subheading2)
 
     }
 
@@ -318,7 +317,7 @@ fun TypographyGroup() {
             description = stringResource(id = R.string.body1_description)
         )
         Spacer(modifier = Modifier.width(20.dp))
-        Text(text = textSample, style = MyTypography.bodyText1)
+        Text(text = textSample, style = DevMeetTheme.typography.bodyText1)
 
     }
 
@@ -332,7 +331,7 @@ fun TypographyGroup() {
             description = stringResource(id = R.string.body2_description)
         )
         Spacer(modifier = Modifier.width(20.dp))
-        Text(text = textSample, style = MyTypography.bodyText2)
+        Text(text = textSample, style = DevMeetTheme.typography.bodyText2)
 
     }
 
@@ -346,7 +345,7 @@ fun TypographyGroup() {
             description = stringResource(id = R.string.meta1_description)
         )
         Spacer(modifier = Modifier.width(20.dp))
-        Text(text = textSample, style = MyTypography.metadata1)
+        Text(text = textSample, style = DevMeetTheme.typography.metadata1)
     }
 
     Row(
@@ -359,7 +358,7 @@ fun TypographyGroup() {
             description = stringResource(id = R.string.meta2_description)
         )
         Spacer(modifier = Modifier.width(20.dp))
-        Text(text = textSample, style = MyTypography.metadata2)
+        Text(text = textSample, style = DevMeetTheme.typography.metadata2)
     }
 
     Row(
@@ -372,7 +371,7 @@ fun TypographyGroup() {
             description = stringResource(id = R.string.meta3_description)
         )
         Spacer(modifier = Modifier.width(20.dp))
-        Text(text = textSample, style = MyTypography.metadata3)
+        Text(text = textSample, style = DevMeetTheme.typography.metadata3)
     }
 }
 
