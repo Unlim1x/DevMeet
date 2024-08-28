@@ -4,7 +4,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import ru.lim1x.domain.repository.DataSourceTest
 import ru.lim1x.domain.repository.MeetingRepositoryStub
@@ -23,6 +23,6 @@ class GetMeetingDetailedInfoByIdUseCaseTest{
         val actual = useCase.execute(expectingId).last()
 
         advanceUntilIdle()
-        assertEquals(expectingId, actual.id)
+        assertEquals(expectingId, actual?.id)
     }
 }

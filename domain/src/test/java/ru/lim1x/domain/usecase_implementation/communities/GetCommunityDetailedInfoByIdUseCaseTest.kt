@@ -4,7 +4,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import ru.lim1x.domain.repository.CommunityRepositoryStub
 import ru.lim1x.domain.repository.DataSourceTest
@@ -19,7 +19,7 @@ class GetCommunityDetailedInfoByIdUseCaseTest{
 
         val useCase = GetCommunityDetailedInfoByIdUseCase(commRepository = communityRepository)
 
-        val actualId = useCase.execute(expectingId).last().id
+        val actualId = useCase.execute(expectingId).last()?.id
 
         advanceUntilIdle()
         assertEquals(expectingId, actualId)
