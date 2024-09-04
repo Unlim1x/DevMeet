@@ -52,6 +52,8 @@
     <string name="i_will_come_to_meeting">Пойду на встречу!</string>
     <string name="i_will_come_another_time">Схожу в другой раз</string>
     <string name="user_avatar">Ваш аватар</string>
+    <string name="pay">Оплатить</string>
+    <string name="hint_name_surname">Имя и Фамилия</string>
 
     <plurals name="people">
         <item quantity="one">человек</item>

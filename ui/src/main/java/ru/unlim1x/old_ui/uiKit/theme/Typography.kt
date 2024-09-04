@@ -154,6 +154,8 @@ data class MyTypographyINTERTextStyles(
     val primary: TextStyle,
     val secondary: TextStyle,
     val regular: TextStyle,
+    val medium: TextStyle,
+    val big: TextStyle,
 )
 
 val MyTypographyInter = MyTypographyINTERTextStyles(
@@ -206,6 +208,24 @@ val MyTypographyInter = MyTypographyINTERTextStyles(
         color = DevMeetTheme.colorScheme.neutralActive,
         fontFamily = interfamily, fontWeight = FontWeight.Normal, fontSize = 19.sp,
         lineHeight = 22.sp,
+        lineHeightStyle = LineHeightStyle(
+            alignment = LineHeightStyle.Alignment.Center,
+            trim = LineHeightStyle.Trim.None
+        )
+    ),
+    medium = TextStyle(
+        color = DevMeetTheme.colorScheme.neutralActive,
+        fontFamily = interfamily, fontWeight = FontWeight.Medium, fontSize = 16.sp,
+        lineHeight = 20.sp,
+        lineHeightStyle = LineHeightStyle(
+            alignment = LineHeightStyle.Alignment.Center,
+            trim = LineHeightStyle.Trim.None
+        )
+    ),
+    big = TextStyle(
+        color = DevMeetTheme.colorScheme.neutralActive,
+        fontFamily = interfamily, fontWeight = FontWeight.Medium, fontSize = 22.sp,
+        lineHeight = 26.sp,
         lineHeightStyle = LineHeightStyle(
             alignment = LineHeightStyle.Alignment.Center,
             trim = LineHeightStyle.Trim.None

@@ -1,5 +1,6 @@
 package ru.unlim1x.ui.kit.input
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,18 +27,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.unlim1x.old_ui.theme.DevMeetTheme
+import ru.unlim1x.ui.R
 
 //TODO: Добавить стейт, хранящий текст и ошибку
 @Composable
 internal fun InputField(
     modifier: Modifier = Modifier,
     maxLines: Int = 1,
-    hint: String,
+    @StringRes
+    hint: Int,
     error: State<Boolean>,
     onTextChanged: (text: String) -> Unit,
     onActionNext: (text: String) -> Unit
@@ -72,7 +76,7 @@ internal fun InputField(
         },
         textStyle = DevMeetTheme.newTypography.regular,
         decorationBox = { innerTextField ->
-            DecorationBox(text = text, hint = hint, error = error.value) {
+            DecorationBox(text = text, hint = stringResource(hint), error = error.value) {
                 innerTextField()
             }
         },
@@ -127,10 +131,10 @@ fun ShowTextInput() {
         mutableStateOf(true)
     }
     Column(modifier = Modifier.background(color = Color.White)) {
-        InputField(hint = "Имя и Фамилия", onTextChanged = { it }, error = state1) {
+        InputField(hint = (R.string.hint_name_surname), onTextChanged = { it }, error = state1) {
 
         }
-        InputField(hint = "Имя и Фамилия", onTextChanged = { it }, error = state2) {
+        InputField(hint = (R.string.hint_name_surname), onTextChanged = { it }, error = state2) {
 
         }
     }
