@@ -196,7 +196,7 @@ val MyTypographyInter = MyTypographyINTERTextStyles(
         )
     ),
     secondary = TextStyle(
-        color = DevMeetTheme.colorScheme.neutralActive,
+        color = DevMeetTheme.colorScheme.secondary,
         fontFamily = interfamily, fontWeight = FontWeight.Medium, fontSize = 14.sp,
         lineHeight = 16.sp,
         lineHeightStyle = LineHeightStyle(

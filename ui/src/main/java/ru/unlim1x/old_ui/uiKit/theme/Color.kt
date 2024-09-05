@@ -55,7 +55,8 @@ data class MyColors(
     val primary: Color,
     val disabled: Color,
     val disabledText: Color,
-    val inputError: Color
+    val inputError: Color,
+    val secondary: Color
 
     )
 
@@ -83,5 +84,6 @@ val myColorScheme = MyColors(
     primary = Color(0xFF9A10F0),
     disabled = Color(0xFFF6F6FA),
     disabledText = Color(0xFF9797AF),
-    inputError = Color(0x19F0114C)
+    inputError = Color(0x19F0114C),
+    secondary = Color(0xFF76778E)
 )

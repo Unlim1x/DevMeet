@@ -4,6 +4,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.unlim1x.old_ui.theme.DevMeetTheme
@@ -49,24 +51,24 @@ fun SubscribeButton(
     val testState = Triple(first = backgroundColor, second = text, third = textColor)
 
     Crossfade(
-        targetState = testState,
+        targetState = isSubscribed,
         animationSpec = spring(dampingRatio = 3f, stiffness = 300f)
     ) {
-        when (isSubscribed) {
+        when (it) {
             true -> SubscribeButtonBody(
                 modifier = modifier,
-                backgroundColor = it.first,
-                text = it.second,
-                textColor = it.third
+                backgroundColor = testState.first,
+                text = testState.second,
+                textColor = testState.third
             ) {
                 onClick()
             }
 
             false -> SubscribeButtonBody(
                 modifier = modifier,
-                backgroundColor = it.first,
-                text = it.second,
-                textColor = it.third
+                backgroundColor = testState.first,
+                text = testState.second,
+                textColor = testState.third
             ) {
                 onClick()
             }
@@ -88,7 +90,13 @@ private fun SubscribeButtonBody(
         .background(
             color = backgroundColor
         )
-        .clickable { onClick() },
+        .clickable { onClick() }
+//        .pointerInput(Unit){
+//            detectTapGestures(onTap = {
+//                onClick()
+//            })
+//        }
+        ,
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -113,7 +121,12 @@ private fun SubscribeButtonBody(
         .background(
             brush = backgroundBrush
         )
-        .clickable { onClick() },
+        .pointerInput(Unit) {
+            detectTapGestures(onTap = {
+                onClick()
+            })
+        },
+        //.clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Text(
