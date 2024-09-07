@@ -1,6 +1,12 @@
 package ru.lim1x.domain.di
 
 import org.koin.dsl.module
+import ru.lim1x.domain.interactor_implementation.GetTagsUseCase
+import ru.lim1x.domain.interactor_implementation.InnerTagsInteractor
+import ru.lim1x.domain.interactor_implementation.TagsOnboardingGetInteractor
+import ru.lim1x.domain.interactor_implementation.TagsOnboardingUpdateInteractor
+import ru.lim1x.domain.interfaces.interactors.ITagsOnboardingGetInteractor
+import ru.lim1x.domain.interfaces.interactors.ITagsOnboardingUpdateInteractor
 import ru.lim1x.domain.interfaces.usecases.IGetActiveMeetingsUseCase
 import ru.lim1x.domain.interfaces.usecases.IGetAllMeetingsUseCase
 import ru.lim1x.domain.interfaces.usecases.IGetCommunitiesUseCase
@@ -54,4 +60,11 @@ val domainModule = module{
     single<IGetCommunitiesUseCase>{GetCommunitiesUseCase(get())}
     single<IGetUserAvatarByIdUseCase>{GetUserAvatarByIdUseCase(get())}
     single<ISetUserPhotoExperimentalUseCase>{ SetUserPhotoExperimentalUseCase(get()) }
+
+}
+val newDomainModule = module {
+    single<ITagsOnboardingGetInteractor> { TagsOnboardingGetInteractor() }
+    single<ITagsOnboardingUpdateInteractor> { TagsOnboardingUpdateInteractor() }
+    single<InnerTagsInteractor> { InnerTagsInteractor() }
+    single<GetTagsUseCase> { GetTagsUseCase() }
 }

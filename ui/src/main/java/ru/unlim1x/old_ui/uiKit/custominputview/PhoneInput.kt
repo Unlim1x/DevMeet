@@ -74,7 +74,7 @@ internal fun PhoneInput(
                 modifier = Modifier.padding(end = FIGMA_HORIZONTAL_PADDING),
                 text = selectedCountry.phoneCode,
                 style = DevMeetTheme.typography.bodyText1,
-                color = DevMeetTheme.colorScheme.neutralDisabled
+                color = DevMeetTheme.colorScheme.black
             )
         }
 

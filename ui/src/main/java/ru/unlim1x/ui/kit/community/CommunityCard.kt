@@ -31,7 +31,7 @@ private const val FIGMA_DEFAULT_SIZE = 104
 @Composable
 internal fun CommunityCard(
     modifier: Modifier = Modifier,
-    state: CommunityCardState,
+    state: CommunityUI,
     onSubscribeClick: () -> Unit
 ) {
     val imageWidth = remember {
@@ -76,13 +76,13 @@ internal fun CommunityCard(
 private fun ShowCommunityCard() {
     var community1 by remember {
         mutableStateOf(
-            CommunityCardState(
+            CommunityUI(
                 imageUri = R.drawable.community_card_placeholder,
                 name = "Супер тестировщики", id = 1, isSubscribed = false
             )
         )
     }
-    val community2 = CommunityCardState(
+    val community2 = CommunityUI(
         imageUri = R.drawable.community_card_placeholder,
         name = "Супер тестировщики",
         id = 1,

@@ -55,6 +55,10 @@
     <string name="pay">Оплатить</string>
     <string name="hint_name_surname">Имя и Фамилия</string>
     <string name="community_image">Community image</string>
+    <string name="event_address_delimeter">" · "</string>
+    <string name="tell_later">Расскажу позже</string>
+    <string name="interests">Интересы</string>
+    <string name="choose_interests">Выберите интересы, чтобы мы рекомендовали полезные встречи</string>
 
     <plurals name="people">
         <item quantity="one">человек</item>

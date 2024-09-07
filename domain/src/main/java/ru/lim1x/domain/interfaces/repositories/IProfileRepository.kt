@@ -1,8 +1,8 @@
 package ru.lim1x.domain.interfaces.repositories
 
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import org.jetbrains.annotations.ApiStatus.Experimental
+import ru.lim1x.domain.models.Tag
 import ru.lim1x.domain.models.User
 
 interface IProfileRepository {
@@ -19,4 +19,8 @@ interface IProfileRepository {
     fun userId():Int
 
     fun saveUserPhoto(stirngUri:String)
+
+    fun getUsersTags(): List<Tag>
+
+    fun updateTag(tagId: Int)
 }

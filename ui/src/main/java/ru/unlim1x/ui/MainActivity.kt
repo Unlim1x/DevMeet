@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import ru.unlim1x.old_ui.navigation.compose_screen_wrapper.MainScreen
 import ru.unlim1x.old_ui.theme.DevMeetTheme
+import ru.unlim1x.ui.navigation.start_app.MainScreen
 import java.util.Locale
 
 
