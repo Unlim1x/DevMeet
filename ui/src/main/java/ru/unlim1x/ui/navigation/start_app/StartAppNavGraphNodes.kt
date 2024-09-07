@@ -3,7 +3,7 @@ package ru.unlim1x.ui.navigation.start_app
 internal enum class StartAppNavGraphNodes {
     Splash,
     Onboarding,
-    GeoOnboarding;
+    Main;
 
     val route = this.name
 }

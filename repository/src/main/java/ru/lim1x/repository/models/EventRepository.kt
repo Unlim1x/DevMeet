@@ -1,8 +1,8 @@
-package ru.lim1x.domain.models
+package ru.lim1x.repository.models
 
 import java.time.LocalDate
 
-data class Event(
+internal data class EventRepository(
     val name: String,
     val date: LocalDate,
     val place: String,

@@ -150,6 +150,7 @@ val interfamily = FontFamily(
 data class MyTypographyINTERTextStyles(
     val h1: TextStyle,
     val h3: TextStyle,
+    val h2: TextStyle,
     val h4: TextStyle,
     val primary: TextStyle,
     val secondary: TextStyle,
@@ -173,6 +174,15 @@ val MyTypographyInter = MyTypographyINTERTextStyles(
         color = DevMeetTheme.colorScheme.black,
         fontFamily = interfamily, fontWeight = FontWeight.Bold, fontSize = 34.sp,
         lineHeight = 34.sp,
+        lineHeightStyle = LineHeightStyle(
+            alignment = LineHeightStyle.Alignment.Center,
+            trim = LineHeightStyle.Trim.None
+        )
+    ),
+    h2 = TextStyle(
+        color = DevMeetTheme.colorScheme.black,
+        fontFamily = interfamily, fontWeight = FontWeight.Bold, fontSize = 24.sp,
+        lineHeight = 26.sp,
         lineHeightStyle = LineHeightStyle(
             alignment = LineHeightStyle.Alignment.Center,
             trim = LineHeightStyle.Trim.None

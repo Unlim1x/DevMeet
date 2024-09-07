@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import ru.unlim1x.old_ui.theme.DevMeetTheme
-import ru.unlim1x.ui.navigation.start_app.MainScreen
+import ru.unlim1x.ui.navigation.start_app.StartScreen
 import java.util.Locale
 
 
@@ -31,7 +31,7 @@ internal class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen()
+                    StartScreen()
 
                 }
             }

@@ -75,6 +75,11 @@ private fun EventCardMaxBody(modifier: Modifier, state: EventUI) {
                 AnimatedTransitionRoundRectangle(
                     modifier = modifier.size(FIGMA_DEFAULT_IMAGE_SIZE.dp)
                 )
+            },
+            error = {
+                AnimatedTransitionRoundRectangle(
+                    modifier = modifier.size(FIGMA_DEFAULT_IMAGE_SIZE.dp)
+                )
             }
         )
         Text(
@@ -124,6 +129,11 @@ private fun EventCardCompactBody(modifier: Modifier, state: EventUI) {
                     imageWidth.intValue = it.size.width
                 },
             loading = {
+                AnimatedTransitionRoundRectangle(
+                    modifier = modifier.size(FIGMA_SMALL_IMAGE_SIZE.dp)
+                )
+            },
+            error = {
                 AnimatedTransitionRoundRectangle(
                     modifier = modifier.size(FIGMA_SMALL_IMAGE_SIZE.dp)
                 )

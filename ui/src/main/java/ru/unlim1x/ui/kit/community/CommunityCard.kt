@@ -32,7 +32,8 @@ private const val FIGMA_DEFAULT_SIZE = 104
 internal fun CommunityCard(
     modifier: Modifier = Modifier,
     state: CommunityUI,
-    onSubscribeClick: () -> Unit
+    onSubscribeClick: () -> Unit,
+    onImageClick: () -> Unit
 ) {
     val imageWidth = remember {
         mutableIntStateOf(0)
@@ -51,6 +52,12 @@ internal fun CommunityCard(
                     imageWidth.intValue = it.size.width
                 },
             loading = {
+                AnimatedTransitionRoundRectangle(
+                    modifier = modifier.size(FIGMA_DEFAULT_SIZE.dp),
+                    cornerRadius = CornerRadius(x = FIGMA_RADIUS, y = FIGMA_RADIUS)
+                )
+            },
+            error = {
                 AnimatedTransitionRoundRectangle(
                     modifier = modifier.size(FIGMA_DEFAULT_SIZE.dp),
                     cornerRadius = CornerRadius(x = FIGMA_RADIUS, y = FIGMA_RADIUS)
@@ -89,7 +96,7 @@ private fun ShowCommunityCard() {
         isSubscribed = true
     )
 
-    CommunityCard(state = community1) {
+    CommunityCard(state = community1, onSubscribeClick = {}) {
         community1 = community1.copy(isSubscribed = !community1.isSubscribed)
     }
 

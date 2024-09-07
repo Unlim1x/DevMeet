@@ -28,7 +28,7 @@ internal fun StartAppNavGraph(navController: NavHostController) {
 
         }
         composable(
-            route = StartAppNavGraphNodes.GeoOnboarding.route,
+            route = StartAppNavGraphNodes.Main.route,
         ) {
             //NavigationScreen()
 

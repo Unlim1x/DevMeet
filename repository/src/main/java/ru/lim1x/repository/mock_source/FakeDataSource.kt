@@ -1,14 +1,16 @@
 package ru.lim1x.repository.mock_source
 
-import ru.lim1x.domain.models.Event
+
 import ru.lim1x.domain.models.Person
 import ru.lim1x.domain.models.Tag
+import ru.lim1x.repository.models.CommunityRailRepository
+import ru.lim1x.repository.models.EventRepository
 import java.time.LocalDate
 import kotlin.random.Random
 
 
 internal class FakeDataSource {
-    val events: List<Event>
+    val events: List<EventRepository>
         get() = fakeEvents
 
     val tags: List<Tag>
@@ -52,15 +54,24 @@ internal class FakeDataSource {
     }.shuffled().toMutableList()
 
 
-    private fun combineEvent(id: Int): Event {
-        return Event(
+    private fun combineEvent(id: Int): EventRepository {
+        return EventRepository(
             name = GPTLists.eventNames.shuffled(Random).random(),
-            date = LocalDate.of(2024, Random.nextInt(1, 13), Random.nextInt(1, 13)),
+            date = LocalDate.of(2024, Random.nextInt(1, 13), Random.nextInt(1, 32)),
             place = GPTLists.addresses.shuffled(Random).random(),
             tags = GPTLists.listOfTags.shuffled(Random).take(3),
             id = id,
-            url = GPTLists.eventImagesUrls.shuffled(Random).random(),
-            description = fakeDescription()
+            url = GPTLists.eventImagesUrls.shuffled(Random).random()
         )
     }
+
+    private val fakeCommunityRails: MutableList<CommunityRailRepository> =
+        MutableList(2) {
+            CommunityRailRepository(
+                title = GPTLists.railCommunityTitles.shuffled().random(),
+                listId = MutableList<Int>(5) {
+                    Random.nextInt(1, GPTLists.developerCommunities.size + 1)
+                }
+            )
+        }
 }

@@ -6,7 +6,7 @@ import androidx.navigation.compose.rememberNavController
 
 
 @Composable
-internal fun MainScreen() {
+internal fun StartScreen() {
     val navHostController: NavHostController = rememberNavController()
     StartAppNavGraph(navController = navHostController)
 }

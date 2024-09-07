@@ -1,6 +1,13 @@
 package ru.lim1x.domain.models
 
 
+@Deprecated(
+    message = "Deprecated since new design was introduced", ReplaceWith(
+        "DeveloperCommunity", imports = arrayOf(
+            "ru.lim1x.domain.models.DeveloperCommunity"
+        )
+    )
+)
 data class Community(
     val name: String,
     val imageUrl: String? = null,
@@ -8,6 +15,13 @@ data class Community(
     val id: Int
 )
 
+@Deprecated(
+    message = "Deprecated since new design was introduced", ReplaceWith(
+        "DeveloperCommunityDetailed", imports = arrayOf(
+            "ru.lim1x.domain.models.DeveloperCommunityDetailed"
+        )
+    )
+)
 data class CommunityDetailed(
     val name: String,
     val imageUrl: String? = null,
