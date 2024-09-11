@@ -148,6 +148,18 @@ class GPTLists {
             "DOU",
             "Stack Overflow"
         )
+        val developerCommunitiesUrls = mapOf(
+            "Хабр" to "https://habr.com/img/maskable_icon.png",
+            "Wbtech" to "https://zenclass-files-hot-01.storage.yandexcloud.net/55866150-344e-4516-88e6-4676dc52107d.png",
+            "Codeforces" to "https://static3.tgstat.ru/channels/_0/6a/6afc24b22ba406dcea0a4b67927f8bcd.jpg",
+            "Dev.by" to "https://robonomics.network/assets/static/dev-logo-brand.3c11615.d824fec981eade32b07400b3bff501bd.png",
+            "GitHub Russia" to "https://user-images.githubusercontent.com/71294563/251964863-d5f63d82-9451-44aa-a0c4-05d2abc0810f.png",
+            "IT.Mail.ru" to "https://sun9-80.userapi.com/impf/c627818/v627818089/26d85/KEo2gB3kou0.jpg?size=1200x1200&quality=96&sign=38d3372a4e5aaeb9243b5db12d8aaace&type=album",
+            "ВКонтакте для разработчиков" to "https://static.tildacdn.com/tild3234-3631-4432-b330-623561343238/vk.png",
+            "GeekBrains" to "https://yt4.ggpht.com/ytc/AAUvwngqZsMoyAEwhNCxOPbo1AJ4dR5ED833yTwv1m1hbw=s900-c-k-c0x00ffffff-no-rj",
+            "DOU" to "",
+            "Stack Overflow" to "https://cdn.promodj.com/afs/e8b81ce392d2aec059d488f89c6b929b11:resize:2000x2000:same:6d0b19"
+        )
 
         val speakerDescriptions = listOf(
             "Ведущий инженер по разработке программного обеспечения с многолетним опытом в крупных международных корпорациях.",

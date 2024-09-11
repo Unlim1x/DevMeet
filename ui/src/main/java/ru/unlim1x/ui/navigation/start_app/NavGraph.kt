@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import ru.unlim1x.ui.screens.aka_splash_screen.SplashScreen
+import ru.unlim1x.ui.screens.main_screen.MainScreen
 import ru.unlim1x.ui.screens.onboarding.Onboarding
 
 
@@ -30,7 +31,7 @@ internal fun StartAppNavGraph(navController: NavHostController) {
         composable(
             route = StartAppNavGraphNodes.Main.route,
         ) {
-            //NavigationScreen()
+            MainScreen()
 
         }
     }

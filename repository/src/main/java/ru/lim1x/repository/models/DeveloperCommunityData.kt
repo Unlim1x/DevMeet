@@ -1,7 +1,8 @@
 package ru.lim1x.repository.models
 
-data class SpeakerRepository(
+internal data class DeveloperCommunityData(
+    val id: Int,
     val name: String,
     val imageUri: Any,
-    val description: String
-)
+
+    )

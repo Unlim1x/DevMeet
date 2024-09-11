@@ -31,8 +31,9 @@ import ru.unlim1x.old_ui.theme.DevMeetTheme
 import ru.unlim1x.ui.R
 import ru.unlim1x.ui.kit.button.DisabledButton
 import ru.unlim1x.ui.kit.button.PrimaryButton
-import ru.unlim1x.ui.kit.tag.Tag
+import ru.unlim1x.ui.kit.tag.TagUi
 import ru.unlim1x.ui.kit.tag.TagBig
+import ru.unlim1x.ui.navigation.start_app.StartAppNavGraphNodes
 
 private const val TOP_PADDING = 20
 private const val HORIZONTAL_PADDING = 16
@@ -50,12 +51,17 @@ internal fun Onboarding(navController: NavController) {
         OnboardingViewState.Loading -> Loading()
         is OnboardingViewState.Display -> {
             Body(isPrimaryButtonActive = (state as OnboardingViewState.Display).isButtonActive,
-                tagList = (state as OnboardingViewState.Display).tagList,
+                tagUiList = (state as OnboardingViewState.Display).tagUiList,
                 onTagClicked = {
-                    viewModel.obtain(OnboardingEvent.OnTagClick(tag = it))
+                    viewModel.obtain(OnboardingEvent.OnTagClick(tagUi = it))
                 },
                 onPrimaryButtonClicked = {
-
+                    viewModel.obtain(OnboardingEvent.OnMainButtonClick)
+                    navController.navigate(StartAppNavGraphNodes.Main.route) {
+                        popUpTo(StartAppNavGraphNodes.Onboarding.route) {
+                            inclusive = true
+                        }
+                    }
                 }, onSkipClicked = {
 
                 })
@@ -72,8 +78,8 @@ private fun Loading() {
 @Composable
 private fun Body(
     isPrimaryButtonActive: Boolean,
-    tagList: List<Tag>,
-    onTagClicked: (tag: Tag) -> Unit,
+    tagUiList: List<TagUi>,
+    onTagClicked: (tagUi: TagUi) -> Unit,
     onPrimaryButtonClicked: () -> Unit,
     onSkipClicked: () -> Unit
 ) {
@@ -94,7 +100,7 @@ private fun Body(
             Modifier
                 .align(Alignment.TopStart)
                 .fillMaxWidth()
-                .padding(bottom = buttonPartHeight.dp), tagList = tagList
+                .padding(bottom = buttonPartHeight.dp), tagUiList = tagUiList
         ) {
             onTagClicked(it)
         }
@@ -145,7 +151,11 @@ private fun ButtonPart(
 }
 
 @Composable
-private fun MainPart(modifier: Modifier, tagList: List<Tag>, onTagClicked: (tag: Tag) -> Unit) {
+private fun MainPart(
+    modifier: Modifier,
+    tagUiList: List<TagUi>,
+    onTagClicked: (tagUi: TagUi) -> Unit
+) {
     LazyColumn(modifier = modifier) {
         item {
             Text(
@@ -161,7 +171,10 @@ private fun MainPart(modifier: Modifier, tagList: List<Tag>, onTagClicked: (tag:
             )
         }
         item {
-            TagPart(modifier = Modifier.padding(top = TAG_FLOW_TOP_PADDING.dp), tagList = tagList) {
+            TagPart(
+                modifier = Modifier.padding(top = TAG_FLOW_TOP_PADDING.dp),
+                tagUiList = tagUiList
+            ) {
                 onTagClicked(it)
             }
         }
@@ -170,9 +183,13 @@ private fun MainPart(modifier: Modifier, tagList: List<Tag>, onTagClicked: (tag:
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun TagPart(modifier: Modifier, tagList: List<Tag>, onTagClicked: (tag: Tag) -> Unit) {
+private fun TagPart(
+    modifier: Modifier,
+    tagUiList: List<TagUi>,
+    onTagClicked: (tagUi: TagUi) -> Unit
+) {
     FlowRow(modifier = modifier) {
-        tagList.forEach {
+        tagUiList.forEach {
             TagBig(text = it.text, modifier = Modifier.padding(4.dp), selected = it.isSelected) {
                 onTagClicked(it)
             }
@@ -183,9 +200,9 @@ private fun TagPart(modifier: Modifier, tagList: List<Tag>, onTagClicked: (tag: 
 @Composable
 @Preview
 private fun SHow() {
-    val testTag = Tag(id = 1, text = "Дизайн", isSelected = false)
+    val testTagUi = TagUi(id = 1, text = "Дизайн", isSelected = false)
     val state = OnboardingViewState.Display(
-        tagList = MutableList<Tag>(40) { testTag },
+        tagUiList = MutableList<TagUi>(40) { testTagUi },
         isButtonActive = false
     )
     Onboarding(navController = rememberNavController())

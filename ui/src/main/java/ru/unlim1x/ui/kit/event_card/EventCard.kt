@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -18,16 +19,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import ru.unlim1x.old_ui.theme.DevMeetTheme
 import ru.unlim1x.old_ui.uiKit.cards.loading_cards.AnimatedTransitionRoundRectangle
 import ru.unlim1x.ui.R
 import ru.unlim1x.ui.kit.tag.TagSmall
+import ru.unlim1x.ui.models.EventUI
 
 private const val FIGMA_RADIUS = 16f
 private const val FIGMA_DEFAULT_IMAGE_SIZE = 180
@@ -44,28 +49,50 @@ internal enum class EventCardVariant {
 internal fun EventCard(
     modifier: Modifier = Modifier,
     state: EventUI,
-    variant: EventCardVariant = EventCardVariant.MAX_WIDTH
+    variant: EventCardVariant = EventCardVariant.MAX_WIDTH,
+    onHeightMeasured: (p: Dp) -> Unit = {},
+    onClick: () -> Unit
 ) {
     when (variant) {
-        EventCardVariant.MAX_WIDTH -> EventCardMaxBody(modifier.fillMaxWidth(), state)
-        EventCardVariant.COMPACT -> EventCardCompactBody(modifier.width(212.dp), state)
+        EventCardVariant.MAX_WIDTH -> EventCardMaxBody(
+            modifier.fillMaxWidth(),
+            state,
+            onHeightMeasured = onHeightMeasured
+        )
+
+        EventCardVariant.COMPACT -> EventCardCompactBody(
+            modifier.width(212.dp),
+            state,
+            onHeightMeasured = onHeightMeasured
+        )
     }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun EventCardMaxBody(modifier: Modifier, state: EventUI) {
+private fun EventCardMaxBody(
+    modifier: Modifier, state: EventUI,
+    onHeightMeasured: (Dp) -> Unit
+) {
     val imageWidth = remember {
         mutableIntStateOf(0)
     }
     val tagsToShow = 3
 
-
-    Column(modifier = modifier) {
+    val density = LocalDensity.current
+    Column(modifier = modifier.onGloballyPositioned { coordinates ->
+        val height = with(density) {
+            coordinates.size.height.toDp()
+        }
+        onHeightMeasured(height)
+    }) {
         SubcomposeAsyncImage(
             model = state.imageUri,
             contentDescription = stringResource(R.string.community_image),
-            modifier = modifier
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(FIGMA_DEFAULT_IMAGE_SIZE.dp)
                 .padding(bottom = FIGMA_IMAGE_PADDING.dp)
                 .clip(RoundedCornerShape(FIGMA_RADIUS.dp))
                 .onGloballyPositioned {
@@ -73,12 +100,12 @@ private fun EventCardMaxBody(modifier: Modifier, state: EventUI) {
                 },
             loading = {
                 AnimatedTransitionRoundRectangle(
-                    modifier = modifier.size(FIGMA_DEFAULT_IMAGE_SIZE.dp)
+                    modifier = Modifier.size(FIGMA_DEFAULT_IMAGE_SIZE.dp)
                 )
             },
             error = {
                 AnimatedTransitionRoundRectangle(
-                    modifier = modifier.size(FIGMA_DEFAULT_IMAGE_SIZE.dp)
+                    modifier = Modifier.size(FIGMA_DEFAULT_IMAGE_SIZE.dp)
                 )
             }
         )
@@ -110,19 +137,28 @@ private fun EventCardMaxBody(modifier: Modifier, state: EventUI) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun EventCardCompactBody(modifier: Modifier, state: EventUI) {
+private fun EventCardCompactBody(
+    modifier: Modifier, state: EventUI,
+    onHeightMeasured: (Dp) -> Unit
+) {
     val imageWidth = remember {
         mutableIntStateOf(0)
     }
     val tagsToShow = 2
 
-
-    Column(modifier = modifier) {
+    val density = LocalDensity.current
+    Column(modifier = modifier.onGloballyPositioned { coordinates ->
+        val height = with(density) {
+            coordinates.size.height.toDp()
+        }
+        onHeightMeasured(height)
+    }) {
         SubcomposeAsyncImage(
             model = state.imageUri,
             contentDescription = stringResource(R.string.community_image),
-            modifier = modifier
-
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .height(FIGMA_SMALL_IMAGE_SIZE.dp)
                 .padding(bottom = FIGMA_IMAGE_PADDING.dp)
                 .clip(RoundedCornerShape(FIGMA_RADIUS.dp))
                 .onGloballyPositioned {
@@ -130,12 +166,12 @@ private fun EventCardCompactBody(modifier: Modifier, state: EventUI) {
                 },
             loading = {
                 AnimatedTransitionRoundRectangle(
-                    modifier = modifier.size(FIGMA_SMALL_IMAGE_SIZE.dp)
+                    modifier = Modifier.size(FIGMA_SMALL_IMAGE_SIZE.dp)
                 )
             },
             error = {
                 AnimatedTransitionRoundRectangle(
-                    modifier = modifier.size(FIGMA_SMALL_IMAGE_SIZE.dp)
+                    modifier = Modifier.size(FIGMA_SMALL_IMAGE_SIZE.dp)
                 )
             }
         )
@@ -177,5 +213,5 @@ private fun Show() {
             )
         )
     }
-    EventCard(state = community1, variant = EventCardVariant.COMPACT)
+    EventCard(state = community1, variant = EventCardVariant.MAX_WIDTH, onHeightMeasured = {}) {}
 }

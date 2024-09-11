@@ -8,7 +8,8 @@ import kotlinx.coroutines.launch
 import ru.lim1x.domain.interfaces.interactors.ITagsOnboardingGetInteractor
 import ru.lim1x.domain.interfaces.interactors.ITagsOnboardingUpdateInteractor
 import ru.unlim1x.old_ui.screens.MainViewModel
-import ru.unlim1x.ui.kit.tag.Tag
+import ru.unlim1x.ui.kit.tag.TagUi
+import ru.unlim1x.ui.mappers.mapTagToUi
 
 internal class OnboardingViewModel(
     private val tagsOnboardingGetInteractor: ITagsOnboardingGetInteractor,
@@ -25,12 +26,10 @@ internal class OnboardingViewModel(
         viewModelScope.launch {
             tagsOnboardingGetInteractor.execute().collect { tagList ->
                 Log.d("VM", "Data collected: $tagList")
-                val tags = tagList.map {
-                    Tag(id = it.id, text = it.text, isSelected = it.isSelected)
-                }
+                val tagUis = tagList.mapTagToUi()
                 _viewState.value = OnboardingViewState.Display(
-                    tagList = tags,
-                    isButtonActive = tags.any { tag -> tag.isSelected }
+                    tagUiList = tagUis,
+                    isButtonActive = tagUis.any { tag -> tag.isSelected }
                 )
                 Log.e("VM", "_viewState.value = ${_viewState.value}")
             }
@@ -43,7 +42,7 @@ internal class OnboardingViewModel(
             OnboardingEvent.OnSkipButtonClick -> {}
             is OnboardingEvent.OnTagClick -> {
                 Log.e("VM", "pressed called")
-                tagsOnboardingUpdateInteractor.execute(event.tag.id)
+                tagsOnboardingUpdateInteractor.execute(event.tagUi.id)
             }
         }
     }

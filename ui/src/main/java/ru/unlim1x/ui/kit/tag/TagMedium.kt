@@ -33,18 +33,20 @@ internal fun TagMedium(
         true -> DevMeetTheme.colorScheme.primary
         false -> DevMeetTheme.colorScheme.disabled
     }
-    Box(modifier = modifier
+    Box(modifier = Modifier
         .background(
             color = backgroundColor, shape = RoundedCornerShape(
                 FIGMA_RADIUS.dp
             )
         )
         .clip(RoundedCornerShape(FIGMA_RADIUS.dp))
-        .clickable { onClick() }
-        .padding(PADDING.dp),
+        .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
-        Text(text = text, style = DevMeetTheme.newTypography.medium, color = textColor)
+        Text(
+            text = text, style = DevMeetTheme.newTypography.medium, color = textColor,
+            modifier = modifier
+        )
     }
 }
 

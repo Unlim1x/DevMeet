@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.unlim1x.old_ui.theme.DevMeetTheme
@@ -45,7 +46,10 @@ internal fun TagSmall(
         .padding(vertical = VERTICAL_PADDING.dp, horizontal = HORIZONTAL_PADDING.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = text, style = DevMeetTheme.newTypography.secondary, color = textColor)
+        Text(
+            text = text, style = DevMeetTheme.newTypography.secondary, color = textColor,
+            maxLines = 1, overflow = TextOverflow.Ellipsis
+        )
     }
 }
 

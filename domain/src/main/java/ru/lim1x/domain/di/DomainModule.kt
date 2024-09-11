@@ -1,10 +1,26 @@
 package ru.lim1x.domain.di
 
 import org.koin.dsl.module
+import ru.lim1x.domain.interactor_implementation.GetMainEventsUseCase
+import ru.lim1x.domain.interactor_implementation.GetMoreEventsInteractor
+import ru.lim1x.domain.interactor_implementation.GetMoreEventsUseCase
+import ru.lim1x.domain.interactor_implementation.GetRailUseCase
+import ru.lim1x.domain.interactor_implementation.GetSoonEventsUseCase
 import ru.lim1x.domain.interactor_implementation.GetTagsUseCase
+import ru.lim1x.domain.interactor_implementation.InnerLoadRailInteractor
+import ru.lim1x.domain.interactor_implementation.InnerMoreEvents
 import ru.lim1x.domain.interactor_implementation.InnerTagsInteractor
+import ru.lim1x.domain.interactor_implementation.LoadMainEventsInteractor
+import ru.lim1x.domain.interactor_implementation.LoadMoreEventsInteractor
+import ru.lim1x.domain.interactor_implementation.LoadRailInteractor
+import ru.lim1x.domain.interactor_implementation.LoadSoonEventsInteractor
 import ru.lim1x.domain.interactor_implementation.TagsOnboardingGetInteractor
 import ru.lim1x.domain.interactor_implementation.TagsOnboardingUpdateInteractor
+import ru.lim1x.domain.interfaces.interactors.IGetMoreEventsInteractor
+import ru.lim1x.domain.interfaces.interactors.ILoadMainEventsInteractor
+import ru.lim1x.domain.interfaces.interactors.ILoadMoreEventsInteractor
+import ru.lim1x.domain.interfaces.interactors.ILoadRailInteractor
+import ru.lim1x.domain.interfaces.interactors.ILoadSoonEventsInteractor
 import ru.lim1x.domain.interfaces.interactors.ITagsOnboardingGetInteractor
 import ru.lim1x.domain.interfaces.interactors.ITagsOnboardingUpdateInteractor
 import ru.lim1x.domain.interfaces.usecases.IGetActiveMeetingsUseCase
@@ -67,4 +83,19 @@ val newDomainModule = module {
     single<ITagsOnboardingUpdateInteractor> { TagsOnboardingUpdateInteractor() }
     single<InnerTagsInteractor> { InnerTagsInteractor() }
     single<GetTagsUseCase> { GetTagsUseCase() }
+
+    single<ILoadSoonEventsInteractor> { LoadSoonEventsInteractor() }
+
+    single<ILoadRailInteractor> { LoadRailInteractor() }
+
+    single<ILoadMainEventsInteractor> { LoadMainEventsInteractor(get()) }
+
+    single<IGetMoreEventsInteractor> { GetMoreEventsInteractor() }
+    single<ILoadMoreEventsInteractor> { LoadMoreEventsInteractor() }
+    single<InnerMoreEvents> { InnerMoreEvents() }
+    single<GetMoreEventsUseCase> { GetMoreEventsUseCase() }
+    single<GetMainEventsUseCase> { GetMainEventsUseCase(get()) }
+    single<GetSoonEventsUseCase> { GetSoonEventsUseCase(get()) }
+    single<GetRailUseCase> { GetRailUseCase(get()) }
+    single<InnerLoadRailInteractor> { InnerLoadRailInteractor() }
 }

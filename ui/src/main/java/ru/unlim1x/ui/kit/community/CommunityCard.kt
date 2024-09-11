@@ -1,9 +1,11 @@
 package ru.unlim1x.ui.kit.community
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -24,6 +27,7 @@ import coil.compose.SubcomposeAsyncImage
 import ru.unlim1x.old_ui.theme.DevMeetTheme
 import ru.unlim1x.old_ui.uiKit.cards.loading_cards.AnimatedTransitionRoundRectangle
 import ru.unlim1x.ui.R
+import ru.unlim1x.ui.models.CommunityUI
 
 private const val FIGMA_RADIUS = 16f
 private const val FIGMA_DEFAULT_SIZE = 104
@@ -39,18 +43,18 @@ internal fun CommunityCard(
         mutableIntStateOf(0)
     }
     val density = LocalDensity.current
-    val imageWidthDp = with(density) { imageWidth.intValue.toDp() }
+
     val textAndButtonModifier = modifier
-        .width(imageWidthDp)
+        .width(FIGMA_DEFAULT_SIZE.dp)
         .padding(top = 8.dp)
     Column(modifier = modifier) {
         SubcomposeAsyncImage(
             model = state.imageUri,
             contentDescription = stringResource(R.string.community_image),
             modifier = modifier
-                .onGloballyPositioned {
-                    imageWidth.intValue = it.size.width
-                },
+                .width(FIGMA_DEFAULT_SIZE.dp)
+                .height(FIGMA_DEFAULT_SIZE.dp)
+                .clip(RoundedCornerShape(FIGMA_RADIUS.dp)),
             loading = {
                 AnimatedTransitionRoundRectangle(
                     modifier = modifier.size(FIGMA_DEFAULT_SIZE.dp),

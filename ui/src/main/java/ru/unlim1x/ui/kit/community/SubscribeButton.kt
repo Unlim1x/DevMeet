@@ -25,6 +25,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.unlim1x.old_ui.theme.DevMeetTheme
+import ru.unlim1x.ui.kit.brush.primaryLinearBrush
+import ru.unlim1x.ui.kit.brush.secondaryLinearBrush
 
 private const val FIGMA_MIN_WIDTH = 38
 private const val FIGMA_RADIUS = 12
@@ -36,9 +38,19 @@ fun SubscribeButton(
     isSubscribed: Boolean = false,
     onClick: () -> Unit
 ) {
+//    val backgroundColor = when (isSubscribed) {
+//        true -> DevMeetTheme.colorScheme.primary
+//        false -> Color.White
+//    }
     val backgroundColor = when (isSubscribed) {
-        true -> DevMeetTheme.colorScheme.primary
-        false -> Color.White
+        true -> primaryLinearBrush(
+            listOf(
+                DevMeetTheme.colorScheme.primary,
+                DevMeetTheme.colorScheme.primary
+            )
+        )
+
+        false -> secondaryLinearBrush()
     }
     val text = when (isSubscribed) {
         true -> "✓"
@@ -57,7 +69,7 @@ fun SubscribeButton(
         when (it) {
             true -> SubscribeButtonBody(
                 modifier = modifier,
-                backgroundColor = testState.first,
+                backgroundBrush = testState.first,
                 text = testState.second,
                 textColor = testState.third
             ) {
@@ -66,7 +78,7 @@ fun SubscribeButton(
 
             false -> SubscribeButtonBody(
                 modifier = modifier,
-                backgroundColor = testState.first,
+                backgroundBrush = testState.first,
                 text = testState.second,
                 textColor = testState.third
             ) {

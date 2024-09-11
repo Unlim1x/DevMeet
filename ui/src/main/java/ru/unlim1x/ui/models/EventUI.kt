@@ -1,4 +1,4 @@
-package ru.unlim1x.ui.kit.event_card
+package ru.unlim1x.ui.models
 
 data class EventUI(
     val id: Int,

@@ -59,6 +59,7 @@
     <string name="tell_later">Расскажу позже</string>
     <string name="interests">Интересы</string>
     <string name="choose_interests">Выберите интересы, чтобы мы рекомендовали полезные встречи</string>
+    <string name="choose_interests_button">Выбрать интересы</string>
 
     <plurals name="people">
         <item quantity="one">человек</item>

@@ -2,7 +2,7 @@ package ru.lim1x.repository.models
 
 import ru.lim1x.domain.models.Tag
 
-data class DeveloperCommunityDetailedRepository(
+data class DeveloperCommunityDetailedData(
     val id: Int,
     val name: String,
     val imageUri: Any,

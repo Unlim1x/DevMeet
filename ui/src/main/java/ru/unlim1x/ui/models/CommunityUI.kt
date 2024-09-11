@@ -1,4 +1,4 @@
-package ru.unlim1x.ui.kit.community
+package ru.unlim1x.ui.models
 
 internal data class CommunityUI(
     val imageUri: Any,

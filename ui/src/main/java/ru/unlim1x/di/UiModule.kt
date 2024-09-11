@@ -15,6 +15,7 @@ import ru.unlim1x.old_ui.screens.more_screen.MoreScreenViewModel
 import ru.unlim1x.old_ui.screens.my_meetings.MyMeetingScreenViewModel
 import ru.unlim1x.old_ui.screens.profile_screen.ProfileScreenViewModel
 import ru.unlim1x.old_ui.screens.splash_screen.SplashScreenViewModel
+import ru.unlim1x.ui.screens.main_screen.MainScreenViewModel
 import ru.unlim1x.ui.screens.onboarding.OnboardingViewModel
 
 val uiModule = module {
@@ -36,4 +37,5 @@ val uiModule = module {
 val newUiModule = module {
     viewModel { ru.unlim1x.ui.screens.aka_splash_screen.SplashScreenViewModel() }
     viewModel { OnboardingViewModel(get(), get()) }
+    viewModel { MainScreenViewModel(get(), get(), get(), get(), get(), get()) }
 }
