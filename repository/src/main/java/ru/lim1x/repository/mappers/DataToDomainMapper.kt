@@ -4,11 +4,12 @@ import ru.lim1x.domain.models.CommunityRail
 import ru.lim1x.domain.models.DeveloperCommunity
 import ru.lim1x.domain.models.Event
 import ru.lim1x.domain.models.Person
-import ru.lim1x.repository.event_repository.EventRepository
+import ru.lim1x.domain.models.PersonRail
 import ru.lim1x.repository.models.CommunityRailData
 import ru.lim1x.repository.models.DeveloperCommunityData
 import ru.lim1x.repository.models.EventData
 import ru.lim1x.repository.models.PersonData
+import ru.lim1x.repository.models.PersonRailData
 
 internal fun List<EventData>.mapEventListToDomain(): List<Event> {
     return this.map {
@@ -60,4 +61,8 @@ internal fun List<PersonData>.mapPersonToDomain(): List<Person> {
     return this.map {
         it.mapToDomain()
     }
+}
+
+internal fun PersonRailData.mapToDomain(): PersonRail {
+    return PersonRail(title = this.title, contentList = this.listPersons.mapPersonToDomain())
 }

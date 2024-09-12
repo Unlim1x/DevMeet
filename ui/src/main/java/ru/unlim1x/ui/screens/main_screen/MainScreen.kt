@@ -1,6 +1,7 @@
 package ru.unlim1x.ui.screens.main_screen
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,7 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,23 +37,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.koin.androidx.compose.koinViewModel
+import ru.lim1x.domain.models.Rail
+import ru.lim1x.domain.models.RailType
 import ru.unlim1x.old_ui.theme.DevMeetTheme
 import ru.unlim1x.ui.kit.banner.Banner
 import ru.unlim1x.ui.kit.community.CommunityCard
 import ru.unlim1x.ui.kit.event_card.EventCard
 import ru.unlim1x.ui.kit.event_card.EventCardVariant
-import ru.unlim1x.ui.models.EventUI
 import ru.unlim1x.ui.kit.person.Person
-import ru.unlim1x.ui.models.PersonUi
 import ru.unlim1x.ui.kit.tag.TagMedium
+import ru.unlim1x.ui.kit.tag.TagUi
 import ru.unlim1x.ui.models.CommunityRailUI
+import ru.unlim1x.ui.models.EventUI
+import ru.unlim1x.ui.models.PersonRailUi
 
 private const val HORIZONTAL_PADDING = 16
 private const val ROW_CARD_FRACTION = 0.8f
 private const val HEADER_SPACE = 16
+private const val VERTICAL_GAP = 40
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -72,9 +75,12 @@ internal fun MainScreen(viewModel: MainScreenViewModel = koinViewModel()) {
     }
 }
 
-@OptIn(FlowPreview::class)
+@OptIn(FlowPreview::class, ExperimentalFoundationApi::class)
 @Composable
 private fun MainScreenBody(state: MainScreenViewState.Display, onEndOfListReached: () -> Unit) {
+    Log.e("MAIN SCREEN", "$state")
+    Log.e("MAIN SCREEN", "INFINITE LIST ${state.infiniteEventsListByTag}")
+    Log.e("MAIN SCREEN", "RAILLIST LIST ${state.railList}")
 
     val lazyListState = rememberSaveable(saver = LazyListState.Saver) { LazyListState() }
     val threshold = 2
@@ -99,7 +105,8 @@ private fun MainScreenBody(state: MainScreenViewState.Display, onEndOfListReache
         LazyColumn(
             state = lazyListState,
             modifier = Modifier.padding(top = topBarPadding.dp),
-            verticalArrangement = Arrangement.spacedBy(40.dp)
+            verticalArrangement = Arrangement.spacedBy(40.dp),
+            //contentPadding = PaddingValues(bottom = VERTICAL_GAP.dp)
         ) {
             //Главные
             item {
@@ -111,7 +118,8 @@ private fun MainScreenBody(state: MainScreenViewState.Display, onEndOfListReache
             }
             //ПЕРВЫЙ РЭИЛ
             item {
-                Rail(rail = state.railList[railIndex])
+                if (state.railList[0].railType == RailType.Community)
+                    Rail(rail = state.railList[0])
             }
 
 
@@ -119,32 +127,29 @@ private fun MainScreenBody(state: MainScreenViewState.Display, onEndOfListReache
 
             //ТЭГОВАЯ ИСТОРИЯ
             item {
-                TagPart()
+                TagPart(listTagsUi = state.otherTags)
             }
 
             //Здесь идет условно бесконечный список с вставками каждые три ивента
 
             itemsIndexed(items = state.infiniteEventsListByTag) { index, item ->
+
                 EventCard(
                     state = item,
-                    modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)
+                    modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)//.animateItemPlacement(
+                    //animationSpec = tween(durationMillis = 600)
+                    //)
                 ) {
 
                 }
-                if (index == 2) {
-                    Banner(Modifier.padding(vertical = 40.dp, horizontal = HORIZONTAL_PADDING.dp)) {
-
-                    }
+                if ((index + 1) % 3 == 0 && index < 9) {
+                    if (state.railList.size > (index + 1) / 3)
+                        Rail(
+                            modifier = Modifier.padding(top = VERTICAL_GAP.dp),
+                            rail = state.railList[(index + 1) / 3]
+                        )
                 }
-                if (index == 5) {
-                    PersonsToKnow(Modifier.padding(vertical = 40.dp), personsList = emptyList())
-                }
-                if (index == 8) {
-                    //RAIL!!!!
 
-                    Rail(rail = state.railList[railIndex])
-
-                }
             }
 
 
@@ -154,12 +159,13 @@ private fun MainScreenBody(state: MainScreenViewState.Display, onEndOfListReache
 
 
     LaunchedEffect(lazyListState, state) {
+
         snapshotFlow { lazyListState.firstVisibleItemIndex + lazyListState.layoutInfo.visibleItemsInfo.size }
             //.debounce(300)
             .distinctUntilChanged()
             .collect { visibleItems ->
                 state.infiniteEventsListByTag.let {
-                    if (visibleItems >= it.size + itemsBeforeInfiniteList) {
+                    if (visibleItems >= it.size + itemsBeforeInfiniteList - threshold) {
                         Log.e("", "VISIBLE ITEMS = ${visibleItems}")
                         Log.e(
                             "",
@@ -172,30 +178,7 @@ private fun MainScreenBody(state: MainScreenViewState.Display, onEndOfListReache
     }
 }
 
-@Composable
-internal fun PersonsToKnow(modifier: Modifier = Modifier, personsList: List<PersonUi>) {
-    Column(verticalArrangement = Arrangement.spacedBy(HEADER_SPACE.dp), modifier = modifier) {
-        Text(
-            text = "Вы можете их знать", style = DevMeetTheme.newTypography.h2,
-            modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)
-        )
-        LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(HORIZONTAL_PADDING.dp)
-        ) {
-            itemsIndexed(personsList) { index, item ->
-                Person(
-                    modifier = modifier.railModifier(index),
-                    personUi = item
-                ) {
 
-                }
-            }
-        }
-    }
-
-
-}
 
 @Composable
 fun MainEvents(modifier: Modifier = Modifier, listMainEvents: List<EventUI>) {
@@ -275,7 +258,28 @@ fun SoonEvents(modifier: Modifier = Modifier, listSoonEvents: List<EventUI>) {
 }
 
 @Composable
-private fun Rail(modifier: Modifier = Modifier, rail: CommunityRailUI) {
+private fun Rail(modifier: Modifier = Modifier, rail: Rail) {
+    when (rail.railType) {
+        RailType.Community -> RailCommunity(
+            modifier = modifier,
+            rail = rail.content as CommunityRailUI
+        )
+
+        RailType.Banner -> Banner(modifier = modifier.padding(horizontal = HORIZONTAL_PADDING.dp)) {
+
+        }
+
+        RailType.Person -> {
+            RailPerson(modifier = modifier, rail = rail.content as PersonRailUi)
+        }
+
+        RailType.Nothing -> {}
+    }
+
+}
+
+@Composable
+private fun RailCommunity(modifier: Modifier = Modifier, rail: CommunityRailUI) {
     Column(verticalArrangement = Arrangement.spacedBy(HEADER_SPACE.dp), modifier = modifier) {
         Text(
             text = rail.title, style = DevMeetTheme.newTypography.h2,
@@ -295,30 +299,35 @@ private fun Rail(modifier: Modifier = Modifier, rail: CommunityRailUI) {
             }
         }
     }
+}
 
+@Composable
+private fun RailPerson(modifier: Modifier = Modifier, rail: PersonRailUi) {
+    Column(verticalArrangement = Arrangement.spacedBy(HEADER_SPACE.dp), modifier = modifier) {
+        Text(
+            text = rail.title, style = DevMeetTheme.newTypography.h2,
+            modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)
+        )
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(HORIZONTAL_PADDING.dp)
+        ) {
+            itemsIndexed(rail.contentList) { index, item ->
+                Person(
+                    personUi = item,
+                    modifier = Modifier.railModifier(index)
+                ) {
+
+                }
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun TagPart(modifier: Modifier = Modifier) {
-    val tagList = listOf(
-        "Дизайн",
-        "Разработка",
-        "Mobile",
-        "Frontend",
-        "Backend",
-        "DevOps",
-        "AI",
-        "Машинное Обучение",
-        "Базы Данных",
-        "Безопасность",
-        "UI/UX",
-        "Веб-Разработка",
-        "Облачные Технологии",
-        "Тестирование",
-        "Разработка Игр",
-        "Все категории"
-    )
+private fun TagPart(modifier: Modifier = Modifier, listTagsUi: List<TagUi>) {
+
     Column(
         verticalArrangement = Arrangement.spacedBy(HEADER_SPACE.dp),
         modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)
@@ -329,9 +338,9 @@ private fun TagPart(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            tagList.forEach {
+            listTagsUi.forEach {
                 TagMedium(
-                    text = it,
+                    text = it.text,
                     modifier = Modifier.padding(8.dp),
                     selected = false
                 ) {

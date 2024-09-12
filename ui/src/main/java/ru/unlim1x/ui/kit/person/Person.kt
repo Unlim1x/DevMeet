@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -30,9 +31,9 @@ internal fun Person(modifier: Modifier = Modifier, personUi: PersonUi, onClick: 
         Column(modifier = modifier) {
             SubcomposeAsyncImage(model = personUi.imageUri, contentDescription = "",
                 modifier
+                    .padding(bottom = 4.dp)
                     .clip(CircleShape)
-                    .size(104.dp)
-                    .padding(bottom = 4.dp),
+                    .requiredSize(104.dp),
                 error = {
                     AnimatedTransitionRoundRectangle(
                         modifier = modifier.size(104.dp)

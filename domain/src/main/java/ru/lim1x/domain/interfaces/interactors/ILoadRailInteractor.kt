@@ -1,8 +1,7 @@
 package ru.lim1x.domain.interfaces.interactors
 
-import kotlinx.coroutines.flow.Flow
-import ru.lim1x.domain.models.CommunityRail
+import ru.lim1x.domain.models.RailType
 
 interface ILoadRailInteractor {
-    fun execute(): Flow<List<CommunityRail>>
+    fun execute(railType: RailType): Unit
 }

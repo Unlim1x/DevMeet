@@ -114,7 +114,7 @@ private fun EventCardMaxBody(
             style = DevMeetTheme.newTypography.h1,
             color = Color.Black,
             overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
+            maxLines = 2,
             modifier = Modifier.padding(bottom = FIGMA_TEXT_PADDING.dp)
 
         )

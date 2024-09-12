@@ -1,12 +1,12 @@
 package ru.lim1x.repository.mock_source
 
 
-import ru.lim1x.domain.models.Person
 import ru.lim1x.domain.models.Tag
 import ru.lim1x.repository.models.CommunityRailData
 import ru.lim1x.repository.models.DeveloperCommunityData
 import ru.lim1x.repository.models.EventData
 import ru.lim1x.repository.models.PersonData
+import ru.lim1x.repository.models.PersonRailData
 import java.time.LocalDate
 import kotlin.random.Random
 
@@ -63,13 +63,12 @@ internal class FakeDataSource {
         )
     }
 
-    private fun fakeCommunityRails(): MutableList<CommunityRailData> =
-        MutableList(2) {
-            CommunityRailData(
+    private fun fakeCommunityRails() =
+        CommunityRailData(
                 title = GPTLists.railCommunityTitles.shuffled().random(),
                 listId = fakeCommunities.shuffled(Random).subList(2, 7)
             )
-        }
+
 
     fun getMainEvents(): List<EventData> {
 
@@ -94,7 +93,7 @@ internal class FakeDataSource {
             return emptyList()
     }
 
-    fun loadCommunityRail(): List<CommunityRailData> {
+    fun loadCommunityRail(): CommunityRailData {
         return fakeCommunityRails()
     }
 
@@ -116,9 +115,9 @@ internal class FakeDataSource {
     }
 
     private fun fakePersonsToKnowQuantity() = Random.nextInt(5, 12)
-    fun fakePersonsToKnow(): List<PersonData> {
+    fun fakePersonsToKnow(): PersonRailData {
         val size = fakePersonsToKnowQuantity()
-        return generateListOfPersons(size)
+        return PersonRailData("Вы можете их знать", generateListOfPersons(size))
 
     }
 
@@ -145,7 +144,7 @@ internal class FakeDataSource {
 
             Sex.FEMALE -> {
                 PersonData(
-                    id = personsList.size, name = GPTLists.maleNames.shuffled().random(),
+                    id = personsList.size, name = GPTLists.femaleNames.shuffled().random(),
                     mainTag = GPTLists.listOfTags.random(), imageUri = randomPersonUri(sex)
                 )
             }

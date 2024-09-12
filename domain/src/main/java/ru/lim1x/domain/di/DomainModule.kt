@@ -1,24 +1,30 @@
 package ru.lim1x.domain.di
 
 import org.koin.dsl.module
+import ru.lim1x.domain.interactor_implementation.FullInfo
 import ru.lim1x.domain.interactor_implementation.GetMainEventsUseCase
 import ru.lim1x.domain.interactor_implementation.GetMoreEventsInteractor
-import ru.lim1x.domain.interactor_implementation.GetMoreEventsUseCase
+import ru.lim1x.domain.interactor_implementation.GetRailInteractor
 import ru.lim1x.domain.interactor_implementation.GetRailUseCase
 import ru.lim1x.domain.interactor_implementation.GetSoonEventsUseCase
 import ru.lim1x.domain.interactor_implementation.GetTagsUseCase
 import ru.lim1x.domain.interactor_implementation.InnerLoadRailInteractor
+import ru.lim1x.domain.interactor_implementation.InnerMainEventInteractor
 import ru.lim1x.domain.interactor_implementation.InnerMoreEvents
+import ru.lim1x.domain.interactor_implementation.InnerSoonEventInteractor
 import ru.lim1x.domain.interactor_implementation.InnerTagsInteractor
+import ru.lim1x.domain.interactor_implementation.LoadInfiniteListUseCase
 import ru.lim1x.domain.interactor_implementation.LoadMainEventsInteractor
-import ru.lim1x.domain.interactor_implementation.LoadMoreEventsInteractor
+import ru.lim1x.domain.interactor_implementation.LoadMoreInfiniteListInteractor
 import ru.lim1x.domain.interactor_implementation.LoadRailInteractor
 import ru.lim1x.domain.interactor_implementation.LoadSoonEventsInteractor
 import ru.lim1x.domain.interactor_implementation.TagsOnboardingGetInteractor
 import ru.lim1x.domain.interactor_implementation.TagsOnboardingUpdateInteractor
+import ru.lim1x.domain.interfaces.interactors.IGetMainScreenFullInfo
 import ru.lim1x.domain.interfaces.interactors.IGetMoreEventsInteractor
+import ru.lim1x.domain.interfaces.interactors.IGetRailInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadMainEventsInteractor
-import ru.lim1x.domain.interfaces.interactors.ILoadMoreEventsInteractor
+import ru.lim1x.domain.interfaces.interactors.ILoadMoreInfiniteListInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadRailInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadSoonEventsInteractor
 import ru.lim1x.domain.interfaces.interactors.ITagsOnboardingGetInteractor
@@ -85,17 +91,23 @@ val newDomainModule = module {
     single<GetTagsUseCase> { GetTagsUseCase() }
 
     single<ILoadSoonEventsInteractor> { LoadSoonEventsInteractor() }
+    single<InnerSoonEventInteractor> { InnerSoonEventInteractor() }
+    single<GetSoonEventsUseCase> { GetSoonEventsUseCase(get()) }
 
-    single<ILoadRailInteractor> { LoadRailInteractor() }
 
     single<ILoadMainEventsInteractor> { LoadMainEventsInteractor(get()) }
+    single<InnerMainEventInteractor> { InnerMainEventInteractor() }
+    single<GetMainEventsUseCase> { GetMainEventsUseCase(get()) }
 
     single<IGetMoreEventsInteractor> { GetMoreEventsInteractor() }
-    single<ILoadMoreEventsInteractor> { LoadMoreEventsInteractor() }
+    single<ILoadMoreInfiniteListInteractor> { LoadMoreInfiniteListInteractor() }
     single<InnerMoreEvents> { InnerMoreEvents() }
-    single<GetMoreEventsUseCase> { GetMoreEventsUseCase() }
-    single<GetMainEventsUseCase> { GetMainEventsUseCase(get()) }
-    single<GetSoonEventsUseCase> { GetSoonEventsUseCase(get()) }
+    single<LoadInfiniteListUseCase> { LoadInfiniteListUseCase() }
+
+    single<IGetRailInteractor> { GetRailInteractor() }
     single<GetRailUseCase> { GetRailUseCase(get()) }
     single<InnerLoadRailInteractor> { InnerLoadRailInteractor() }
+    single<ILoadRailInteractor> { LoadRailInteractor() }
+
+    single<IGetMainScreenFullInfo> { FullInfo() }
 }
