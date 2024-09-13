@@ -26,6 +26,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
@@ -69,14 +71,16 @@ internal fun SearchField(
         ) {
             Text(
                 text = "Поиск",
-                style = DevMeetTheme.typography.bodyText1,
+                style = DevMeetTheme.newTypography.bodyText1,
                 color = hintColor,
             )
 
 
             BasicTextField2(
                 enabled = enabled,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(FocusRequester()),
                 keyboardActions = KeyboardActions(onSearch = {
                     onSearch(state)
                     focusManager.clearFocus()
@@ -84,7 +88,7 @@ internal fun SearchField(
                 interactionSource = interactionSource,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 lineLimits = TextFieldLineLimits.SingleLine,
-                textStyle = DevMeetTheme.typography.bodyText1.copy(color = DevMeetTheme.colorScheme.neutralActive),
+                textStyle = DevMeetTheme.newTypography.bodyText1.copy(color = DevMeetTheme.colorScheme.neutralActive),
                 state = state,
             )
         }

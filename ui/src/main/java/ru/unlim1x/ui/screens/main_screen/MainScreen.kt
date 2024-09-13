@@ -28,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -49,6 +48,7 @@ import ru.unlim1x.ui.kit.event_card.EventCardVariant
 import ru.unlim1x.ui.kit.person.Person
 import ru.unlim1x.ui.kit.tag.TagMedium
 import ru.unlim1x.ui.kit.tag.TagUi
+import ru.unlim1x.ui.kit.topbar_row.TopBarSearchRow
 import ru.unlim1x.ui.models.CommunityRailUI
 import ru.unlim1x.ui.models.EventUI
 import ru.unlim1x.ui.models.PersonRailUi
@@ -62,11 +62,32 @@ private const val VERTICAL_GAP = 40
 @Composable
 internal fun MainScreen(viewModel: MainScreenViewModel = koinViewModel()) {
     val viewState by viewModel.viewState().collectAsStateWithLifecycle()
+    var topBarPadding by remember { mutableStateOf(0) }
+    val density = LocalDensity.current.density
     when (viewState) {
         is MainScreenViewState.Display -> {
-            MainScreenBody(state = viewState as MainScreenViewState.Display) {
-                viewModel.obtain(MainScreenEvent.ScrolledToEndOfList)
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Transparent)) {
+                TopBarSearchRow(modifier = Modifier
+                    .padding(
+                        top = 10.dp,
+                        start = HORIZONTAL_PADDING.dp,
+                        end = HORIZONTAL_PADDING.dp
+                    )
+                    .onGloballyPositioned {
+                        topBarPadding = (it.size.height / density).toInt()
+                    }, onSearch = {}, onValueChanged = {}, onMenuItemClick = { }) {
+
+                }
+                MainScreenBody(
+                    Modifier.padding(top = topBarPadding.dp + 15.dp),
+                    state = viewState as MainScreenViewState.Display
+                ) {
+                    viewModel.obtain(MainScreenEvent.ScrolledToEndOfList)
+                }
             }
+
         }
 
         is MainScreenViewState.DisplaySearch -> {}
@@ -77,7 +98,11 @@ internal fun MainScreen(viewModel: MainScreenViewModel = koinViewModel()) {
 
 @OptIn(FlowPreview::class, ExperimentalFoundationApi::class)
 @Composable
-private fun MainScreenBody(state: MainScreenViewState.Display, onEndOfListReached: () -> Unit) {
+private fun MainScreenBody(
+    modifier: Modifier,
+    state: MainScreenViewState.Display,
+    onEndOfListReached: () -> Unit
+) {
     Log.e("MAIN SCREEN", "$state")
     Log.e("MAIN SCREEN", "INFINITE LIST ${state.infiniteEventsListByTag}")
     Log.e("MAIN SCREEN", "RAILLIST LIST ${state.railList}")
@@ -88,29 +113,32 @@ private fun MainScreenBody(state: MainScreenViewState.Display, onEndOfListReache
     var railIndex = 0
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.White)
             //.padding(horizontal = HORIZONTAL_PADDING.dp)
-            .padding(bottom = 24.dp)
+        //.padding(bottom = 24.dp)
     ) {
-        var topBarPadding by remember { mutableStateOf(0) }
-        val density = LocalDensity.current.density
-        Text(text = "Здесь будет поисковая строка", modifier = Modifier
-            .align(Alignment.TopCenter)
-            .onGloballyPositioned {
-                topBarPadding =
-                    (it.size.height / density).toInt()
-            })
+
+
+//        Text(text = "Здесь будет поисковая строка", modifier = Modifier
+//            .align(Alignment.TopCenter)
+//            .onGloballyPositioned {
+//                topBarPadding =
+//                    (it.size.height / density).toInt()
+//            })
         LazyColumn(
             state = lazyListState,
-            modifier = Modifier.padding(top = topBarPadding.dp),
+            modifier = Modifier,
             verticalArrangement = Arrangement.spacedBy(40.dp),
             //contentPadding = PaddingValues(bottom = VERTICAL_GAP.dp)
         ) {
             //Главные
             item {
-                MainEvents(listMainEvents = state.mainEventsList)
+                MainEvents(
+                    modifier = Modifier.padding(top = 20.dp),
+                    listMainEvents = state.mainEventsList
+                )
             }
             //СКОРО
             item {
@@ -188,14 +216,14 @@ fun MainEvents(modifier: Modifier = Modifier, listMainEvents: List<EventUI>) {
         val constraintsHeight = constraints.maxHeight.dp
 
         LazyRow(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(maxCardHeight.takeIf { !firstRender } ?: constraintsHeight),
             horizontalArrangement = Arrangement.spacedBy(HORIZONTAL_PADDING.dp)
         ) {
             itemsIndexed(listMainEvents) { index, item ->
                 EventCard(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillParentMaxWidth(ROW_CARD_FRACTION)
                         .heightIn(min = 0.dp) // Ensure that height is not restricted
                         .fillMaxHeight()  // This ensures that cards take up the full available height
@@ -223,38 +251,47 @@ fun SoonEvents(modifier: Modifier = Modifier, listSoonEvents: List<EventUI>) {
     var maxCardHeight by remember { mutableStateOf(0.dp) }
     var firstRender by remember { mutableStateOf(true) }
 
-    // Use BoxWithConstraints to get max height of LazyRow
-    BoxWithConstraints(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        val constraintsHeight = constraints.maxHeight.dp
-
-        LazyRow(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(maxCardHeight.takeIf { !firstRender } ?: constraintsHeight),
-            horizontalArrangement = Arrangement.spacedBy(HORIZONTAL_PADDING.dp)
+    Column(verticalArrangement = Arrangement.spacedBy(HEADER_SPACE.dp), modifier = modifier) {
+        Text(
+            text = "Ближайшие встречи", style = DevMeetTheme.newTypography.h2,
+            modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)
+        )
+        // Use BoxWithConstraints to get max height of LazyRow
+        BoxWithConstraints(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            itemsIndexed(listSoonEvents) { index, item ->
-                EventCard(
-                    modifier = Modifier
-                        .padding(horizontal = HORIZONTAL_PADDING.dp)
-                        .heightIn(min = 0.dp) // Ensure that height is not restricted
-                        .fillMaxHeight(),  // This ensures that cards take up the full available height
-                    state = item,
-                    variant = EventCardVariant.COMPACT,
-                    onHeightMeasured = { height ->
-                        if (height > maxCardHeight) {
-                            maxCardHeight = height
+            val constraintsHeight = constraints.maxHeight.dp
+
+            LazyRow(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(maxCardHeight.takeIf { !firstRender } ?: constraintsHeight),
+                horizontalArrangement = Arrangement.spacedBy(HORIZONTAL_PADDING.dp)
+            ) {
+                itemsIndexed(listSoonEvents) { index, item ->
+                    EventCard(
+                        modifier = Modifier
+                            .railModifier(index)
+                            //.padding(horizontal = HORIZONTAL_PADDING.dp)
+                            .heightIn(min = 0.dp) // Ensure that height is not restricted
+                            .fillMaxHeight(),  // This ensures that cards take up the full available height
+                        state = item,
+                        variant = EventCardVariant.COMPACT,
+                        onHeightMeasured = { height ->
+                            if (height > maxCardHeight) {
+                                maxCardHeight = height
+                            }
+                            firstRender = false
                         }
-                        firstRender = false
+                    ) {
+                        // Handle click event
                     }
-                ) {
-                    // Handle click event
                 }
             }
         }
     }
+
+
 }
 
 @Composable

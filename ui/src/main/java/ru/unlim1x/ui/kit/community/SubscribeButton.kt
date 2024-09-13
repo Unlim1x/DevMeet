@@ -8,6 +8,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -143,7 +144,8 @@ private fun SubscribeButtonBody(
     ) {
         Text(
             text = text, style = DevMeetTheme.newTypography.big,
-            color = textColor
+            color = textColor,
+            modifier = Modifier.padding(8.dp)
         )
     }
 }

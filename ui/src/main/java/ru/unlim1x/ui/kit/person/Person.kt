@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -25,18 +26,18 @@ import ru.unlim1x.ui.models.PersonUi
 
 @Composable
 internal fun Person(modifier: Modifier = Modifier, personUi: PersonUi, onClick: () -> Unit) {
-    Box(modifier = modifier.clickable {
+    Box(modifier = Modifier.clickable {
         onClick()
     }) {
-        Column(modifier = modifier) {
+        Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
             SubcomposeAsyncImage(model = personUi.imageUri, contentDescription = "",
-                modifier
+                Modifier
                     .padding(bottom = 4.dp)
                     .clip(CircleShape)
                     .requiredSize(104.dp),
                 error = {
                     AnimatedTransitionRoundRectangle(
-                        modifier = modifier.size(104.dp)
+                        modifier = Modifier.size(104.dp)
                     )
 
                 })

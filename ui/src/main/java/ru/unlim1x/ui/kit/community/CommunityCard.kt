@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -44,26 +43,26 @@ internal fun CommunityCard(
     }
     val density = LocalDensity.current
 
-    val textAndButtonModifier = modifier
+    val textAndButtonModifier = Modifier
         .width(FIGMA_DEFAULT_SIZE.dp)
         .padding(top = 8.dp)
     Column(modifier = modifier) {
         SubcomposeAsyncImage(
             model = state.imageUri,
             contentDescription = stringResource(R.string.community_image),
-            modifier = modifier
+            modifier = Modifier
                 .width(FIGMA_DEFAULT_SIZE.dp)
                 .height(FIGMA_DEFAULT_SIZE.dp)
                 .clip(RoundedCornerShape(FIGMA_RADIUS.dp)),
             loading = {
                 AnimatedTransitionRoundRectangle(
-                    modifier = modifier.size(FIGMA_DEFAULT_SIZE.dp),
+                    modifier = Modifier.size(FIGMA_DEFAULT_SIZE.dp),
                     cornerRadius = CornerRadius(x = FIGMA_RADIUS, y = FIGMA_RADIUS)
                 )
             },
             error = {
                 AnimatedTransitionRoundRectangle(
-                    modifier = modifier.size(FIGMA_DEFAULT_SIZE.dp),
+                    modifier = Modifier.size(FIGMA_DEFAULT_SIZE.dp),
                     cornerRadius = CornerRadius(x = FIGMA_RADIUS, y = FIGMA_RADIUS)
                 )
             }

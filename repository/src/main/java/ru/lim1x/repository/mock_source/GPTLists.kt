@@ -127,7 +127,7 @@ class GPTLists {
             "https://static.tildacdn.com/tild3730-6365-4864-b764-343664653238/photo.jpg",
             "https://alfatechnologies.ru/upload/iblock/6eb/3cnj4pmp416zbn2j3oevu7wpbvb7t4n6.jpg",
             "https://www.forsaljningschefen.se/wp-content/uploads/2019/02/hela-företaget-arbetar-med-Social-Selling.jpg",
-            "https://ss-static-https://edoodoo.ru/wp-content/uploads/2023/03/kursy-ajti-s-nulya-realno-li-eto.jpg",
+            "https://edoodoo.ru/wp-content/uploads/2023/03/kursy-ajti-s-nulya-realno-li-eto.jpg",
             "https://remplanner.ru/images/design/v2/order/designers.jpg",
             "https://ik.imagekit.io/edtechdigit/usdsi/content/images/articles/the-ultimate-guide-to-data-science.jpg",
             "https://3.bp.blogspot.com/-EiwMDehzXhI/WKYcNzaTVjI/AAAAAAAACWs/EzTHklKG70A5v8f-_7RMI3HIKwURhDWSACLcB/s1600/android-development.jpg",
@@ -145,7 +145,6 @@ class GPTLists {
             "IT.Mail.ru",
             "ВКонтакте для разработчиков",
             "GeekBrains",
-            "DOU",
             "Stack Overflow"
         )
         val developerCommunitiesUrls = mapOf(
@@ -157,7 +156,6 @@ class GPTLists {
             "IT.Mail.ru" to "https://sun9-80.userapi.com/impf/c627818/v627818089/26d85/KEo2gB3kou0.jpg?size=1200x1200&quality=96&sign=38d3372a4e5aaeb9243b5db12d8aaace&type=album",
             "ВКонтакте для разработчиков" to "https://static.tildacdn.com/tild3234-3631-4432-b330-623561343238/vk.png",
             "GeekBrains" to "https://yt4.ggpht.com/ytc/AAUvwngqZsMoyAEwhNCxOPbo1AJ4dR5ED833yTwv1m1hbw=s900-c-k-c0x00ffffff-no-rj",
-            "DOU" to "",
             "Stack Overflow" to "https://cdn.promodj.com/afs/e8b81ce392d2aec059d488f89c6b929b11:resize:2000x2000:same:6d0b19"
         )
 

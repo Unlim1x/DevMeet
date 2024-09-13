@@ -1,5 +1,6 @@
 package ru.unlim1x.ui.kit.event_card
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -58,13 +59,18 @@ internal fun EventCard(
             modifier.fillMaxWidth(),
             state,
             onHeightMeasured = onHeightMeasured
-        )
+        ) {
+            onClick()
+        }
 
         EventCardVariant.COMPACT -> EventCardCompactBody(
             modifier.width(212.dp),
             state,
             onHeightMeasured = onHeightMeasured
-        )
+        ) {
+            onClick()
+        }
+
     }
 }
 
@@ -72,7 +78,8 @@ internal fun EventCard(
 @Composable
 private fun EventCardMaxBody(
     modifier: Modifier, state: EventUI,
-    onHeightMeasured: (Dp) -> Unit
+    onHeightMeasured: (Dp) -> Unit,
+    onClick: () -> Unit
 ) {
     val imageWidth = remember {
         mutableIntStateOf(0)
@@ -97,6 +104,10 @@ private fun EventCardMaxBody(
                 .clip(RoundedCornerShape(FIGMA_RADIUS.dp))
                 .onGloballyPositioned {
                     imageWidth.intValue = it.size.width
+                }
+                .clickable {
+                    println(state.imageUri)
+                    onClick()
                 },
             loading = {
                 AnimatedTransitionRoundRectangle(
@@ -125,7 +136,7 @@ private fun EventCardMaxBody(
             maxLines = 1,
             modifier = Modifier.padding(bottom = FIGMA_TEXT_PADDING.dp)
         )
-        FlowRow() {
+        FlowRow {
             state.tags.take(tagsToShow).forEach {
                 TagSmall(Modifier.padding(4.dp), text = it) {
 
@@ -139,7 +150,8 @@ private fun EventCardMaxBody(
 @Composable
 private fun EventCardCompactBody(
     modifier: Modifier, state: EventUI,
-    onHeightMeasured: (Dp) -> Unit
+    onHeightMeasured: (Dp) -> Unit,
+    onClick: () -> Unit
 ) {
     val imageWidth = remember {
         mutableIntStateOf(0)
@@ -163,6 +175,10 @@ private fun EventCardCompactBody(
                 .clip(RoundedCornerShape(FIGMA_RADIUS.dp))
                 .onGloballyPositioned {
                     imageWidth.intValue = it.size.width
+                }
+                .clickable {
+                    println(state.imageUri)
+                    onClick()
                 },
             loading = {
                 AnimatedTransitionRoundRectangle(
@@ -187,11 +203,11 @@ private fun EventCardCompactBody(
         Text(
             text = state.date + stringResource(R.string.event_address_delimeter) + state.address,
             style = DevMeetTheme.newTypography.secondary,
-            //overflow = TextOverflow.Ellipsis,
-            //maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 2,
             modifier = Modifier.padding(bottom = FIGMA_TEXT_PADDING.dp)
         )
-        FlowRow() {
+        FlowRow {
             state.tags.take(tagsToShow).forEach {
                 TagSmall(Modifier.padding(4.dp), text = it) {
 
