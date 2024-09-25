@@ -37,5 +37,5 @@ val uiModule = module {
 val newUiModule = module {
     viewModel { ru.unlim1x.ui.screens.aka_splash_screen.SplashScreenViewModel() }
     viewModel { OnboardingViewModel(get(), get()) }
-    viewModel { MainScreenViewModel(get(), get()) }
+    viewModel { MainScreenViewModel(get(), get(), get()) }
 }

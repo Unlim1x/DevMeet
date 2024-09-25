@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,6 +42,7 @@ import org.koin.androidx.compose.koinViewModel
 import ru.lim1x.domain.models.Rail
 import ru.lim1x.domain.models.RailType
 import ru.unlim1x.old_ui.theme.DevMeetTheme
+import ru.unlim1x.ui.R
 import ru.unlim1x.ui.kit.banner.Banner
 import ru.unlim1x.ui.kit.community.CommunityCard
 import ru.unlim1x.ui.kit.event_card.EventCard
@@ -82,9 +84,10 @@ internal fun MainScreen(viewModel: MainScreenViewModel = koinViewModel()) {
                 }
                 MainScreenBody(
                     Modifier.padding(top = topBarPadding.dp + 15.dp),
-                    state = viewState as MainScreenViewState.Display
+                    state = viewState as MainScreenViewState.Display,
+                    onEndOfListReached = { viewModel.obtain(MainScreenEvent.ScrolledToEndOfList) }
                 ) {
-                    viewModel.obtain(MainScreenEvent.ScrolledToEndOfList)
+                    viewModel.obtain(MainScreenEvent.ClickOnTag(it))
                 }
             }
 
@@ -101,12 +104,13 @@ internal fun MainScreen(viewModel: MainScreenViewModel = koinViewModel()) {
 private fun MainScreenBody(
     modifier: Modifier,
     state: MainScreenViewState.Display,
-    onEndOfListReached: () -> Unit
+    onEndOfListReached: () -> Unit,
+    onTagClicked: (id: Int) -> Unit
 ) {
     Log.e("MAIN SCREEN", "$state")
     Log.e("MAIN SCREEN", "INFINITE LIST ${state.infiniteEventsListByTag}")
     Log.e("MAIN SCREEN", "RAILLIST LIST ${state.railList}")
-
+    Log.e("MAIN SCREEN", "TAG LIST ${state.otherTags}")
     val lazyListState = rememberSaveable(saver = LazyListState.Saver) { LazyListState() }
     val threshold = 2
     val itemsBeforeInfiniteList = 4
@@ -146,6 +150,7 @@ private fun MainScreenBody(
             }
             //ПЕРВЫЙ РЭИЛ
             item {
+                //if(state.railList.isNotEmpty())
                 if (state.railList[0].railType == RailType.Community)
                     Rail(rail = state.railList[0])
             }
@@ -155,7 +160,9 @@ private fun MainScreenBody(
 
             //ТЭГОВАЯ ИСТОРИЯ
             item {
-                TagPart(listTagsUi = state.otherTags)
+                TagPart(listTagsUi = state.otherTags) {
+                    onTagClicked(it)
+                }
             }
 
             //Здесь идет условно бесконечный список с вставками каждые три ивента
@@ -363,13 +370,17 @@ private fun RailPerson(modifier: Modifier = Modifier, rail: PersonRailUi) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun TagPart(modifier: Modifier = Modifier, listTagsUi: List<TagUi>) {
+private fun TagPart(
+    modifier: Modifier = Modifier,
+    listTagsUi: List<TagUi>,
+    onTagClicked: (id: Int) -> Unit
+) {
 
     Column(
         verticalArrangement = Arrangement.spacedBy(HEADER_SPACE.dp),
         modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)
     ) {
-        Text(text = "Другие встречи", style = DevMeetTheme.newTypography.h2)
+        Text(text = stringResource(R.string.other_meetings), style = DevMeetTheme.newTypography.h2)
 
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -377,11 +388,11 @@ private fun TagPart(modifier: Modifier = Modifier, listTagsUi: List<TagUi>) {
         ) {
             listTagsUi.forEach {
                 TagMedium(
-                    text = it.text,
+                    text = it.text.ifBlank { stringResource(id = R.string.all_categories) },
                     modifier = Modifier.padding(8.dp),
-                    selected = false
+                    selected = it.isSelected
                 ) {
-
+                    onTagClicked(it.id)
                 }
             }
         }

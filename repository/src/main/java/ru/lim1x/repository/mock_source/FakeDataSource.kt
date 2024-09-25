@@ -20,13 +20,20 @@ internal class FakeDataSource {
     val tags: List<Tag>
         get() = tagsList
 
+    val eventTags: List<Tag>
+        get() = tagsEventList
+
     val usersTags: MutableList<Int> = mutableListOf()
 
     private val tagsList = MutableList(GPTLists.listOfTags.size) {
         Tag(it, GPTLists.listOfTags[it])
     }
 
-    private val eventsQuantity = 60
+    private val tagsEventList = MutableList(GPTLists.listOfTags.size) {
+        Tag(it, GPTLists.listOfTags[it])
+    }.apply { add(Tag(-1, "Все категории", isSelected = true)) }
+
+    private val eventsQuantity = 100
 
     private val fakeEvents = MutableList(eventsQuantity) {
         combineEvent(it)
@@ -88,9 +95,31 @@ internal class FakeDataSource {
         if (rightEdge < events.size)
             return events.subList(12 + skip, 12 + skip + limit)
         else if (leftEdge < events.size - 2)
-            return events.subList(12 + skip, events.size - 1)
+            return events.subList(12 + skip, events.size)
         else
             return emptyList()
+    }
+
+    fun loadMoreEvents(limit: Int, skip: Int, tagList: List<Int>): List<EventData> {
+        if (tagList.contains(-1)) {
+            return loadMoreEvents(limit, skip)
+        } else {
+            val filteredList = events.filter { event ->
+                event.tags.any { tag -> tags.find { it.text == tag }?.id in tagList }
+            }
+
+            val filteredListSize = filteredList.size
+            val leftEdge = skip
+            val rightEdge = skip + limit
+
+
+            if (rightEdge < filteredListSize)
+                return filteredList.subList(skip, skip + limit)
+            else if (leftEdge < filteredListSize - 2)
+                return filteredList.subList(skip, filteredListSize)
+            else
+                return emptyList()
+        }
     }
 
     fun loadCommunityRail(): CommunityRailData {

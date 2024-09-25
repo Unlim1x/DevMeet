@@ -7,4 +7,8 @@ internal sealed class MainScreenEvent {
     data class ClickOnCommunitySubscribe(val communityId: Int) : MainScreenEvent()
 
     data object ScrolledToEndOfList : MainScreenEvent()
+
+    data class ClickOnTag(val tagId: Int) : MainScreenEvent()
+
+    data object Idle : MainScreenEvent()
 }

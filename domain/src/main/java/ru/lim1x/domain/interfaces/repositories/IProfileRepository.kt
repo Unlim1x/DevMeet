@@ -22,5 +22,6 @@ interface IProfileRepository {
 
     fun getUsersTags(): List<Tag>
 
+
     fun updateTag(tagId: Int)
 }

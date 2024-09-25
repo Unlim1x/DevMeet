@@ -2,6 +2,7 @@ package ru.lim1x.domain.repository
 
 import kotlinx.coroutines.flow.StateFlow
 import ru.lim1x.domain.interfaces.repositories.IProfileRepository
+import ru.lim1x.domain.models.Tag
 import ru.lim1x.domain.models.User
 
 class ProfileRepositoryStub(private val dataSource:DataSourceTest) : IProfileRepository {
@@ -24,5 +25,14 @@ class ProfileRepositoryStub(private val dataSource:DataSourceTest) : IProfileRep
 
     override fun saveUserPhoto(stirngUri: String) {
         dataSource.updateUserPhoto(uriString = stirngUri)
+    }
+
+    override fun getUsersTags(): List<Tag> {
+        return emptyList()
+        //TODO("Not yet implemented")
+    }
+
+    override fun updateTag(tagId: Int) {
+        //TODO("Not yet implemented")
     }
 }

@@ -71,7 +71,7 @@ internal fun SearchField(
         ) {
             Text(
                 text = "Поиск",
-                style = DevMeetTheme.newTypography.bodyText1,
+                style = DevMeetTheme.typography.bodyText1,
                 color = hintColor,
             )
 
@@ -88,7 +88,7 @@ internal fun SearchField(
                 interactionSource = interactionSource,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 lineLimits = TextFieldLineLimits.SingleLine,
-                textStyle = DevMeetTheme.newTypography.bodyText1.copy(color = DevMeetTheme.colorScheme.neutralActive),
+                textStyle = DevMeetTheme.typography.bodyText1.copy(color = DevMeetTheme.colorScheme.neutralActive),
                 state = state,
             )
         }
