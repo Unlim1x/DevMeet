@@ -4,5 +4,6 @@ internal data class CommunityUI(
     val imageUri: Any,
     val name: String,
     val id: Int,
+    val description:String = "",
     val isSubscribed: Boolean
 )

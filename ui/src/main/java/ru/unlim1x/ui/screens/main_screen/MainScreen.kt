@@ -400,7 +400,7 @@ private fun TagPart(
 }
 
 
-private fun Modifier.railModifier(index: Int): Modifier {
+fun Modifier.railModifier(index: Int): Modifier {
     return if (index == 0) {
         this.then(Modifier.padding(start = HORIZONTAL_PADDING.dp))
     } else {
