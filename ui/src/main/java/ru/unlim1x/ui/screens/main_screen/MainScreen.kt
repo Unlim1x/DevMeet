@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -38,6 +39,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 import org.koin.androidx.compose.koinViewModel
 import ru.lim1x.domain.models.Rail
 import ru.lim1x.domain.models.RailType
@@ -64,7 +67,7 @@ private const val VERTICAL_GAP = 40
 @Composable
 internal fun MainScreen(viewModel: MainScreenViewModel = koinViewModel()) {
     val viewState by viewModel.viewState().collectAsStateWithLifecycle()
-    var topBarPadding by remember { mutableStateOf(0) }
+    var topBarPadding by remember { mutableIntStateOf(0) }
     val density = LocalDensity.current.density
     when (viewState) {
         is MainScreenViewState.Display -> {
@@ -112,30 +115,21 @@ private fun MainScreenBody(
     Log.e("MAIN SCREEN", "RAILLIST LIST ${state.railList}")
     Log.e("MAIN SCREEN", "TAG LIST ${state.otherTags}")
     val lazyListState = rememberSaveable(saver = LazyListState.Saver) { LazyListState() }
-    val threshold = 2
+    val threshold = 5
     val itemsBeforeInfiniteList = 4
-    var railIndex = 0
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color.White)
-            //.padding(horizontal = HORIZONTAL_PADDING.dp)
-        //.padding(bottom = 24.dp)
     ) {
 
 
-//        Text(text = "Здесь будет поисковая строка", modifier = Modifier
-//            .align(Alignment.TopCenter)
-//            .onGloballyPositioned {
-//                topBarPadding =
-//                    (it.size.height / density).toInt()
-//            })
+
         LazyColumn(
             state = lazyListState,
             modifier = Modifier,
             verticalArrangement = Arrangement.spacedBy(40.dp),
-            //contentPadding = PaddingValues(bottom = VERTICAL_GAP.dp)
         ) {
             //Главные
             item {
@@ -150,9 +144,10 @@ private fun MainScreenBody(
             }
             //ПЕРВЫЙ РЭИЛ
             item {
-                //if(state.railList.isNotEmpty())
-                if (state.railList[0].railType == RailType.Community)
+                if (state.railList.isNotEmpty()) {
+                    //if (state.railList[0].railType == RailType.Community)
                     Rail(rail = state.railList[0])
+                }
             }
 
 
@@ -171,9 +166,7 @@ private fun MainScreenBody(
 
                 EventCard(
                     state = item,
-                    modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)//.animateItemPlacement(
-                    //animationSpec = tween(durationMillis = 600)
-                    //)
+                    modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)
                 ) {
 
                 }
@@ -193,22 +186,20 @@ private fun MainScreenBody(
     }
 
 
-    LaunchedEffect(lazyListState, state) {
+    LaunchedEffect(state.infiniteEventsListByTag.size) {
 
         snapshotFlow { lazyListState.firstVisibleItemIndex + lazyListState.layoutInfo.visibleItemsInfo.size }
-            //.debounce(300)
+            .map { visibleItems ->
+                if (visibleItems >= state.infiniteEventsListByTag.size + itemsBeforeInfiniteList - threshold)
+                    true
+                else
+                    null
+
+            }
             .distinctUntilChanged()
-            .collect { visibleItems ->
-                state.infiniteEventsListByTag.let {
-                    if (visibleItems >= it.size + itemsBeforeInfiniteList - threshold) {
-                        Log.e("", "VISIBLE ITEMS = ${visibleItems}")
-                        Log.e(
-                            "",
-                            "it.size+itemsBeforeInfiniteList = ${it.size + itemsBeforeInfiniteList}"
-                        )
-                        onEndOfListReached()
-                    }
-                }
+            .filterNotNull()
+            .collect { _ ->
+                onEndOfListReached()
             }
     }
 }
@@ -232,9 +223,9 @@ fun MainEvents(modifier: Modifier = Modifier, listMainEvents: List<EventUI>) {
                 EventCard(
                     modifier = Modifier
                         .fillParentMaxWidth(ROW_CARD_FRACTION)
-                        .heightIn(min = 0.dp) // Ensure that height is not restricted
-                        .fillMaxHeight()  // This ensures that cards take up the full available height
-                        .railModifier(index),
+                        .heightIn(min = 0.dp)
+                        .fillMaxHeight()
+                        .railModifier(index, listMainEvents.size),
                     state = item,
                     onHeightMeasured = { height ->
                         if (height > maxCardHeight) {
@@ -263,7 +254,7 @@ fun SoonEvents(modifier: Modifier = Modifier, listSoonEvents: List<EventUI>) {
             text = "Ближайшие встречи", style = DevMeetTheme.newTypography.h2,
             modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)
         )
-        // Use BoxWithConstraints to get max height of LazyRow
+        //  BoxWithConstraints чтобы узнать max height у LazyRow
         BoxWithConstraints(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -278,10 +269,9 @@ fun SoonEvents(modifier: Modifier = Modifier, listSoonEvents: List<EventUI>) {
                 itemsIndexed(listSoonEvents) { index, item ->
                     EventCard(
                         modifier = Modifier
-                            .railModifier(index)
-                            //.padding(horizontal = HORIZONTAL_PADDING.dp)
-                            .heightIn(min = 0.dp) // Ensure that height is not restricted
-                            .fillMaxHeight(),  // This ensures that cards take up the full available height
+                            .railModifier(index, listSoonEvents.size)
+                            .heightIn(min = 0.dp)
+                            .fillMaxHeight(),
                         state = item,
                         variant = EventCardVariant.COMPACT,
                         onHeightMeasured = { height ->
@@ -335,7 +325,7 @@ private fun RailCommunity(modifier: Modifier = Modifier, rail: CommunityRailUI) 
         ) {
             itemsIndexed(rail.contentList) { index, item ->
                 CommunityCard(
-                    modifier = Modifier.railModifier(index),
+                    modifier = Modifier.railModifier(index, rail.contentList.size),
                     state = item,
                     onSubscribeClick = { /*TODO*/ }) {
 
@@ -359,7 +349,7 @@ private fun RailPerson(modifier: Modifier = Modifier, rail: PersonRailUi) {
             itemsIndexed(rail.contentList) { index, item ->
                 Person(
                     personUi = item,
-                    modifier = Modifier.railModifier(index)
+                    modifier = Modifier.railModifier(index, rail.contentList.size)
                 ) {
 
                 }
@@ -378,7 +368,7 @@ private fun TagPart(
 
     Column(
         verticalArrangement = Arrangement.spacedBy(HEADER_SPACE.dp),
-        modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)
+        modifier = modifier.padding(horizontal = HORIZONTAL_PADDING.dp)
     ) {
         Text(text = stringResource(R.string.other_meetings), style = DevMeetTheme.newTypography.h2)
 
@@ -400,11 +390,19 @@ private fun TagPart(
 }
 
 
-fun Modifier.railModifier(index: Int): Modifier {
-    return if (index == 0) {
-        this.then(Modifier.padding(start = HORIZONTAL_PADDING.dp))
-    } else {
-        this
+fun Modifier.railModifier(index: Int, listSize: Int): Modifier {
+    return when (index) {
+        0 -> {
+            this.then(Modifier.padding(start = HORIZONTAL_PADDING.dp))
+        }
+
+        listSize - 1 -> {
+            this.then(Modifier.padding(end = HORIZONTAL_PADDING.dp))
+        }
+
+        else -> {
+            this
+        }
     }
 }
 

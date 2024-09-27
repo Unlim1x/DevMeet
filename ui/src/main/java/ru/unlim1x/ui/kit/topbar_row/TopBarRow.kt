@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -35,6 +36,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.unlim1x.old_ui.theme.DevMeetTheme
@@ -112,6 +114,7 @@ internal fun TopBarSearchRow(
                                 isFocused = it.isFocused
                             },
                         value = text,
+                        singleLine = true,
                         onValueChange = {
                             text = it
                             onValueChanged(it)
@@ -119,7 +122,10 @@ internal fun TopBarSearchRow(
                         },
                         interactionSource = interactionSource,
                         textStyle = DevMeetTheme.newTypography.secondary.copy(DevMeetTheme.colorScheme.black),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                         keyboardActions = KeyboardActions(onSearch = {
+                            isFocused = false
+                            focusManager.clearFocus()
                             onSearch(text)
 
                         }),
@@ -145,7 +151,8 @@ internal fun TopBarSearchRow(
         Box(
             modifier = Modifier
                 //.align(Alignment.CenterEnd)
-                .clickable { onMenuItemClick() }
+                .clickable { if (textIsEmpty && !isFocused) onMenuItemClick() }
+
                 .sizeIn(minWidth = 32.dp, minHeight = 44.dp),
         ) {
             if (textIsEmpty && !isFocused) {
@@ -154,6 +161,8 @@ internal fun TopBarSearchRow(
             } else {
                 CancelMenuIcon(Modifier.align(Alignment.Center)) {
                     text = ""
+                    textIsEmpty = true
+                    isFocused = false
                     focusManager.clearFocus()
                     onCancelClick()
                 }

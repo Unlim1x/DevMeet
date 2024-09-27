@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -26,7 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -235,7 +233,7 @@ private fun MoreEvents(modifier: Modifier = Modifier, listMoreEvents: List<Event
                 itemsIndexed(listMoreEvents) { index, item ->
                     EventCard(
                         modifier = Modifier
-                            .railModifier(index)
+                            .railModifier(index, listMoreEvents.size)
                             //.padding(horizontal = HORIZONTAL_PADDING.dp)
                             .heightIn(min = 0.dp) // Ensure that height is not restricted
                             .fillMaxHeight(),  // This ensures that cards take up the full available height

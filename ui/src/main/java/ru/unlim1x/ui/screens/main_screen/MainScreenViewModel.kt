@@ -1,16 +1,17 @@
 package ru.unlim1x.ui.screens.main_screen
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import ru.lim1x.domain.interfaces.interactors.IGetMainScreenFullInfo
 import ru.lim1x.domain.interfaces.interactors.ILoadMoreInfiniteListInteractor
+import ru.lim1x.domain.interfaces.interactors.ILoadRailInteractor
 import ru.lim1x.domain.interfaces.interactors.ITagsInfiniteListUpdateInteractor
 import ru.lim1x.domain.models.CommunityRail
 import ru.lim1x.domain.models.PersonRail
@@ -22,36 +23,29 @@ import ru.unlim1x.ui.mappers.mapEventListToUi
 import ru.unlim1x.ui.mappers.mapTagToUi
 import ru.unlim1x.ui.mappers.mapToPersonRailUi
 
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class MainScreenViewModel(
     private val getFullInfo: IGetMainScreenFullInfo,
     private val loadMoreListInteractor: ILoadMoreInfiniteListInteractor,
     private val updateTagInteractor: ITagsInfiniteListUpdateInteractor,
+    private val loadRails: ILoadRailInteractor,
 ) : MainViewModel<MainScreenEvent, MainScreenViewState>() {
     override val _viewState: MutableStateFlow<MainScreenViewState> =
         MutableStateFlow(MainScreenViewState.Loading)
 
-    private val stateMutex = Mutex()
     private val userActionFlow = MutableSharedFlow<MainScreenEvent>(replay = 1)
 
     init {
         subscribeOnUserActions()
-        getFullInfo.invoke().onEach {
-            safeUpdateStateForDisplay { currentState ->
-                currentState.copy(
-                    mainEventsList = it.mainEventsList.mapEventListToUi(),
-                    soonEventsList = it.soonEventsList.mapEventListToUi(),
-                    otherTags = it.otherTags.mapTagToUi(),
-                    railList = mapRail(it.railList),
-                    infiniteEventsListByTag = it.infiniteEventsListByTag.mapEventListToUi()
-                )
-            }
-            safeUpdateStateForLoading { currentState ->
+        viewModelScope.launch { loadRails.execute() }
+        getFullInfo.invoke().onEach { mainState ->
+            _viewState.update {
                 MainScreenViewState.Display(
-                    mainEventsList = it.mainEventsList.mapEventListToUi(),
-                    soonEventsList = it.soonEventsList.mapEventListToUi(),
-                    otherTags = it.otherTags.mapTagToUi(),
-                    railList = mapRail(it.railList),
-                    infiniteEventsListByTag = it.infiniteEventsListByTag.mapEventListToUi()
+                    mainEventsList = mainState.mainEventsList.mapEventListToUi(),
+                    soonEventsList = mainState.soonEventsList.mapEventListToUi(),
+                    otherTags = mainState.otherTags.mapTagToUi(),
+                    railList = mapRail(mainState.railList),
+                    infiniteEventsListByTag = mainState.infiniteEventsListByTag.mapEventListToUi()
                 )
             }
         }.launchIn(viewModelScope)
@@ -83,33 +77,15 @@ internal class MainScreenViewModel(
         }
     }
 
-    private suspend fun safeUpdateStateForDisplay(action: (MainScreenViewState.Display) -> MainScreenViewState.Display) {
-        stateMutex.withLock {
-            val currentState = _viewState.value
-            if (currentState is MainScreenViewState.Display) {
-                _viewState.value = action(currentState)
-            }
-        }
-    }
 
-    private suspend fun safeUpdateStateForLoading(action: (MainScreenViewState.Loading) -> MainScreenViewState.Display) {
-        stateMutex.withLock {
-            val currentState = _viewState.value
-            if (currentState is MainScreenViewState.Loading) {
-                _viewState.value = action(currentState)
-            }
-        }
-    }
 
     private fun subscribeOnUserActions() {
         userActionFlow.onEach {
-            Log.e("VM", "RECIEVED AN EVENT")
             when (it) {
                 is MainScreenEvent.ClickOnCommunity -> TODO()
                 is MainScreenEvent.ClickOnCommunitySubscribe -> TODO()
                 is MainScreenEvent.ClickOnEvent -> TODO()
                 MainScreenEvent.ScrolledToEndOfList -> {
-                    Log.e("VM", "CALLED LOAD MORE")
                     loadMoreListInteractor.execute((_viewState.value as MainScreenViewState.Display).infiniteEventsListByTag.size)
                 }
 
@@ -130,7 +106,6 @@ internal class MainScreenViewModel(
 
 
     override fun obtain(event: MainScreenEvent) {
-        Log.e("VM", "EMITTING AN EVENT")
         userActionFlow.tryEmit(event)
     }
 

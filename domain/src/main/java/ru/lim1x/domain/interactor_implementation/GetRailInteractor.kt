@@ -17,56 +17,63 @@ import ru.lim1x.domain.models.RailType
 internal class GetRailInteractor() :
     IGetRailInteractor, KoinComponent {
     private val useCase: GetRailUseCase by inject()
-    override fun execute(): Flow<Rail> {
+    override fun execute(): Flow<MutableList<Rail>> {
         return useCase.observe()
     }
 }
 
 internal class LoadRailInteractor() : ILoadRailInteractor, KoinComponent {
     private val innerLoadRail: InnerLoadRailInteractor by inject()
-    override fun execute(railType: RailType) {
-        innerLoadRail.loadRail(railType)
+    override fun execute() {
+        innerLoadRail.loadRail()
     }
 }
 
 internal class InnerLoadRailInteractor() : KoinComponent {
-    private val loadingRequestFlow = MutableStateFlow<RailType>(RailType.Nothing)
+    private val loadingRequestFlow = MutableStateFlow<Int>(-1)
 
-    fun loadRail(railType: RailType) {
-        loadingRequestFlow.tryEmit(railType)
+    fun loadRail() {
+        loadingRequestFlow.tryEmit(1)
     }
 
     fun observe() = loadingRequestFlow
 }
 
 internal class GetRailUseCase(private val repository: IEventRepository) : KoinComponent {
-    private val railFlow = MutableStateFlow<Rail>(Rail(railType = RailType.Nothing, content = ""))
+    private val railFlow = MutableStateFlow<MutableList<Rail>>(mutableListOf())
     private val innerLoadRail: InnerLoadRailInteractor by inject()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun observe() = innerLoadRail.observe().mapLatest { railType ->
         println("RAILLOAD CALLED AND UPDATING FLOW")
-        when (railType) {
-            RailType.Community -> {
+        if (railType > 0) {
                 railFlow.update {
-                    Rail(railType = railType, content = repository.loadRailCommunity())
-                }
-            }
+                    it.apply {
+                        add(
+                            Rail(
+                                railType = RailType.Community,
+                                content = repository.loadRailCommunity()
+                            )
+                        )
+                        add(Rail(railType = RailType.Banner, content = Banner.Default))
+                        add(
+                            Rail(
+                                railType = RailType.Person,
+                                content = repository.loadRailPersons()
+                            )
+                        )
+                        add(
+                            Rail(
+                                railType = RailType.Community,
+                                content = repository.loadRailCommunity()
+                            )
+                        )
+                    }
 
-            RailType.Banner -> {
-                railFlow.update {
-                    Rail(railType = railType, content = Banner.Default)
-                }
-            }
 
-            RailType.Person -> {
-                railFlow.update {
-                    Rail(railType = railType, content = repository.loadRailPersons())
-                }
-            }
-
-            RailType.Nothing -> {}
         }
+
+    }
         railFlow.value
     }
 }
