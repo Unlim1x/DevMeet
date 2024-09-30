@@ -6,12 +6,14 @@ import ru.lim1x.domain.interactor_implementation.GetMainEventsUseCase
 import ru.lim1x.domain.interactor_implementation.GetMoreEventsInteractor
 import ru.lim1x.domain.interactor_implementation.GetRailInteractor
 import ru.lim1x.domain.interactor_implementation.GetRailUseCase
+import ru.lim1x.domain.interactor_implementation.GetSearchStateInteractor
 import ru.lim1x.domain.interactor_implementation.GetSoonEventsUseCase
 import ru.lim1x.domain.interactor_implementation.GetTagsInfiniteListUseCase
 import ru.lim1x.domain.interactor_implementation.GetTagsUseCase
 import ru.lim1x.domain.interactor_implementation.InnerLoadRailInteractor
 import ru.lim1x.domain.interactor_implementation.InnerMainEventInteractor
 import ru.lim1x.domain.interactor_implementation.InnerMoreEvents
+import ru.lim1x.domain.interactor_implementation.InnerSearchUseCase
 import ru.lim1x.domain.interactor_implementation.InnerSoonEventInteractor
 import ru.lim1x.domain.interactor_implementation.InnerTagsInfiniteListInteractor
 import ru.lim1x.domain.interactor_implementation.InnerTagsInteractor
@@ -20,17 +22,20 @@ import ru.lim1x.domain.interactor_implementation.LoadMainEventsInteractor
 import ru.lim1x.domain.interactor_implementation.LoadMoreInfiniteListInteractor
 import ru.lim1x.domain.interactor_implementation.LoadRailInteractor
 import ru.lim1x.domain.interactor_implementation.LoadSoonEventsInteractor
+import ru.lim1x.domain.interactor_implementation.SearchRequestInteractor
 import ru.lim1x.domain.interactor_implementation.TagsInfiniteListGetInteractor
 import ru.lim1x.domain.interactor_implementation.TagsInfiniteListUpdateInteractor
 import ru.lim1x.domain.interactor_implementation.TagsOnboardingGetInteractor
 import ru.lim1x.domain.interactor_implementation.TagsOnboardingUpdateInteractor
 import ru.lim1x.domain.interfaces.interactors.IGetMainScreenFullInfo
+import ru.lim1x.domain.interfaces.interactors.IGetMainScreenSearchState
 import ru.lim1x.domain.interfaces.interactors.IGetMoreEventsInteractor
 import ru.lim1x.domain.interfaces.interactors.IGetRailInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadMainEventsInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadMoreInfiniteListInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadRailInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadSoonEventsInteractor
+import ru.lim1x.domain.interfaces.interactors.ISearchRequestInteractor
 import ru.lim1x.domain.interfaces.interactors.ITagsInfiniteListGetInteractor
 import ru.lim1x.domain.interfaces.interactors.ITagsInfiniteListUpdateInteractor
 import ru.lim1x.domain.interfaces.interactors.ITagsOnboardingGetInteractor
@@ -121,4 +126,8 @@ val newDomainModule = module {
     single<ITagsInfiniteListUpdateInteractor> { TagsInfiniteListUpdateInteractor() }
     single<InnerTagsInfiniteListInteractor> { InnerTagsInfiniteListInteractor() }
     single<GetTagsInfiniteListUseCase> { GetTagsInfiniteListUseCase() }
+
+    single<ISearchRequestInteractor> { SearchRequestInteractor() }
+    single<InnerSearchUseCase> { InnerSearchUseCase() }
+    single<IGetMainScreenSearchState> { GetSearchStateInteractor() }
 }

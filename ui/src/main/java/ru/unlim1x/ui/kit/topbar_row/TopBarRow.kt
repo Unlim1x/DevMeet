@@ -1,5 +1,12 @@
 package ru.unlim1x.ui.kit.topbar_row
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -34,7 +42,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -63,11 +74,27 @@ internal fun TopBarSearchRow(
         mutableStateOf(true)
     }
     var text by remember { mutableStateOf(text) }
-    Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+    var wholeRowWidth by remember { mutableIntStateOf(320) }
+    var basicSearchWidth by remember { mutableIntStateOf(320) }
+    val density = LocalDensity.current
+    //var widthAnimationValue by remember{ mutableFloatStateOf(320f)}
+    val animationWidth by animateFloatAsState(
+        targetValue = basicSearchWidth.toFloat(),
+        animationSpec = tween(durationMillis = 100)
+    )
+    val keyboard = LocalSoftwareKeyboardController.current
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .onGloballyPositioned {
+                wholeRowWidth = (it.size.width)
+            }, verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         var isFocused by remember { mutableStateOf(false) }
         Row(
             Modifier
-                .weight(1f)
+                //.weight(1f)
                 .padding(end = 8.dp)) {
             Box(
                 Modifier
@@ -102,14 +129,16 @@ internal fun TopBarSearchRow(
                         //.padding(10.dp)
                         //.padding(end = 22.dp)
                         .height(22.dp), verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     //Icon(imageVector = Icons.Filled.Search, contentDescription = "Search", tint = Color.Transparent)
                     BasicTextField(
                         modifier = Modifier
+                            //.width(animationWidth.dp) ///HERE!!!!!
                             .focusRequester(focusRequester)
+
                             //.weight(1f)
-                            .fillMaxWidth()
+                            //.fillMaxWidth()
                             .onFocusChanged {
                                 isFocused = it.isFocused
                             },
@@ -127,7 +156,7 @@ internal fun TopBarSearchRow(
                             isFocused = false
                             focusManager.clearFocus()
                             onSearch(text)
-
+                            keyboard?.hide()
                         }),
                     )
 
@@ -150,23 +179,36 @@ internal fun TopBarSearchRow(
         }
         Box(
             modifier = Modifier
+                .onGloballyPositioned {
+                    basicSearchWidth =
+                        ((wholeRowWidth - it.size.width)).toInt()
+                }
                 //.align(Alignment.CenterEnd)
                 .clickable { if (textIsEmpty && !isFocused) onMenuItemClick() }
 
                 .sizeIn(minWidth = 32.dp, minHeight = 44.dp),
         ) {
-            if (textIsEmpty && !isFocused) {
+            AnimatedContent(targetState = textIsEmpty && !isFocused,
+                modifier = Modifier.align(Alignment.Center),
+                transitionSpec = {
+                    (fadeIn(animationSpec = tween(50)) +
+                            scaleIn(initialScale = 0.1f, animationSpec = tween(100)))
+                        .togetherWith(fadeOut(animationSpec = tween(50)))
+                }) {
+                if (it) {
 
-                menuDischargeContent()
-            } else {
-                CancelMenuIcon(Modifier.align(Alignment.Center)) {
-                    text = ""
-                    textIsEmpty = true
-                    isFocused = false
-                    focusManager.clearFocus()
-                    onCancelClick()
+                    menuDischargeContent()
+                } else {
+                    CancelMenuIcon(Modifier) {
+                        text = ""
+                        textIsEmpty = true
+                        isFocused = false
+                        focusManager.clearFocus()
+                        onCancelClick()
+                    }
                 }
             }
+
 
         }
 
@@ -190,6 +232,7 @@ private fun CancelMenuIcon(modifier: Modifier, onClick: () -> Unit) {
     Text(
         modifier = modifier.clickable { onClick() },
         text = "Отмена",
+        maxLines = 1,
         style = DevMeetTheme.newTypography.h4,
         color = DevMeetTheme.colorScheme.primary
     )

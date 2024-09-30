@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,6 +58,7 @@ import ru.unlim1x.ui.kit.topbar_row.TopBarSearchRow
 import ru.unlim1x.ui.models.CommunityRailUI
 import ru.unlim1x.ui.models.EventUI
 import ru.unlim1x.ui.models.PersonRailUi
+import ru.unlim1x.ui.screens.event_detailed.MoreEvents
 
 private const val HORIZONTAL_PADDING = 16
 private const val ROW_CARD_FRACTION = 0.8f
@@ -69,22 +71,30 @@ internal fun MainScreen(viewModel: MainScreenViewModel = koinViewModel()) {
     val viewState by viewModel.viewState().collectAsStateWithLifecycle()
     var topBarPadding by remember { mutableIntStateOf(0) }
     val density = LocalDensity.current.density
-    when (viewState) {
-        is MainScreenViewState.Display -> {
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Transparent)) {
-                TopBarSearchRow(modifier = Modifier
-                    .padding(
-                        top = 10.dp,
-                        start = HORIZONTAL_PADDING.dp,
-                        end = HORIZONTAL_PADDING.dp
-                    )
-                    .onGloballyPositioned {
-                        topBarPadding = (it.size.height / density).toInt()
-                    }, onSearch = {}, onValueChanged = {}, onMenuItemClick = { }) {
 
-                }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Transparent)
+    ) {
+        TopBarSearchRow(modifier = Modifier
+            .padding(
+                top = 10.dp,
+                start = HORIZONTAL_PADDING.dp,
+                end = HORIZONTAL_PADDING.dp
+            )
+            .onGloballyPositioned {
+                topBarPadding = (it.size.height / density).toInt()
+            },
+            onSearch = { viewModel.obtain(MainScreenEvent.OnSearchClicked(it)) },
+            onValueChanged = {
+                viewModel.obtain(MainScreenEvent.SearchValueChanged(it))
+            },
+            onMenuItemClick = { }) {
+            viewModel.obtain(MainScreenEvent.CanceledSearch)
+        }
+        when (viewState) {
+            is MainScreenViewState.Display -> {
                 MainScreenBody(
                     Modifier.padding(top = topBarPadding.dp + 15.dp),
                     state = viewState as MainScreenViewState.Display,
@@ -92,14 +102,24 @@ internal fun MainScreen(viewModel: MainScreenViewModel = koinViewModel()) {
                 ) {
                     viewModel.obtain(MainScreenEvent.ClickOnTag(it))
                 }
+
             }
 
+            is MainScreenViewState.DisplaySearch -> {
+                MainScreenSearchBody(
+                    Modifier.padding(top = topBarPadding.dp + 15.dp),
+                    state = viewState as MainScreenViewState.DisplaySearch
+                ) {
+                    viewModel.obtain(MainScreenEvent.ScrolledToEndOfList)
+                }
+            }
+
+            MainScreenViewState.Error -> {}
+            MainScreenViewState.Loading -> {}
         }
 
-        is MainScreenViewState.DisplaySearch -> {}
-        MainScreenViewState.Error -> {}
-        MainScreenViewState.Loading -> {}
     }
+
 }
 
 @OptIn(FlowPreview::class, ExperimentalFoundationApi::class)
@@ -202,6 +222,101 @@ private fun MainScreenBody(
                 onEndOfListReached()
             }
     }
+}
+
+@Composable
+internal fun MainScreenSearchBody(
+    modifier: Modifier = Modifier, state: MainScreenViewState.DisplaySearch,
+    onEndOfListReached: () -> Unit,
+) {
+    val lazyListState = rememberSaveable(saver = LazyListState.Saver) { LazyListState() }
+    val threshold = 1
+    val itemsBeforeInfiniteList = 2
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+
+
+        if (state.searchedEventsList.isNotEmpty())
+            LazyColumn(
+                state = lazyListState,
+                modifier = Modifier,
+                verticalArrangement = Arrangement.spacedBy(40.dp),
+            ) {
+                //Первые 3
+                items(state.searchedEventsList.take(3)) {
+                    EventCard(
+                        state = it,
+                        modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)
+                    ) {
+
+                    }
+                }
+
+                //РЭИЛ
+                item {
+                    if (state.rail.railType != RailType.Nothing) {
+                        //if (state.railList[0].railType == RailType.Community)
+                        Rail(rail = state.rail)
+                    }
+                }
+
+                item {
+                    Text(
+                        text = state.eventsRailHeader,
+                        style = DevMeetTheme.newTypography.h1,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .padding(top = 4.dp)
+                    )
+                }
+                item {
+                    MoreEvents(listMoreEvents = state.eventsRail)
+                }
+
+
+                //Здесь идет условно бесконечный список
+
+                itemsIndexed(items = state.searchedEventsList.drop(3)) { index, item ->
+
+                    EventCard(
+                        state = item,
+                        modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)
+                    ) {
+
+                    }
+
+
+                }
+
+
+            }
+
+    }
+
+
+    LaunchedEffect(state.searchedEventsList.size) {
+
+        snapshotFlow { lazyListState.firstVisibleItemIndex + lazyListState.layoutInfo.visibleItemsInfo.size }
+            .map { visibleItems ->
+                if (visibleItems >= state.searchedEventsList.size + itemsBeforeInfiniteList - threshold)
+                    true
+                else
+                    null
+
+            }
+            .distinctUntilChanged()
+            .filterNotNull()
+            .collect { _ ->
+                Log.e("", "END OF LIST REACHED")
+                onEndOfListReached()
+            }
+    }
+
 }
 
 

@@ -213,7 +213,7 @@ private fun DetailedEventScreenDisplay(state:DetailedEventScreenViewState.Displa
 }
 
 @Composable
-private fun MoreEvents(modifier: Modifier = Modifier, listMoreEvents: List<EventUI>) {
+internal fun MoreEvents(modifier: Modifier = Modifier, listMoreEvents: List<EventUI>) {
     var maxCardHeight by remember { mutableStateOf(0.dp) }
     var firstRender by remember { mutableStateOf(true) }
 

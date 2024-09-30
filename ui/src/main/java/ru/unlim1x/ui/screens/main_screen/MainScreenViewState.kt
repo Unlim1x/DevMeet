@@ -1,6 +1,5 @@
 package ru.unlim1x.ui.screens.main_screen
 
-import ru.lim1x.domain.models.CommunityRail
 import ru.lim1x.domain.models.Rail
 import ru.unlim1x.ui.kit.tag.TagUi
 import ru.unlim1x.ui.models.EventUI
@@ -19,7 +18,8 @@ internal sealed class MainScreenViewState {
 
     data class DisplaySearch(
         val searchedEventsList: List<EventUI>,
-        val rail: CommunityRail,
-        val soonEventsList: List<EventUI>,
+        val rail: Rail,
+        val eventsRail: List<EventUI>,
+        val eventsRailHeader: String
     ) : MainScreenViewState()
 }

@@ -182,5 +182,51 @@ internal class FakeDataSource {
         return person
     }
 
+    fun searchEvents(text: String): Triple<List<EventData>, CommunityRailData, Pair<String, List<EventData>>> {
+        val filteredList = events.filter { event ->
+            event.name.contains(
+                text,
+                ignoreCase = true
+            ) || event.tags.any { tag -> tag.contains(text, ignoreCase = true) }
+        }
+        val rail = CommunityRailData(
+            title = GPTLists.railCommunityTitles.shuffled()
+                .find { it.contains(text, ignoreCase = true) }
+                ?: GPTLists.railCommunityTitles.shuffled().random(),
+            listId = fakeCommunities.shuffled(Random).subList(2, 7)
+        )
+        val additionHeader =
+            GPTLists.railEventTitles.shuffled().find { it.contains(text, ignoreCase = true) }
+                ?: GPTLists.railEventTitles.shuffled().random()
+        val additionList = events.filter { event ->
+            event.name.contains(
+                text,
+                ignoreCase = true
+            ) || event.tags.any { tag -> tag.contains(text, ignoreCase = true) }
+        }.shuffled().take(5)
+
+        return Triple(filteredList.take(3), rail, Pair(additionHeader, additionList))
+    }
+
+    fun searchMore(text: String, limit: Int, skip: Int): List<EventData> {
+
+        val filteredList = events.filter { event ->
+            event.name.contains(
+                text,
+                ignoreCase = true
+            ) || event.tags.any { tag -> tag.contains(text, ignoreCase = true) }
+        }
+        val leftEdge = 3 + skip
+        val rightEdge = 3 + skip + limit
+        println("searchListSize = ${filteredList.size}")
+        if (rightEdge < filteredList.size)
+            return filteredList.subList(3 + skip, 3 + skip + limit)
+        else if (leftEdge < filteredList.size - 2)
+            return filteredList.subList(3 + skip, filteredList.size)
+        else
+            return emptyList()
+
+    }
+
 
 }

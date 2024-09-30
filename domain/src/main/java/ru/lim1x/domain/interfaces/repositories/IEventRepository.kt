@@ -15,4 +15,5 @@ interface IEventRepository {
     fun loadMoreEvents(limit: Int, skip: Int, tags: List<Tag>? = null): List<Event>
 
     fun getAllTags(): List<Tag>
+
 }

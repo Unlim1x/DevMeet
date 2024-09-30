@@ -11,4 +11,9 @@ internal sealed class MainScreenEvent {
     data class ClickOnTag(val tagId: Int) : MainScreenEvent()
 
     data object Idle : MainScreenEvent()
+
+    data class SearchValueChanged(val text: String) : MainScreenEvent()
+    data class OnSearchClicked(val text: String) : MainScreenEvent()
+
+    data object CanceledSearch : MainScreenEvent()
 }
