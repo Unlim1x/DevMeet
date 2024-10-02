@@ -13,12 +13,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -29,6 +33,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +48,9 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -74,41 +82,51 @@ internal fun TopBarSearchRow(
         mutableStateOf(true)
     }
     var text by remember { mutableStateOf(text) }
-    var wholeRowWidth by remember { mutableIntStateOf(320) }
-    var basicSearchWidth by remember { mutableIntStateOf(320) }
+    var wholeRowWidth by remember { mutableStateOf(360.dp) }
+    var wholeRowHeight by remember { mutableStateOf(0.dp) }
+    var basicSearchWidth by remember { mutableStateOf(32.dp) }
     val density = LocalDensity.current
     //var widthAnimationValue by remember{ mutableFloatStateOf(320f)}
     val animationWidth by animateFloatAsState(
-        targetValue = basicSearchWidth.toFloat(),
-        animationSpec = tween(durationMillis = 100)
+        targetValue = basicSearchWidth.value,
+        animationSpec = tween(durationMillis = 100),
+        visibilityThreshold = 0.1f
     )
     val keyboard = LocalSoftwareKeyboardController.current
-    Row(
+    Box(
         modifier = modifier
             .fillMaxWidth()
+            //.height(wholeRowHeight)
             .onGloballyPositioned {
-                wholeRowWidth = (it.size.width)
-            }, verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+                wholeRowWidth = (density.run {
+                    (it.size.width)
+                        .toDp()
+                        .takeIf { it > 0.dp } ?: wholeRowWidth
+                })
+            }, //verticalAlignment = Alignment.CenterVertically,
+        //horizontalArrangement = Arrangement.Absolute.SpaceBetween
     ) {
         var isFocused by remember { mutableStateOf(false) }
-        Row(
-            Modifier
-                //.weight(1f)
-                .padding(end = 8.dp)) {
-            Box(
+
+            BoxWithConstraints(
                 Modifier
                     .clip(RoundedCornerShape(16.dp))
                     .background(DevMeetTheme.colorScheme.disabled)
                     .padding(10.dp)
-                //.weight(1f)
+                //.weight(0.1f)
                 //.fillMaxWidth()
                 ,
                 contentAlignment = Alignment.CenterStart
             ) {
                 if (text.isEmpty() && !isFocused) {
                     Row(
-                        modifier = Modifier, verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .onGloballyPositioned {
+                                wholeRowHeight= (density.run {
+                                    (it.size.height)
+                                        .toDp().takeIf { it>wholeRowHeight }?:wholeRowHeight
+                                })
+                            }, verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         Icon(
@@ -124,17 +142,18 @@ internal fun TopBarSearchRow(
                     }
                 }
 
-                Row(
-                    modifier = Modifier
-                        //.padding(10.dp)
-                        //.padding(end = 22.dp)
-                        .height(22.dp), verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
+//                Row(
+//                    modifier = Modifier
+//                        //.padding(10.dp)
+//                        //.padding(end = 22.dp)
+//                        .height(22.dp), verticalAlignment = Alignment.CenterVertically,
+//                    horizontalArrangement = Arrangement.SpaceEvenly
+//                ) {
                     //Icon(imageVector = Icons.Filled.Search, contentDescription = "Search", tint = Color.Transparent)
                     BasicTextField(
                         modifier = Modifier
-                            //.width(animationWidth.dp) ///HERE!!!!!
+                            .height(wholeRowHeight)
+                            .width(animationWidth.dp) ///HERE!!!!!
                             .focusRequester(focusRequester)
 
                             //.weight(1f)
@@ -161,10 +180,10 @@ internal fun TopBarSearchRow(
                     )
 
 
-                }
+                //}
                 if (text.isNotEmpty()) {
                     Icon(imageVector = Icons.Filled.Clear,
-                        contentDescription = "Search",
+                        contentDescription = "Clear",
                         tint = hintColor,
                         modifier = Modifier
                             .size(22.dp)
@@ -176,26 +195,50 @@ internal fun TopBarSearchRow(
 
                 }
             }
-        }
-        Box(
-            modifier = Modifier
+
+        BoxWithConstraints(
+            modifier = Modifier.align(Alignment.CenterEnd)
+                .sizeIn(minHeight = 44.dp)
                 .onGloballyPositioned {
                     basicSearchWidth =
-                        ((wholeRowWidth - it.size.width)).toInt()
+                        ((wholeRowWidth - (density
+                            .run { (2*it.size.width).toDp() }
+//                            .takeIf { it > 0.dp } ?: basicSearchWidth
+                            )))
+//                    println("WHOLE ROW ${wholeRowWidth}")
+//                    println("BOX WITH TEXT ${it.size.width}")
+//                    //println("EMPTY? ${textIsEmpty}")
+                    println("BOX WITH TEXT toDp ${density.run { it.size.width.toDp() }}")
+                    println("BOX WITH TEXT toDp value ${density.run { it.size.width.toDp().value }}")
                 }
+                //.requiredWidth(32.dp)
+                //.requiredWidthIn(min=32.dp, max = 128.dp)
+
                 //.align(Alignment.CenterEnd)
                 .clickable { if (textIsEmpty && !isFocused) onMenuItemClick() }
 
-                .sizeIn(minWidth = 32.dp, minHeight = 44.dp),
+                ,
         ) {
-            AnimatedContent(targetState = textIsEmpty && !isFocused,
-                modifier = Modifier.align(Alignment.Center),
+           // LaunchedEffect(key1 = !(!textIsEmpty || isFocused)) {
+                //basicSearchWidth =
+                    //((wholeRowWidth - ((constraints.minWidth)/density.density).dp))
+                println("MIN WIDTH ${(constraints.minWidth/density.density).dp}")
+            println("MAX WIDTH ${(constraints.maxWidth/density.density).dp}")
+           // }
+
+                    //.run { constraints.minWidth.toDp() })))
+                    //.takeIf { it > 0.dp } ?: basicSearchWidth)))
+            AnimatedContent(targetState = !textIsEmpty || isFocused,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    ,
                 transitionSpec = {
                     (fadeIn(animationSpec = tween(50)) +
-                            scaleIn(initialScale = 0.1f, animationSpec = tween(100)))
+                            scaleIn(initialScale = 0.1f, animationSpec = tween(100))
+                    )
                         .togetherWith(fadeOut(animationSpec = tween(50)))
                 }) {
-                if (it) {
+                if (!it) {
 
                     menuDischargeContent()
                 } else {
@@ -213,29 +256,34 @@ internal fun TopBarSearchRow(
         }
 
     }
-
-
+println("XYZ ${wholeRowWidth.value}")
+    println("XYZ ${basicSearchWidth.value}")
 }
 
 @Composable
-internal fun ProfileMenuIcon() {
-    Icon(
-        modifier = Modifier.height(44.dp),
-        painter = painterResource(id = R.drawable.user),
-        contentDescription = "Профиль",
-        tint = DevMeetTheme.colorScheme.primary
-    )
+internal fun ProfileMenuIcon(modifier: Modifier=Modifier) {
+    //Box(modifier = modifier.height(44.dp).sizeIn(minWidth = 32.dp)){
+        Icon(
+            modifier=modifier.sizeIn(minWidth = 32.dp),
+            painter = painterResource(id = R.drawable.user),
+            contentDescription = "Профиль",
+            tint = DevMeetTheme.colorScheme.primary
+        )
+   // }
 }
 
 @Composable
 private fun CancelMenuIcon(modifier: Modifier, onClick: () -> Unit) {
-    Text(
-        modifier = modifier.clickable { onClick() },
-        text = "Отмена",
-        maxLines = 1,
-        style = DevMeetTheme.newTypography.h4,
-        color = DevMeetTheme.colorScheme.primary
-    )
+    Box(modifier.clickable { onClick() }){
+        Text(
+            modifier=modifier.sizeIn(minWidth = 32.dp),
+            text = "Отмена",
+            maxLines = 1,
+            style = DevMeetTheme.newTypography.h4,
+            color = DevMeetTheme.colorScheme.primary
+        )
+
+    }
 }
 
 @Composable
@@ -327,13 +375,12 @@ internal fun SearchBar(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-@Preview
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
 private fun Show() {
     val focusManager = LocalFocusManager.current
     TopBarSearchRow(onSearch = {},
         onValueChanged = {},
-        menuDischargeContent = { ProfileMenuIcon() },
         onMenuItemClick = {}) {
 
     }
