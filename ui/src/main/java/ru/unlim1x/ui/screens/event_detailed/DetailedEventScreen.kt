@@ -1,6 +1,8 @@
 package ru.unlim1x.ui.screens.event_detailed
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,16 +18,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -32,15 +41,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import ru.lim1x.domain.models.Tag
 import ru.unlim1x.old_ui.theme.DevMeetTheme
 import ru.unlim1x.old_ui.uiKit.avatarline.AvatarLine
 import ru.unlim1x.old_ui.uiKit.cards.loading_cards.animatedTransitionBrush
 import ru.unlim1x.ui.R
+import ru.unlim1x.ui.kit.avatars_row.AvatarRow
+import ru.unlim1x.ui.kit.brush.secondaryLinearBrush
 import ru.unlim1x.ui.kit.event_card.EventCard
 import ru.unlim1x.ui.kit.event_card.EventCardVariant
 import ru.unlim1x.ui.kit.tag.TagSmall
@@ -115,24 +128,7 @@ private fun DetailedEventScreenDisplay(state:DetailedEventScreenViewState.Displa
         }
         item{
             //Ведущий todo:сделать отдельную карточку как баннер
-            Row(){
-                Column(modifier = Modifier.weight(1f)){
-                    Text(text = state.presenter.name, style = DevMeetTheme.newTypography.medium, color = Color.Black,
-                        modifier = Modifier
-                            .padding(horizontal = FIGMA_PADDING.dp)
-                            .padding(top = 4.dp))
-                    Text(text = state.presenter.description, style = DevMeetTheme.newTypography.medium, color = Color.Black,
-                        modifier = Modifier
-                            .padding(horizontal = FIGMA_PADDING.dp)
-                            .padding(top = 4.dp))
-                }
-                Box(modifier = Modifier
-                    .weight(1f)
-                    .size(50.dp)
-                    .background(animatedTransitionBrush())){
-
-                }
-            }
+            Presenter(modifier = Modifier.padding(horizontal = FIGMA_PADDING.dp),state = state)
         }
         item{
             //todo: сделать компонент заголвок + карта
@@ -170,7 +166,7 @@ private fun DetailedEventScreenDisplay(state:DetailedEventScreenViewState.Displa
                 Text(text = "Пойдут на встречу", style = DevMeetTheme.newTypography.h2,
                     modifier = Modifier.padding(FIGMA_PADDING.dp))
                 Box(modifier = Modifier.padding(horizontal = FIGMA_PADDING.dp)){
-                    AvatarLine(listAvatars = listOf("","","","","","","","","",""))
+                    AvatarRow(listAvatars = listOf("","","","","","","","","",""))
                 }
             }
         }
@@ -182,24 +178,7 @@ private fun DetailedEventScreenDisplay(state:DetailedEventScreenViewState.Displa
         item {
             // todo: Организатор
             //todo:сделать отдельную карточку как баннер
-            Row(){
-                Column(modifier = Modifier.weight(1f)){
-                    Text(text = state.organizer.name, style = DevMeetTheme.newTypography.medium, color = Color.Black,
-                        modifier = Modifier
-                            .padding(horizontal = FIGMA_PADDING.dp)
-                            .padding(top = 4.dp))
-                    Text(text = state.organizer.description, style = DevMeetTheme.newTypography.medium, color = Color.Black,
-                        modifier = Modifier
-                            .padding(horizontal = FIGMA_PADDING.dp)
-                            .padding(top = 4.dp))
-                }
-                Box(modifier = Modifier
-                    .weight(1f)
-                    .size(50.dp)
-                    .background(animatedTransitionBrush())){
-
-                }
-            }
+            Organizer(modifier = Modifier.padding(horizontal = FIGMA_PADDING.dp),state = state)
         }
         item{
             //Другие встречи
@@ -209,6 +188,112 @@ private fun DetailedEventScreenDisplay(state:DetailedEventScreenViewState.Displa
         item{
             MoreEvents(listMoreEvents = state.otherEventsOfCommunity)
         }
+    }
+}
+
+@Composable
+private fun Organizer(modifier: Modifier = Modifier, state: DetailedEventScreenViewState.Display){
+Row(modifier){
+    Column(modifier = Modifier.weight(1f)){
+        Text(text = state.organizer.name, style = DevMeetTheme.newTypography.h3, color = Color.Black,
+            modifier = Modifier
+                //.padding(horizontal = FIGMA_PADDING.dp)
+                //.padding(top = 4.dp)
+                    )
+        Text(text = state.organizer.description, style = DevMeetTheme.newTypography.medium, color = Color.Black,
+            modifier = Modifier
+                //.padding(horizontal = FIGMA_PADDING.dp)
+                .padding(top = 4.dp))
+    }
+    Box(modifier = Modifier
+        .size(104.dp)
+        .clip(RoundedCornerShape(16.dp))
+        .background(animatedTransitionBrush())){
+        if(state.isSubscribedToCommunity)
+            Box(modifier = Modifier
+                .align(Alignment.BottomStart)
+                .size(53.dp)
+                .padding(8.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(secondaryLinearBrush())
+                ){
+                Icon(imageVector = Icons.Filled.Check,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(48.dp)
+                        //.padding(8.dp)
+                             ,
+                    tint = DevMeetTheme.colorScheme.primary)
+            }
+        }
+    }
+}
+
+@Composable
+private fun Presenter(modifier: Modifier = Modifier, state: DetailedEventScreenViewState.Display){
+    Row(modifier){
+        Column(modifier = Modifier.weight(1f)){
+            Text(text = state.presenter.name, style = DevMeetTheme.newTypography.h3, color = Color.Black,
+                modifier = Modifier
+                //.padding(horizontal = FIGMA_PADDING.dp)
+                //.padding(top = 4.dp)
+            )
+            Text(text = state.presenter.description, style = DevMeetTheme.newTypography.medium, color = Color.Black,
+                modifier = Modifier
+                    //.padding(horizontal = FIGMA_PADDING.dp)
+                    .padding(top = 4.dp))
+        }
+        Box(modifier = Modifier
+            .size(104.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(animatedTransitionBrush())){
+
+        }
+    }
+}
+@Composable
+fun HostCard(
+    imageUrl: String,
+    hostName: String,
+    hostDescription: String
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Текстовая информация
+        Column(
+            modifier = Modifier
+                .weight(1f) // Задаем вес для текстовой части, чтобы она занимала оставшееся пространство
+        ) {
+            Text(
+                text = hostName,
+                style = MaterialTheme.typography.titleLarge, // Стиль для заголовка
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = hostDescription,
+                style = MaterialTheme.typography.bodyLarge, // Стиль для описания
+                color = Color.Gray
+            )
+        }
+
+        Spacer(modifier = Modifier.width(16.dp)) // Промежуток между текстом и изображением
+
+        // Фото ведущего
+        Image(
+            painter = rememberAsyncImagePainter(imageUrl), // Загрузка изображения по URL
+            contentDescription = "Host image",
+            modifier = Modifier
+                .size(80.dp) // Размер изображения
+                .clip(RoundedCornerShape(16.dp)) // Закругление углов
+                .border(2.dp, Color.LightGray, RoundedCornerShape(16.dp)),
+            contentScale = ContentScale.Crop
+        )
     }
 }
 
@@ -256,111 +341,6 @@ internal fun MoreEvents(modifier: Modifier = Modifier, listMoreEvents: List<Even
 
 }
 
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun DESDCut(state:DetailedEventScreenViewState.Display){
-    LazyColumn(modifier = Modifier.fillMaxSize(), ) {
-        item{
-            //Image
-            Box(modifier = Modifier
-                .padding(FIGMA_PADDING.dp)
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(FIGMA_PADDING.dp))
-                .height(240.dp)
-                .background(
-                    animatedTransitionBrush()
-                ))
-        }
-        item{
-            Text(text = state.header, style = DevMeetTheme.newTypography.h1,
-                modifier = Modifier.padding(horizontal = FIGMA_PADDING.dp))
-        }
-        item{
-            Text(text = state.date.format(DateTimeFormatter.ofPattern("dd MMMM"))+ stringResource(id = R.string.event_address_delimeter)+
-                    state.address, style = DevMeetTheme.newTypography.secondary,
-                modifier = Modifier
-                    .padding(horizontal = FIGMA_PADDING.dp)
-                    .padding(top = 4.dp))
-        }
-        item{
-            FlowRow {
-                state.tags.forEach {
-                    TagSmall(text = it.text, modifier = Modifier
-                        .padding(vertical = FIGMA_PADDING.dp)
-                        .padding(start = FIGMA_PADDING.dp)) {
-
-                    }
-                }
-            }
-        }
-
-        item{
-            Text(text = state.description, style = DevMeetTheme.newTypography.secondary,
-                modifier = Modifier
-                    .padding(horizontal = FIGMA_PADDING.dp)
-                    .padding(top = 4.dp))
-        }
-
-        item{
-            //Ведущий заголовок
-            Text(text = "Ведущий", style = DevMeetTheme.newTypography.h2,
-                modifier = Modifier.padding(FIGMA_PADDING.dp))
-        }
-        item{
-            //Ведущий todo:сделать отдельную карточку как баннер
-            Row(){
-                Column(modifier = Modifier.weight(1f)){
-                    Text(text = state.presenter.name, style = DevMeetTheme.newTypography.medium, color = Color.Black,
-                        modifier = Modifier
-                            .padding(horizontal = FIGMA_PADDING.dp)
-                            .padding(top = 4.dp))
-                    Text(text = state.presenter.description, style = DevMeetTheme.newTypography.medium, color = Color.Black,
-                        modifier = Modifier
-                            .padding(horizontal = FIGMA_PADDING.dp)
-                            .padding(top = 4.dp))
-                }
-                Box(modifier = Modifier
-                    .weight(1f)
-                    .size(50.dp)
-                    .background(animatedTransitionBrush())){
-
-                }
-            }
-        }
-        item{
-            //todo: сделать компонент заголвок + карта
-            Column {
-
-                Text(text = state.address, style = DevMeetTheme.newTypography.h2,
-                    modifier = Modifier
-                        .padding(horizontal = FIGMA_PADDING.dp)
-                        .padding(top = FIGMA_PADDING.dp))
-                Text(text = state.nearestSubwayStation, style = DevMeetTheme.newTypography.medium, color = Color.Black,
-                    modifier = Modifier
-                        .padding(horizontal = FIGMA_PADDING.dp)
-                        .padding(top = 4.dp))
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(R.drawable.map_sample_2)
-                        .crossfade(true)
-                        .build(),
-                    contentScale = ContentScale.Crop,
-                    placeholder = painterResource(id = R.drawable.map_sample_2),
-                    contentDescription = "Map picture will be replaced in future",
-                    modifier = Modifier
-                        .padding(horizontal = FIGMA_PADDING.dp)
-                        .padding(top = 8.dp)
-                        .fillMaxWidth()
-                        .height(180.dp)
-                        .clip(RoundedCornerShape(20.dp))
-
-                )
-            }
-        }
-
-    }
-}
-
 @Preview
 @Composable
 private fun Show() {
@@ -381,9 +361,16 @@ private fun Show() {
             PersonUi(4,"Мария","", ""),
             PersonUi(5,"Таня","", "")),
         organizer = CommunityUI("", "Соощебство", 1, "Площадка самых топовых разработчиков и фанатов IT",false),
+        isSubscribedToCommunity = true,
         otherEventsOfCommunity = listOf(EventUI(1,"Пышки в программах", "", "Завтра", address = "Приморская 47", tags = listOf("Веб-разработка")),
             EventUI(1,"Пышки в программах", "", "Завтра", address = "Приморская 47", tags = listOf("Веб-разработка","Дизайн")),
             EventUI(1,"Пышки в программах", "", "Завтра", address = "Приморская 47", tags = listOf("Веб-разработка")))
     )
     DetailedEventScreen(state)
+    //Presenter(state=state)
+//        HostCard(
+//        imageUrl = "https://example.com/image.jpg",
+//        hostName = "Павел Хориков",
+//        hostDescription = "Ведущий специалист по подбору персонала в одной из крупнейших IT-компаний в ЕС."
+//    )
 }

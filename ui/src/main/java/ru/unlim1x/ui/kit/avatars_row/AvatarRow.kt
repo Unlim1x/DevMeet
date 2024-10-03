@@ -1,5 +1,6 @@
-package ru.unlim1x.old_ui.uiKit.avatarline
+package ru.unlim1x.ui.kit.avatars_row
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -30,55 +33,55 @@ import coil.request.ImageRequest
 import ru.unlim1x.old_ui.theme.DevMeetTheme
 import ru.unlim1x.ui.R
 
-@Deprecated(message = "Deprecated since new design was introduced. Use AvatarRow() instead",
-    ReplaceWith("AvatarRow(listAvatars = listAvatars)", imports = ["ru.unlim1x.ui.kit.avatars_row.AvatarRow"]))
 @Composable
-internal fun AvatarLine(listAvatars: List<String>) {
+internal fun AvatarRow(modifier: Modifier =Modifier,listAvatars: List<String>,
+                       emptyContent: @Composable ()->Unit = { EmptyPeopleText() }
+) {
     var zIndexCounter by rememberSaveable {
-        mutableIntStateOf(listAvatars.size)
+        mutableIntStateOf(listAvatars.size+1)
     }
     var notShown by rememberSaveable {
         mutableIntStateOf(listAvatars.size - 5)
     }
     LazyRow(
-        modifier = Modifier.requiredHeight(48.dp),
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy((-14).dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         when (listAvatars.size) {
-            in 1..5 -> items(listAvatars) {
-                ZIndexElement(zIndex = zIndexCounter--.toFloat(), url = it)
+            in 1..8 -> items(listAvatars) {
+                ZIndexAvatar(zIndex = -zIndexCounter--.toFloat(), url = it)
             }
 
-            in 5..Int.MAX_VALUE -> {
-                items(listAvatars.subList(0, 5)) {
-                    ZIndexElement(zIndex = zIndexCounter--.toFloat(), url = it)
+            in 8..Int.MAX_VALUE -> {
+                items(listAvatars.subList(0, 8)) {
+                    ZIndexAvatar(zIndex = -zIndexCounter--.toFloat(), url = it)
                 }
                 item {
-                    notShown = listAvatars.size - 5
-                    Text(
-                        modifier = Modifier.padding(28.dp, 0.dp, 0.dp, 0.dp),
-                        text = "+ $notShown",
-                        style = DevMeetTheme.typography.bodyText1
-                    )
+                    notShown = listAvatars.size - 8
+                    ZIndexNumber(zIndex = -zIndexCounter.toFloat(), notShown = notShown)
                 }
             }
 
             else -> {
-
+                //item{emptyContent}
             }
         }
+    }
+    if(listAvatars.isEmpty()){
+        emptyContent()
     }
 
 }
 
 
 @Composable
-private fun ZIndexElement(zIndex: Float, url: String) {
+private fun ZIndexAvatar(zIndex: Float, url: String) {
     Box(
         modifier = Modifier
             .zIndex(zIndex)
             .size(48.dp)
+            //.clip(CircleShape)
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -88,8 +91,8 @@ private fun ZIndexElement(zIndex: Float, url: String) {
             contentDescription = "User avatar",
             contentScale = ContentScale.Crop,
             modifier = Modifier
+                .clip(CircleShape)
                 .fillMaxSize()
-                .clip(RoundedCornerShape(10.dp))
                 .border(
                     color = DevMeetTheme.colorScheme.neutralWeak,
                     width = 2.dp,
@@ -101,10 +104,35 @@ private fun ZIndexElement(zIndex: Float, url: String) {
     }
 }
 
+@Composable
+private fun ZIndexNumber(zIndex: Float, notShown: Int) {
+    Box(
+        modifier = Modifier
+            .zIndex(zIndex)
+            .size(48.dp)
+            .clip(CircleShape)
+            .background(DevMeetTheme.colorScheme.disabled)
+            .border(width = 2.dp, color = Color.White, shape = CircleShape)
+    ) {
+        Text(
+            modifier = Modifier.align(Alignment.Center),
+            text = "+ $notShown",
+            style = DevMeetTheme.newTypography.secondary,
+            color = DevMeetTheme.colorScheme.primary
+        )
+    }
+}
+
+@Composable
+private fun EmptyPeopleText(){
+    Text(text = "Будьте первым!", style = DevMeetTheme.newTypography.big)
+}
+
 
 @Preview
 @Composable
 private fun showAvatarLine() {
-    AvatarLine(listOf("", "", "", "", "", "", ""))
 
+    //AvatarRow(listAvatars = listOf("", "", "", "", "", "", "", "", "", "", "", "", ""))
+    AvatarRow(listAvatars = emptyList())
 }

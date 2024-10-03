@@ -62,6 +62,10 @@
     <string name="choose_interests_button">Выбрать интересы</string>
     <string name="all_categories">Все категории</string>
     <string name="other_meetings">Другие встречи</string>
+    <string name="find_meetings_and_communities">Найти встречи и сообщества</string>
+    <string name="search">Поиск</string>
+    <string name="clear_text">Очистить текст</string>
+    <string name="cancel">Отмена</string>
 
     <plurals name="people">
         <item quantity="one">человек</item>

@@ -37,7 +37,8 @@ import ru.unlim1x.ui.models.EventUI
 
 private const val FIGMA_RADIUS = 16f
 private const val FIGMA_DEFAULT_IMAGE_SIZE = 180
-private const val FIGMA_SMALL_IMAGE_SIZE = 148
+private const val FIGMA_SMALL_IMAGE_HEIGHT = 148
+private const val FIGMA_SMALL_IMAGE_WIDTH = 212
 private const val FIGMA_IMAGE_PADDING = 2
 private const val FIGMA_TEXT_PADDING = 6
 
@@ -170,7 +171,7 @@ private fun EventCardCompactBody(
             contentDescription = stringResource(R.string.community_image),
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .height(FIGMA_SMALL_IMAGE_SIZE.dp)
+                .height(FIGMA_SMALL_IMAGE_HEIGHT.dp)
                 .padding(bottom = FIGMA_IMAGE_PADDING.dp)
                 .clip(RoundedCornerShape(FIGMA_RADIUS.dp))
                 .onGloballyPositioned {
@@ -182,12 +183,14 @@ private fun EventCardCompactBody(
                 },
             loading = {
                 AnimatedTransitionRoundRectangle(
-                    modifier = Modifier.size(FIGMA_SMALL_IMAGE_SIZE.dp)
+                    modifier = Modifier.size(width = FIGMA_SMALL_IMAGE_WIDTH.dp,
+                        height = FIGMA_SMALL_IMAGE_HEIGHT.dp)
                 )
             },
             error = {
                 AnimatedTransitionRoundRectangle(
-                    modifier = Modifier.size(FIGMA_SMALL_IMAGE_SIZE.dp)
+                    modifier = Modifier.size(width = FIGMA_SMALL_IMAGE_WIDTH.dp,
+                        height = FIGMA_SMALL_IMAGE_HEIGHT.dp)
                 )
             }
         )

@@ -13,5 +13,5 @@ internal sealed class DetailedEventScreenViewState {
     data class Display(val imageUri:Any, val header:String, val description:String,
         val date: LocalDate, val address:String, val tags:List<Tag>,
         val presenter: PresenterUi, val nearestSubwayStation:String, val comingPeople:List<PersonUi>,
-        val organizer:CommunityUI, val otherEventsOfCommunity:List<EventUI>):DetailedEventScreenViewState()
+        val organizer:CommunityUI,val isSubscribedToCommunity:Boolean, val otherEventsOfCommunity:List<EventUI>):DetailedEventScreenViewState()
 }

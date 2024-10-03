@@ -34,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -55,20 +56,19 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ru.unlim1x.old_ui.theme.DevMeetTheme
 import ru.unlim1x.ui.R
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 internal fun TopBarSearchRow(
-    text: String = "",
     modifier: Modifier = Modifier,
-    interactionSource: MutableInteractionSource = remember {
-        MutableInteractionSource()
-    },
+    textString: String = "",
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     focusRequester: FocusRequester = remember { FocusRequester() },
     hintColor: Color = DevMeetTheme.colorScheme.secondary,
     onSearch: (string: String) -> Unit,
@@ -78,307 +78,203 @@ internal fun TopBarSearchRow(
     onCancelClick: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
-    var textIsEmpty by remember {
-        mutableStateOf(true)
-    }
-    var text by remember { mutableStateOf(text) }
+    var textIsEmpty by remember { mutableStateOf(true) }
+    var text by remember { mutableStateOf(textString) }
     var wholeRowWidth by remember { mutableStateOf(360.dp) }
-    var wholeRowHeight by remember { mutableStateOf(0.dp) }
     var basicSearchWidth by remember { mutableStateOf(32.dp) }
     val density = LocalDensity.current
-    //var widthAnimationValue by remember{ mutableFloatStateOf(320f)}
     val animationWidth by animateFloatAsState(
         targetValue = basicSearchWidth.value,
         animationSpec = tween(durationMillis = 100),
-        visibilityThreshold = 0.1f
+        visibilityThreshold = 0.1f, label = "AnimationWidth"
     )
     val keyboard = LocalSoftwareKeyboardController.current
+    var isFocused by remember { mutableStateOf(false) }
+
     Box(
         modifier = modifier
             .fillMaxWidth()
-            //.height(wholeRowHeight)
             .onGloballyPositioned {
-                wholeRowWidth = (density.run {
+                wholeRowWidth = density.run {
                     (it.size.width)
                         .toDp()
                         .takeIf { it > 0.dp } ?: wholeRowWidth
-                })
-            }, //verticalAlignment = Alignment.CenterVertically,
-        //horizontalArrangement = Arrangement.Absolute.SpaceBetween
-    ) {
-        var isFocused by remember { mutableStateOf(false) }
-
-            BoxWithConstraints(
-                Modifier
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(DevMeetTheme.colorScheme.disabled)
-                    .padding(10.dp)
-                //.weight(0.1f)
-                //.fillMaxWidth()
-                ,
-                contentAlignment = Alignment.CenterStart
-            ) {
-                if (text.isEmpty() && !isFocused) {
-                    Row(
-                        modifier = Modifier
-                            .onGloballyPositioned {
-                                wholeRowHeight= (density.run {
-                                    (it.size.height)
-                                        .toDp().takeIf { it>wholeRowHeight }?:wholeRowHeight
-                                })
-                            }, verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = "Search",
-                            tint = hintColor,
-                            modifier = Modifier.size(22.dp)
-                        )
-                        Text(
-                            text = "Найти встречи и сообщества",
-                            style = DevMeetTheme.newTypography.secondary
-                        )
-                    }
-                }
-
-//                Row(
-//                    modifier = Modifier
-//                        //.padding(10.dp)
-//                        //.padding(end = 22.dp)
-//                        .height(22.dp), verticalAlignment = Alignment.CenterVertically,
-//                    horizontalArrangement = Arrangement.SpaceEvenly
-//                ) {
-                    //Icon(imageVector = Icons.Filled.Search, contentDescription = "Search", tint = Color.Transparent)
-                    BasicTextField(
-                        modifier = Modifier
-                            .height(wholeRowHeight)
-                            .width(animationWidth.dp) ///HERE!!!!!
-                            .focusRequester(focusRequester)
-
-                            //.weight(1f)
-                            //.fillMaxWidth()
-                            .onFocusChanged {
-                                isFocused = it.isFocused
-                            },
-                        value = text,
-                        singleLine = true,
-                        onValueChange = {
-                            text = it
-                            onValueChanged(it)
-                            textIsEmpty = it.isEmpty()
-                        },
-                        interactionSource = interactionSource,
-                        textStyle = DevMeetTheme.newTypography.secondary.copy(DevMeetTheme.colorScheme.black),
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                        keyboardActions = KeyboardActions(onSearch = {
-                            isFocused = false
-                            focusManager.clearFocus()
-                            onSearch(text)
-                            keyboard?.hide()
-                        }),
-                    )
-
-
-                //}
-                if (text.isNotEmpty()) {
-                    Icon(imageVector = Icons.Filled.Clear,
-                        contentDescription = "Clear",
-                        tint = hintColor,
-                        modifier = Modifier
-                            .size(22.dp)
-                            .align(Alignment.CenterEnd)
-                            .clickable {
-                                text = ""
-                                onValueChanged("")
-                            })
-
                 }
             }
+    ) {
+        SearchBoxContent(
+            text = text,
+            isFocused = isFocused,
+            hintColor = hintColor,
+            onValueChanged = { newText ->
+                text = newText
+                onValueChanged(newText)
+                textIsEmpty = newText.isEmpty()
+            },
+            onFocusChanged = { focusState -> isFocused = focusState },
+            focusRequester = focusRequester,
+            animationWidth = animationWidth,
+            interactionSource = interactionSource,
+            onSearch = {
+                focusManager.clearFocus()
+                onSearch(text)
+                keyboard?.hide()
+            },
+            onClearText = { text = ""; onValueChanged("") }
+        )
 
-        BoxWithConstraints(
-            modifier = Modifier.align(Alignment.CenterEnd)
+        Box(
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
                 .sizeIn(minHeight = 44.dp)
                 .onGloballyPositioned {
                     basicSearchWidth =
-                        ((wholeRowWidth - (density
-                            .run { (2*it.size.width).toDp() }
-//                            .takeIf { it > 0.dp } ?: basicSearchWidth
-                            )))
-//                    println("WHOLE ROW ${wholeRowWidth}")
-//                    println("BOX WITH TEXT ${it.size.width}")
-//                    //println("EMPTY? ${textIsEmpty}")
-                    println("BOX WITH TEXT toDp ${density.run { it.size.width.toDp() }}")
-                    println("BOX WITH TEXT toDp value ${density.run { it.size.width.toDp().value }}")
+                        ((wholeRowWidth - density.run { (2 * it.size.width).toDp() }))
                 }
-                //.requiredWidth(32.dp)
-                //.requiredWidthIn(min=32.dp, max = 128.dp)
-
-                //.align(Alignment.CenterEnd)
                 .clickable { if (textIsEmpty && !isFocused) onMenuItemClick() }
-
-                ,
         ) {
-           // LaunchedEffect(key1 = !(!textIsEmpty || isFocused)) {
-                //basicSearchWidth =
-                    //((wholeRowWidth - ((constraints.minWidth)/density.density).dp))
-                println("MIN WIDTH ${(constraints.minWidth/density.density).dp}")
-            println("MAX WIDTH ${(constraints.maxWidth/density.density).dp}")
-           // }
-
-                    //.run { constraints.minWidth.toDp() })))
-                    //.takeIf { it > 0.dp } ?: basicSearchWidth)))
-            AnimatedContent(targetState = !textIsEmpty || isFocused,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    ,
-                transitionSpec = {
-                    (fadeIn(animationSpec = tween(50)) +
-                            scaleIn(initialScale = 0.1f, animationSpec = tween(100))
-                    )
-                        .togetherWith(fadeOut(animationSpec = tween(50)))
-                }) {
-                if (!it) {
-
-                    menuDischargeContent()
-                } else {
-                    CancelMenuIcon(Modifier) {
-                        text = ""
-                        textIsEmpty = true
-                        isFocused = false
-                        focusManager.clearFocus()
-                        onCancelClick()
-                    }
+            AnimatedMenuContent(
+                modifier= Modifier.align(Alignment.Center),
+                textIsEmpty = textIsEmpty,
+                isFocused = isFocused,
+                menuDischargeContent = menuDischargeContent,
+                onCancelClick = {
+                    text = ""
+                    textIsEmpty = true
+                    isFocused = false
+                    focusManager.clearFocus()
+                    onCancelClick()
                 }
+            )
+        }
+    }
+}
+
+@Composable
+private fun SearchBoxContent(
+    text: String,
+    isFocused: Boolean,
+    hintColor: Color,
+    onValueChanged: (String) -> Unit,
+    onFocusChanged: (Boolean) -> Unit,
+    focusRequester: FocusRequester,
+    animationWidth: Float,
+    interactionSource: MutableInteractionSource,
+    onSearch: () -> Unit,
+    onClearText: () -> Unit
+) {
+    val density = LocalDensity.current
+    val wholeRowHeight = remember { mutableStateOf(0.dp) }
+    BoxWithConstraints(
+        Modifier
+            .clip(RoundedCornerShape(16.dp))
+            .background(DevMeetTheme.colorScheme.disabled)
+            .padding(10.dp),
+        contentAlignment = Alignment.CenterStart
+    ) {
+        if (text.isEmpty() && !isFocused) {
+            Row(
+                modifier = Modifier.onGloballyPositioned { layoutCoordinates ->
+                    wholeRowHeight.value = with(density) {
+                        layoutCoordinates.size.height.toDp()
+                    }
+                },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = stringResource(R.string.search),
+                    tint = hintColor,
+                    modifier = Modifier.size(22.dp)
+                )
+                Text(
+                    text = stringResource(R.string.find_meetings_and_communities),
+                    style = DevMeetTheme.newTypography.secondary
+                )
             }
-
-
         }
 
-    }
-println("XYZ ${wholeRowWidth.value}")
-    println("XYZ ${basicSearchWidth.value}")
-}
-
-@Composable
-internal fun ProfileMenuIcon(modifier: Modifier=Modifier) {
-    //Box(modifier = modifier.height(44.dp).sizeIn(minWidth = 32.dp)){
-        Icon(
-            modifier=modifier.sizeIn(minWidth = 32.dp),
-            painter = painterResource(id = R.drawable.user),
-            contentDescription = "Профиль",
-            tint = DevMeetTheme.colorScheme.primary
+        BasicTextField(
+            modifier = Modifier
+                .height(wholeRowHeight.value)
+                .width(animationWidth.dp)
+                .focusRequester(focusRequester)
+                .onFocusChanged { onFocusChanged(it.isFocused) },
+            value = text,
+            singleLine = true,
+            onValueChange = onValueChanged,
+            interactionSource = interactionSource,
+            textStyle = DevMeetTheme.newTypography.secondary.copy(DevMeetTheme.colorScheme.black),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = { onSearch() })
         )
-   // }
+
+        if (text.isNotEmpty()) {
+            Icon(
+                imageVector = Icons.Filled.Clear,
+                contentDescription = stringResource(R.string.clear_text),
+                tint = hintColor,
+                modifier = Modifier
+                    .size(22.dp)
+                    .align(Alignment.CenterEnd)
+                    .clickable { onClearText() }
+            )
+        }
+    }
 }
 
 @Composable
-private fun CancelMenuIcon(modifier: Modifier, onClick: () -> Unit) {
-    Box(modifier.clickable { onClick() }){
+private fun AnimatedMenuContent(
+    modifier: Modifier = Modifier,
+    textIsEmpty: Boolean,
+    isFocused: Boolean,
+    menuDischargeContent: @Composable () -> Unit,
+    onCancelClick: () -> Unit
+) {
+    AnimatedContent(
+        targetState = !textIsEmpty || isFocused,
+        modifier = modifier,
+        transitionSpec = {
+            fadeIn(animationSpec = tween(50)) +
+                    scaleIn(initialScale = 0.1f, animationSpec = tween(100)) togetherWith
+                    fadeOut(animationSpec = tween(50))
+        }, label = "MenuChangeAnimation"
+    ) {
+        if (!it) {
+            menuDischargeContent()
+        } else {
+            CancelMenuIcon(onCancelClick)
+        }
+    }
+}
+
+@Composable
+internal fun ProfileMenuIcon(modifier: Modifier = Modifier) {
+    Icon(
+        modifier = modifier.sizeIn(minWidth = 32.dp),
+        painter = painterResource(id = R.drawable.user),
+        contentDescription = "Профиль",
+        tint = DevMeetTheme.colorScheme.primary
+    )
+}
+
+@Composable
+private fun CancelMenuIcon(onClick: () -> Unit) {
+    Box(Modifier.clickable { onClick() }) {
         Text(
-            modifier=modifier.sizeIn(minWidth = 32.dp),
-            text = "Отмена",
+            modifier = Modifier.sizeIn(minWidth = 32.dp),
+            text = stringResource(R.string.cancel),
             maxLines = 1,
             style = DevMeetTheme.newTypography.h4,
             color = DevMeetTheme.colorScheme.primary
         )
-
     }
 }
 
-@Composable
-internal fun SearchBar(
-    text: String,
-    modifier: Modifier = Modifier,
-    interactionSource: MutableInteractionSource = remember {
-        MutableInteractionSource()
-    },
-    focusRequester: FocusRequester = remember { FocusRequester() },
-    hintColor: Color = DevMeetTheme.colorScheme.secondary,
-    onSearch: (string: String) -> Unit,
-    onValueChanged: (text: String) -> Unit
-) {
-    //var text by remember{mutableStateOf(text)}
-
-    var isFocused by remember { mutableStateOf(false) }
-    Row(modifier) {
-        Box(
-            modifier
-                .clip(RoundedCornerShape(16.dp))
-                .background(DevMeetTheme.colorScheme.disabled)
-                .padding(10.dp)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            if (text.isEmpty() && !isFocused) {
-                Row(
-                    modifier = Modifier, verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = "Search",
-                        tint = hintColor,
-                        modifier = Modifier.size(22.dp)
-                    )
-                    Text(
-                        text = "Найти встречи и сообщества",
-                        style = DevMeetTheme.newTypography.secondary
-                    )
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    //.padding(10.dp)
-                    //.padding(end = 22.dp)
-                    .height(22.dp), verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                //Icon(imageVector = Icons.Filled.Search, contentDescription = "Search", tint = Color.Transparent)
-                BasicTextField(
-                    modifier = Modifier
-                        .focusRequester(focusRequester)
-                        .fillMaxWidth()
-                        .onFocusChanged {
-                            isFocused = it.isFocused
-                        },
-                    value = text,
-                    onValueChange = {//text=it
-                        onValueChanged(it)
-                    },
-                    interactionSource = interactionSource,
-                    textStyle = DevMeetTheme.newTypography.secondary.copy(DevMeetTheme.colorScheme.black),
-                    keyboardActions = KeyboardActions(onSearch = {
-                        onSearch(text)
-
-                    }),
-                )
-
-
-            }
-            if (text.isNotEmpty()) {
-                Icon(imageVector = Icons.Filled.Clear,
-                    contentDescription = "Search",
-                    tint = hintColor,
-                    modifier = Modifier
-                        .size(22.dp)
-                        .align(Alignment.CenterEnd)
-                        .clickable {
-                            // text = ""
-                            onValueChanged("")
-                        })
-
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 private fun Show() {
-    val focusManager = LocalFocusManager.current
     TopBarSearchRow(onSearch = {},
         onValueChanged = {},
         onMenuItemClick = {}) {
