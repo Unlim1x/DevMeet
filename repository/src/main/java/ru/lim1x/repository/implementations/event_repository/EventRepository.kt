@@ -1,4 +1,4 @@
-package ru.lim1x.repository.event_repository
+package ru.lim1x.repository.implementations.event_repository
 
 import android.util.Log
 import ru.lim1x.domain.interfaces.repositories.IEventRepository

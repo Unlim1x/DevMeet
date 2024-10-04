@@ -1,4 +1,4 @@
-package ru.lim1x.repository.search_repository
+package ru.lim1x.repository.implementations.search_repository
 
 import ru.lim1x.domain.interfaces.repositories.ISearchRepository
 import ru.lim1x.domain.models.Event

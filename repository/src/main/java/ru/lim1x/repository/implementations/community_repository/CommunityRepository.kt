@@ -1,18 +1,12 @@
-package ru.lim1x.repository.community_repository
+package ru.lim1x.repository.implementations.community_repository
 
-import android.content.Context
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import ru.lim1x.domain.interfaces.repositories.ICommunityRepository
 import ru.lim1x.domain.models.Community
 import ru.lim1x.domain.models.CommunityDetailed
 import ru.lim1x.repository.mock_source.MockDataSource
-import kotlin.coroutines.coroutineContext
 
 internal class CommunityRepository(private val dataSource:MockDataSource):ICommunityRepository {
     private val communitiesStateFlow:MutableStateFlow<List<Community>> = MutableStateFlow(emptyList())

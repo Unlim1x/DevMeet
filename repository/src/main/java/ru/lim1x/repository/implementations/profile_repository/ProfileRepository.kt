@@ -1,4 +1,4 @@
-package ru.lim1x.repository.profile_repository
+package ru.lim1x.repository.implementations.profile_repository
 
 import kotlinx.coroutines.flow.StateFlow
 import ru.lim1x.domain.interfaces.repositories.IProfileRepository

@@ -113,6 +113,19 @@ class GPTLists {
             "Светлана"
         )
 
+        val surnames = listOf(
+            "Гоцман",
+            "Зильберман",
+            "Шафран",
+            "Цалюк",
+            "Лернер",
+            "Гурфинкель",
+            "Кац",
+            "Бейдер",
+            "Малкин",
+            "Шейнман"
+        )
+
         val eventImagesUrls = listOf(
             "https://kartinki.pics/uploads/posts/2022-03/thumbs/1647273524_55-kartinkin-net-p-seminar-kartinki-59.jpg",
             "https://red-g.ru/wp-content/uploads/2019/07/break-2-1024x683.jpg",

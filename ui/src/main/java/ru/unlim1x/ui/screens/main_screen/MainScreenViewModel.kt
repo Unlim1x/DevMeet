@@ -6,6 +6,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.lim1x.domain.interfaces.interactors.IGetMainScreenFullInfo
 import ru.lim1x.domain.interfaces.interactors.IGetMainScreenSearchState
+import ru.lim1x.domain.interfaces.interactors.IGetMapUrlInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadMoreInfiniteListInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadRailInteractor
 import ru.lim1x.domain.interfaces.interactors.ISearchRequestInteractor
@@ -35,7 +37,8 @@ internal class MainScreenViewModel(
     private val updateTagInteractor: ITagsInfiniteListUpdateInteractor,
     private val loadRails: ILoadRailInteractor,
     private val getSearchState: IGetMainScreenSearchState,
-    private val requestInteractor: ISearchRequestInteractor
+    private val requestInteractor: ISearchRequestInteractor,
+    private val mapUrlInteractor: IGetMapUrlInteractor,
 ) : MainViewModel<MainScreenEvent, MainScreenViewState>() {
     override val _viewState: MutableStateFlow<MainScreenViewState> =
         MutableStateFlow(MainScreenViewState.Loading)
@@ -108,7 +111,13 @@ internal class MainScreenViewModel(
             when (it) {
                 is MainScreenEvent.ClickOnCommunity -> TODO()
                 is MainScreenEvent.ClickOnCommunitySubscribe -> TODO()
-                is MainScreenEvent.ClickOnEvent -> TODO()
+                is MainScreenEvent.ClickOnEvent -> {
+                    viewModelScope.launch {
+                        mapUrlInteractor.execute(it.eventAddress).collectLatest { url ->
+                            println("ПРЕДПОЛАГАЕМАЯ КАРТА: $url")
+                        }
+                    }
+                }
                 MainScreenEvent.ScrolledToEndOfList -> {
                     if (_viewState.value is MainScreenViewState.Display)
                     loadMoreListInteractor.execute((_viewState.value as MainScreenViewState.Display).infiniteEventsListByTag.size)

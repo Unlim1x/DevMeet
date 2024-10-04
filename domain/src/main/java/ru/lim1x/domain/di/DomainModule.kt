@@ -3,6 +3,7 @@ package ru.lim1x.domain.di
 import org.koin.dsl.module
 import ru.lim1x.domain.interactor_implementation.FullInfo
 import ru.lim1x.domain.interactor_implementation.GetMainEventsUseCase
+import ru.lim1x.domain.interactor_implementation.GetMapUrlInteractor
 import ru.lim1x.domain.interactor_implementation.GetMoreEventsInteractor
 import ru.lim1x.domain.interactor_implementation.GetRailInteractor
 import ru.lim1x.domain.interactor_implementation.GetRailUseCase
@@ -29,6 +30,7 @@ import ru.lim1x.domain.interactor_implementation.TagsOnboardingGetInteractor
 import ru.lim1x.domain.interactor_implementation.TagsOnboardingUpdateInteractor
 import ru.lim1x.domain.interfaces.interactors.IGetMainScreenFullInfo
 import ru.lim1x.domain.interfaces.interactors.IGetMainScreenSearchState
+import ru.lim1x.domain.interfaces.interactors.IGetMapUrlInteractor
 import ru.lim1x.domain.interfaces.interactors.IGetMoreEventsInteractor
 import ru.lim1x.domain.interfaces.interactors.IGetRailInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadMainEventsInteractor
@@ -130,4 +132,6 @@ val newDomainModule = module {
     single<ISearchRequestInteractor> { SearchRequestInteractor() }
     single<InnerSearchUseCase> { InnerSearchUseCase() }
     single<IGetMainScreenSearchState> { GetSearchStateInteractor() }
+
+    single<IGetMapUrlInteractor> { GetMapUrlInteractor(get()) }
 }

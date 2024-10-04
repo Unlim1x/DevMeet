@@ -5,7 +5,7 @@ import java.time.LocalDate
 data class EventDetailedData(
     val name: String,
     val date: LocalDate,
-    val place: String,
+    val shortAddress: String,
     val tags: List<String>,
     val id: Int,
     val url: String,

@@ -9,6 +9,12 @@ pluginManagement {
         }
         mavenCentral()
         maven(url = "https://jitpack.io")
+        maven {
+            url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+        }
+        maven {
+            url = uri("https://androidx.dev/storage/compose-compiler/repository/")
+        }
         gradlePluginPortal()
     }
 }
@@ -18,6 +24,12 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven(url = "https://jitpack.io")
+        maven {
+            url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+        }
+        maven {
+            url = uri("https://androidx.dev/storage/compose-compiler/repository/")
+        }
     }
 }
 

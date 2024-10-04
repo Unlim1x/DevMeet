@@ -1,7 +1,7 @@
 package ru.unlim1x.ui.screens.main_screen
 
 internal sealed class MainScreenEvent {
-    data class ClickOnEvent(val eventId: Int) : MainScreenEvent()
+    data class ClickOnEvent(val eventId: Int, val eventAddress: String) : MainScreenEvent()
     data class ClickOnCommunity(val communityId: Int) : MainScreenEvent()
 
     data class ClickOnCommunitySubscribe(val communityId: Int) : MainScreenEvent()

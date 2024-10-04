@@ -98,9 +98,15 @@ internal fun MainScreen(viewModel: MainScreenViewModel = koinViewModel()) {
                 MainScreenBody(
                     Modifier.padding(top = topBarPadding.dp + 15.dp),
                     state = viewState as MainScreenViewState.Display,
-                    onEndOfListReached = { viewModel.obtain(MainScreenEvent.ScrolledToEndOfList) }
+                    onEndOfListReached = { viewModel.obtain(MainScreenEvent.ScrolledToEndOfList) },
+                    onTagClicked = { viewModel.obtain(MainScreenEvent.ClickOnTag(it)) }
                 ) {
-                    viewModel.obtain(MainScreenEvent.ClickOnTag(it))
+                    viewModel.obtain(
+                        (MainScreenEvent.ClickOnEvent(
+                            eventId = it.id,
+                            eventAddress = it.address
+                        ))
+                    )
                 }
 
             }
@@ -128,7 +134,8 @@ private fun MainScreenBody(
     modifier: Modifier,
     state: MainScreenViewState.Display,
     onEndOfListReached: () -> Unit,
-    onTagClicked: (id: Int) -> Unit
+    onTagClicked: (id: Int) -> Unit,
+    onEventClicked: (event: EventUI) -> Unit
 ) {
     Log.e("MAIN SCREEN", "$state")
     Log.e("MAIN SCREEN", "INFINITE LIST ${state.infiniteEventsListByTag}")
@@ -156,7 +163,9 @@ private fun MainScreenBody(
                 MainEvents(
                     modifier = Modifier.padding(top = 20.dp),
                     listMainEvents = state.mainEventsList
-                )
+                ) {
+                    onEventClicked(it)
+                }
             }
             //СКОРО
             item {
@@ -322,7 +331,11 @@ internal fun MainScreenSearchBody(
 
 
 @Composable
-fun MainEvents(modifier: Modifier = Modifier, listMainEvents: List<EventUI>) {
+fun MainEvents(
+    modifier: Modifier = Modifier,
+    listMainEvents: List<EventUI>,
+    onEventClick: (EventUI) -> Unit
+) {
     var maxCardHeight by remember { mutableStateOf(0.dp) }
     var firstRender by remember { mutableStateOf(true) }
     BoxWithConstraints(modifier.fillMaxWidth()) {
@@ -349,7 +362,7 @@ fun MainEvents(modifier: Modifier = Modifier, listMainEvents: List<EventUI>) {
                         firstRender = false
                     }
                 ) {
-
+                    onEventClick(item)
                 }
             }
 
