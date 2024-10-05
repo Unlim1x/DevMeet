@@ -4,10 +4,12 @@ import android.util.Log
 import ru.lim1x.domain.interfaces.repositories.IEventRepository
 import ru.lim1x.domain.models.CommunityRail
 import ru.lim1x.domain.models.Event
+import ru.lim1x.domain.models.EventDetailed
 import ru.lim1x.domain.models.PersonRail
 import ru.lim1x.domain.models.Tag
 import ru.lim1x.repository.mappers.mapCommunityRailToDomain
 import ru.lim1x.repository.mappers.mapEventListToDomain
+import ru.lim1x.repository.mappers.mapPersonToDomain
 import ru.lim1x.repository.mappers.mapToDomain
 import ru.lim1x.repository.mock_source.FakeDataSource
 
@@ -42,5 +44,23 @@ internal class EventRepository(private val dataSource: FakeDataSource) : IEventR
         return dataSource.fakePersonsToKnow().mapToDomain()
     }
 
-
+    override fun loadEventDetailedInfoById(id: Int): EventDetailed {
+        val eventDetailedData = dataSource.getDetailedEvent(id)
+        return EventDetailed(
+            name = eventDetailedData.name,
+            description = eventDetailedData.description,
+            date = eventDetailedData.date,
+            shortAddress = eventDetailedData.shortAddress,
+            tags = eventDetailedData.tags.mapIndexed { it1, it2 -> Tag(id = it1, text = it2) },
+            id = eventDetailedData.id,
+            url = eventDetailedData.url,
+            mapUrl = "",
+            speaker = eventDetailedData.speaker.mapToDomain(),
+            address = eventDetailedData.address,
+            nearestSubway = "",
+            attendees = eventDetailedData.attendees.mapPersonToDomain(),
+            organizer = eventDetailedData.organizer.mapToDomain(),
+            otherMeetings = eventDetailedData.otherMeetings.mapEventListToDomain()
+        )
+    }
 }

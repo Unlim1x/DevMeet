@@ -1,7 +1,9 @@
 package ru.lim1x.domain.di
 
 import org.koin.dsl.module
+import ru.lim1x.domain.interactor_implementation.DetailedEventInfoFlowInteractor
 import ru.lim1x.domain.interactor_implementation.FullInfo
+import ru.lim1x.domain.interactor_implementation.GetDetailedEventFullInfoInteractor
 import ru.lim1x.domain.interactor_implementation.GetMainEventsUseCase
 import ru.lim1x.domain.interactor_implementation.GetMapUrlInteractor
 import ru.lim1x.domain.interactor_implementation.GetMoreEventsInteractor
@@ -11,6 +13,7 @@ import ru.lim1x.domain.interactor_implementation.GetSearchStateInteractor
 import ru.lim1x.domain.interactor_implementation.GetSoonEventsUseCase
 import ru.lim1x.domain.interactor_implementation.GetTagsInfiniteListUseCase
 import ru.lim1x.domain.interactor_implementation.GetTagsUseCase
+import ru.lim1x.domain.interactor_implementation.InnerDetailedEventUseCase
 import ru.lim1x.domain.interactor_implementation.InnerLoadRailInteractor
 import ru.lim1x.domain.interactor_implementation.InnerMainEventInteractor
 import ru.lim1x.domain.interactor_implementation.InnerMoreEvents
@@ -28,6 +31,7 @@ import ru.lim1x.domain.interactor_implementation.TagsInfiniteListGetInteractor
 import ru.lim1x.domain.interactor_implementation.TagsInfiniteListUpdateInteractor
 import ru.lim1x.domain.interactor_implementation.TagsOnboardingGetInteractor
 import ru.lim1x.domain.interactor_implementation.TagsOnboardingUpdateInteractor
+import ru.lim1x.domain.interfaces.interactors.IGetDetailedEventFullInfoInteractor
 import ru.lim1x.domain.interfaces.interactors.IGetMainScreenFullInfo
 import ru.lim1x.domain.interfaces.interactors.IGetMainScreenSearchState
 import ru.lim1x.domain.interfaces.interactors.IGetMapUrlInteractor
@@ -37,6 +41,7 @@ import ru.lim1x.domain.interfaces.interactors.ILoadMainEventsInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadMoreInfiniteListInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadRailInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadSoonEventsInteractor
+import ru.lim1x.domain.interfaces.interactors.IRequestDetailedEventFullInfoInteractor
 import ru.lim1x.domain.interfaces.interactors.ISearchRequestInteractor
 import ru.lim1x.domain.interfaces.interactors.ITagsInfiniteListGetInteractor
 import ru.lim1x.domain.interfaces.interactors.ITagsInfiniteListUpdateInteractor
@@ -133,5 +138,7 @@ val newDomainModule = module {
     single<InnerSearchUseCase> { InnerSearchUseCase() }
     single<IGetMainScreenSearchState> { GetSearchStateInteractor() }
 
-    single<IGetMapUrlInteractor> { GetMapUrlInteractor(get()) }
+    single<IRequestDetailedEventFullInfoInteractor> { GetDetailedEventFullInfoInteractor() }
+    single<InnerDetailedEventUseCase> { InnerDetailedEventUseCase() }
+    single<IGetDetailedEventFullInfoInteractor> { DetailedEventInfoFlowInteractor() }
 }

@@ -3,13 +3,17 @@ package ru.lim1x.repository.mappers
 import ru.lim1x.domain.models.CommunityRail
 import ru.lim1x.domain.models.DeveloperCommunity
 import ru.lim1x.domain.models.Event
+import ru.lim1x.domain.models.Organizer
 import ru.lim1x.domain.models.Person
 import ru.lim1x.domain.models.PersonRail
+import ru.lim1x.domain.models.Speaker
 import ru.lim1x.repository.models.CommunityRailData
 import ru.lim1x.repository.models.DeveloperCommunityData
 import ru.lim1x.repository.models.EventData
+import ru.lim1x.repository.models.OrganizerData
 import ru.lim1x.repository.models.PersonData
 import ru.lim1x.repository.models.PersonRailData
+import ru.lim1x.repository.models.SpeakerData
 
 internal fun List<EventData>.mapEventListToDomain(): List<Event> {
     return this.map {
@@ -65,4 +69,12 @@ internal fun List<PersonData>.mapPersonToDomain(): List<Person> {
 
 internal fun PersonRailData.mapToDomain(): PersonRail {
     return PersonRail(title = this.title, contentList = this.listPersons.mapPersonToDomain())
+}
+
+internal fun SpeakerData.mapToDomain(): Speaker {
+    return Speaker(name = this.name, imageUri = this.imageUri, description = this.description)
+}
+
+internal fun OrganizerData.mapToDomain(): Organizer {
+    return Organizer(id, imageUri, description, name)
 }

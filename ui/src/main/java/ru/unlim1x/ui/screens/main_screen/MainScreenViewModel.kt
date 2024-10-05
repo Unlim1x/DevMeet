@@ -17,6 +17,7 @@ import ru.lim1x.domain.interfaces.interactors.IGetMainScreenSearchState
 import ru.lim1x.domain.interfaces.interactors.IGetMapUrlInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadMoreInfiniteListInteractor
 import ru.lim1x.domain.interfaces.interactors.ILoadRailInteractor
+import ru.lim1x.domain.interfaces.interactors.IRequestDetailedEventFullInfoInteractor
 import ru.lim1x.domain.interfaces.interactors.ISearchRequestInteractor
 import ru.lim1x.domain.interfaces.interactors.ITagsInfiniteListUpdateInteractor
 import ru.lim1x.domain.models.CommunityRail
@@ -27,6 +28,7 @@ import ru.lim1x.domain.models.SearchRequest
 import ru.unlim1x.old_ui.screens.MainViewModel
 import ru.unlim1x.ui.mappers.mapCommunityRailToUi
 import ru.unlim1x.ui.mappers.mapEventListToUi
+import ru.unlim1x.ui.mappers.mapRail
 import ru.unlim1x.ui.mappers.mapTagToUi
 import ru.unlim1x.ui.mappers.mapToPersonRailUi
 
@@ -38,7 +40,7 @@ internal class MainScreenViewModel(
     private val loadRails: ILoadRailInteractor,
     private val getSearchState: IGetMainScreenSearchState,
     private val requestInteractor: ISearchRequestInteractor,
-    private val mapUrlInteractor: IGetMapUrlInteractor,
+    private val requestDetailedEventFullInfoInteractor: IRequestDetailedEventFullInfoInteractor,
 ) : MainViewModel<MainScreenEvent, MainScreenViewState>() {
     override val _viewState: MutableStateFlow<MainScreenViewState> =
         MutableStateFlow(MainScreenViewState.Loading)
@@ -58,7 +60,7 @@ internal class MainScreenViewModel(
                     mainEventsList = mainState.mainEventsList.mapEventListToUi(),
                     soonEventsList = mainState.soonEventsList.mapEventListToUi(),
                     otherTags = mainState.otherTags.mapTagToUi(),
-                    railList = mapRail(mainState.railList),
+                    railList = mainState.railList.mapRail(),
                     infiniteEventsListByTag = mainState.infiniteEventsListByTag.mapEventListToUi()
                 )
             }
@@ -69,7 +71,7 @@ internal class MainScreenViewModel(
                 _viewState.update {
                     MainScreenViewState.DisplaySearch(
                         searchedEventsList = search.searchedEvents.mapEventListToUi(),
-                        rail = mapRail(listOf(search.rail)).first(),
+                        rail = (listOf(search.rail).mapRail()).first(),
                         eventsRail = search.additionList.mapEventListToUi(),
                         eventsRailHeader = search.additionHeader
                     )
@@ -79,29 +81,6 @@ internal class MainScreenViewModel(
 
     }
 
-    private fun mapRail(railList: List<Rail>): List<Rail> {
-        return railList.map { rail ->
-            when (rail.railType) {
-                RailType.Community -> Rail(
-                    railType = rail.railType,
-                    content = (rail.content as CommunityRail).mapCommunityRailToUi()
-                )
-
-                RailType.Banner -> {
-                    rail
-                }
-
-                RailType.Person -> Rail(
-                    railType = rail.railType,
-                    content = (rail.content as PersonRail).mapToPersonRailUi()
-                )
-
-                RailType.Nothing -> {
-                    rail
-                }
-            }
-        }
-    }
 
 
 
@@ -112,11 +91,7 @@ internal class MainScreenViewModel(
                 is MainScreenEvent.ClickOnCommunity -> TODO()
                 is MainScreenEvent.ClickOnCommunitySubscribe -> TODO()
                 is MainScreenEvent.ClickOnEvent -> {
-                    viewModelScope.launch {
-                        mapUrlInteractor.execute(it.eventAddress).collectLatest { url ->
-                            println("ПРЕДПОЛАГАЕМАЯ КАРТА: $url")
-                        }
-                    }
+                    requestDetailedEventFullInfoInteractor.invoke(it.eventId)
                 }
                 MainScreenEvent.ScrolledToEndOfList -> {
                     if (_viewState.value is MainScreenViewState.Display)

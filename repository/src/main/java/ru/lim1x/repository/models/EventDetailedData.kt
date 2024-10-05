@@ -2,8 +2,9 @@ package ru.lim1x.repository.models
 
 import java.time.LocalDate
 
-data class EventDetailedData(
+internal data class EventDetailedData(
     val name: String,
+    val description: String,
     val date: LocalDate,
     val shortAddress: String,
     val tags: List<String>,
@@ -11,8 +12,8 @@ data class EventDetailedData(
     val url: String,
     val speaker: SpeakerData,
     val address: String,
-    val attendees: List<Int>,
-    val organizer: Int,
-    val otherMeetings: List<Int>,
+    val attendees: List<PersonData>,
+    val organizer: OrganizerData,
+    val otherMeetings: List<EventData>,
     val maxAttendeesQuantity: Int
 )

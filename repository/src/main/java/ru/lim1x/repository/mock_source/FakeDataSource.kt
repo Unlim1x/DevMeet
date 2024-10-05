@@ -5,8 +5,11 @@ import ru.lim1x.domain.models.Tag
 import ru.lim1x.repository.models.CommunityRailData
 import ru.lim1x.repository.models.DeveloperCommunityData
 import ru.lim1x.repository.models.EventData
+import ru.lim1x.repository.models.EventDetailedData
+import ru.lim1x.repository.models.OrganizerData
 import ru.lim1x.repository.models.PersonData
 import ru.lim1x.repository.models.PersonRailData
+import ru.lim1x.repository.models.SpeakerData
 import java.time.LocalDate
 import kotlin.random.Random
 
@@ -35,40 +38,61 @@ internal class FakeDataSource {
 
     private val eventsQuantity = 100
 
-    private val fakeEvents = MutableList(eventsQuantity) {
-        combineEvent(it)
-    }
-
-    private fun fakeDescription(): String {
-        return GPTLists.eventDescriptions.shuffled(Random).take(4).joinToString(separator = " ")
-    }
-
-    private fun fakeAttendeesQuantity() = Random.nextInt(0, 30)
-    private val fakeAttendees = MutableList(eventsQuantity) {
-        generateListOfPersons(size = fakeAttendeesQuantity())
-
-    }
-
-
-    private fun combineEvent(id: Int): EventData {
-        return EventData(
-            name = GPTLists.eventNames.shuffled(Random).random(),
-            date = LocalDate.of(2024, Random.nextInt(9, 13), Random.nextInt(1, 30)),
-            place = GPTLists.addresses.shuffled(Random).random(),
-            tags = GPTLists.listOfTags.shuffled(Random).take(3),
-            id = id,
-            url = GPTLists.eventImagesUrls.shuffled(Random).random()
-        )
-    }
-
     private val fakeCommunities = MutableList(GPTLists.developerCommunities.size) {
-        val community = GPTLists.developerCommunities.shuffled().random()
+        val community = GPTLists.developerCommunities[it]
         DeveloperCommunityData(
             it,
             community,
             imageUri = GPTLists.developerCommunitiesUrls[community] as Any
         )
     }
+    private val eventOrganizerMap: MutableMap<Int, Int> = mutableMapOf()
+
+
+
+    private val fakeAttendees = MutableList(eventsQuantity) {
+        generateListOfPersons(size = fakeAttendeesQuantity())
+
+    }
+
+    private val fakeEvents = MutableList(eventsQuantity) {
+        combineEvent(it)
+    }
+    private val fakeDetailedEvents = MutableList(eventsQuantity) {
+        combineDetailedEvent(it)
+    }
+
+
+    private fun fakeEventDescription(): String {
+        return GPTLists.eventDescriptions.shuffled(Random).take(4).joinToString(separator = " ")
+    }
+
+    private fun fakeAttendeesQuantity() = Random.nextInt(0, 30)
+
+    private fun fakeOrganizer(id: Int): OrganizerData {
+        val community = fakeCommunities[id]
+        return OrganizerData(
+            id = community.id,
+            name = community.name,
+            imageUri = community.imageUri,
+            description = GPTLists.communityDescriptions.shuffled().random()
+        )
+    }
+
+    private fun fakeSpeaker(): SpeakerData {
+        val random = when (Random.nextInt(1, 100) < 50) {
+            true -> Sex.MALE
+            false -> Sex.FEMALE
+        }
+        val person = generatePerson(random)
+        return SpeakerData(
+            name = person.name + " " + GPTLists.surnames.random(),
+            imageUri = person.imageUri ?: "",
+            description = GPTLists.speakerDescriptions.shuffled().random()
+        )
+    }
+
+
 
     private fun fakeCommunityRails() =
         CommunityRailData(
@@ -182,6 +206,40 @@ internal class FakeDataSource {
         return person
     }
 
+    private fun combineEvent(id: Int): EventData {
+        eventOrganizerMap.putIfAbsent(id, fakeCommunities.random().id)
+        return EventData(
+            name = GPTLists.eventNames.shuffled(Random).random(),
+            date = LocalDate.of(2024, Random.nextInt(9, 13), Random.nextInt(1, 30)),
+            place = GPTLists.addresses.shuffled(Random).random(),
+            tags = GPTLists.listOfTags.shuffled(Random).take(3),
+            id = id,
+            url = GPTLists.eventImagesUrls.shuffled(Random).random()
+        )
+    }
+
+    private fun combineDetailedEvent(id: Int): EventDetailedData {
+        val fakeEvent = fakeEvents.find { it.id == id }!!
+        return EventDetailedData(
+            name = fakeEvent.name,
+            description = fakeEventDescription(),
+            date = fakeEvent.date,
+            shortAddress = fakeEvent.place,
+            tags = fakeEvent.tags,
+            id = fakeEvent.id,
+            url = fakeEvent.url,
+            speaker = fakeSpeaker(),
+            address = "Санкт-Петербург, " + fakeEvent.place,
+            attendees = fakeAttendees[id],
+            organizer = fakeOrganizer(eventOrganizerMap[id]!!),
+            otherMeetings = events.filter { event ->
+                eventOrganizerMap.filterValues { it == eventOrganizerMap[id]!! }.keys.filter { it != id }
+                    .any { event.id == it }
+            },
+            maxAttendeesQuantity = 30
+        )
+    }
+
     fun searchEvents(text: String): Triple<List<EventData>, CommunityRailData, Pair<String, List<EventData>>> {
         val filteredList = events.filter { event ->
             event.name.contains(
@@ -227,6 +285,15 @@ internal class FakeDataSource {
             return emptyList()
 
     }
+
+    fun getDetailedEvent(id: Int): EventDetailedData {
+        return fakeDetailedEvents[id]
+    }
+
+    fun getEventById(id: Int): EventData {
+        return events[id]
+    }
+
 
 
 }

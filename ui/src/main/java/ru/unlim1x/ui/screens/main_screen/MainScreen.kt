@@ -38,6 +38,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
@@ -58,6 +60,7 @@ import ru.unlim1x.ui.kit.topbar_row.TopBarSearchRow
 import ru.unlim1x.ui.models.CommunityRailUI
 import ru.unlim1x.ui.models.EventUI
 import ru.unlim1x.ui.models.PersonRailUi
+import ru.unlim1x.ui.navigation.start_app.StartAppNavGraphNodes
 import ru.unlim1x.ui.screens.event_detailed.MoreEvents
 
 private const val HORIZONTAL_PADDING = 16
@@ -67,7 +70,10 @@ private const val VERTICAL_GAP = 40
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun MainScreen(viewModel: MainScreenViewModel = koinViewModel()) {
+internal fun MainScreen(
+    navController: NavController,
+    viewModel: MainScreenViewModel = koinViewModel()
+) {
     val viewState by viewModel.viewState().collectAsStateWithLifecycle()
     var topBarPadding by remember { mutableIntStateOf(0) }
     val density = LocalDensity.current.density
@@ -107,6 +113,7 @@ internal fun MainScreen(viewModel: MainScreenViewModel = koinViewModel()) {
                             eventAddress = it.address
                         ))
                     )
+                    navController.navigate(StartAppNavGraphNodes.DetailedEvent.routeId(it.id))
                 }
 
             }
@@ -114,7 +121,16 @@ internal fun MainScreen(viewModel: MainScreenViewModel = koinViewModel()) {
             is MainScreenViewState.DisplaySearch -> {
                 MainScreenSearchBody(
                     Modifier.padding(top = topBarPadding.dp + 15.dp),
-                    state = viewState as MainScreenViewState.DisplaySearch
+                    state = viewState as MainScreenViewState.DisplaySearch,
+                    onEventClick = {
+                        viewModel.obtain(
+                            (MainScreenEvent.ClickOnEvent(
+                                eventId = it.id,
+                                eventAddress = it.address
+                            ))
+                        )
+                        navController.navigate(StartAppNavGraphNodes.DetailedEvent.routeId(it.id))
+                    }
                 ) {
                     viewModel.obtain(MainScreenEvent.ScrolledToEndOfList)
                 }
@@ -169,7 +185,9 @@ private fun MainScreenBody(
             }
             //СКОРО
             item {
-                SoonEvents(listSoonEvents = state.soonEventsList)
+                SoonEvents(listSoonEvents = state.soonEventsList) {
+                    onEventClicked(it)
+                }
             }
             //ПЕРВЫЙ РЭИЛ
             item {
@@ -197,7 +215,7 @@ private fun MainScreenBody(
                     state = item,
                     modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)
                 ) {
-
+                    onEventClicked(item)
                 }
                 if ((index + 1) % 3 == 0 && index < 9) {
                     if (state.railList.size > (index + 1) / 3)
@@ -236,6 +254,7 @@ private fun MainScreenBody(
 @Composable
 internal fun MainScreenSearchBody(
     modifier: Modifier = Modifier, state: MainScreenViewState.DisplaySearch,
+    onEventClick: (EventUI) -> Unit,
     onEndOfListReached: () -> Unit,
 ) {
     val lazyListState = rememberSaveable(saver = LazyListState.Saver) { LazyListState() }
@@ -284,7 +303,9 @@ internal fun MainScreenSearchBody(
                     )
                 }
                 item {
-                    MoreEvents(listMoreEvents = state.eventsRail)
+                    MoreEvents(listMoreEvents = state.eventsRail) {
+                        onEventClick(it)
+                    }
                 }
 
 
@@ -296,7 +317,7 @@ internal fun MainScreenSearchBody(
                         state = item,
                         modifier = Modifier.padding(horizontal = HORIZONTAL_PADDING.dp)
                     ) {
-
+                        onEventClick(item)
                     }
 
 
@@ -373,7 +394,11 @@ fun MainEvents(
 }
 
 @Composable
-fun SoonEvents(modifier: Modifier = Modifier, listSoonEvents: List<EventUI>) {
+fun SoonEvents(
+    modifier: Modifier = Modifier,
+    listSoonEvents: List<EventUI>,
+    onEventClick: (EventUI) -> Unit
+) {
     var maxCardHeight by remember { mutableStateOf(0.dp) }
     var firstRender by remember { mutableStateOf(true) }
 
@@ -409,7 +434,7 @@ fun SoonEvents(modifier: Modifier = Modifier, listSoonEvents: List<EventUI>) {
                             firstRender = false
                         }
                     ) {
-                        // Handle click event
+                        onEventClick(item)
                     }
                 }
             }
@@ -537,5 +562,5 @@ fun Modifier.railModifier(index: Int, listSize: Int): Modifier {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 private fun Show() {
-    MainScreen()
+    MainScreen(rememberNavController())
 }
